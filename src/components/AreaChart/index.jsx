@@ -87,7 +87,7 @@ export default function AreaChartComponents({ width, height }) {
         width={width}
         height={height}
         data={data}
-        margin={{ top: 10, right: 30, left: 0, bottom: 30 }}
+        margin={{ top: 10, right: 40, left: 0, bottom: 30 }}
       >
         <defs>
           <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
