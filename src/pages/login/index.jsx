@@ -1,8 +1,5 @@
-import Lock from "@/components/icons/Lock";
-import User from "@/components/icons/User";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import LoginForm from "./LoginForm";
+import Logo from "@/assets/img/logo-white.png";
 
 export function LoginPage() {
   return (
@@ -18,44 +15,20 @@ export function LoginPage() {
               Admin.
             </p>
           </div>
-          <div className="grid gap-14">
-            <div className="grid gap-2">
-              <Label htmlFor="username" className="font-bold text-primary">
-                Nama Pengguna
-              </Label>
-              <div className="relative w-full rounded-[12px] bg-white">
-                <User className="absolute left-3 top-2 text-primary" />
-                <Input
-                  id="username"
-                  type="text"
-                  required
-                  className="absolute bg-transparent pl-12"
-                />
-              </div>
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password" className="font-bold text-primary">
-                  Password
-                </Label>
-              </div>
-              <div className="relative w-full rounded-[12px] bg-white">
-                <Lock className="absolute left-3 top-2 text-primary" />
-                <Input
-                  className="absolute bg-transparent pl-12"
-                  id="password"
-                  type="password"
-                  required
-                />
-              </div>
-            </div>
-            <Button type="submit" className="w-full rounded-[12px]">
-              Masuk
-            </Button>
-          </div>
+          <LoginForm />
         </div>
       </div>
-      <div className="hidden lg:block"></div>
+      <div className="container hidden items-start justify-end py-[80px] pr-[80px] lg:flex">
+        <div className="flex items-center gap-6 text-neutral-50">
+          <div className="">
+            <h2 className="text-end text-[32px] font-bold">Tourease</h2>
+            <p className="font-medium">
+              Jelajahi dunia dengan mudah dan menyenangkan
+            </p>
+          </div>
+          <img src={Logo} alt="Logo" className="size-20" />
+        </div>
+      </div>
     </div>
   );
 }
