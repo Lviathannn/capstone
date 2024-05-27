@@ -9,11 +9,11 @@ const data01 = [
 const colors = tailwindConfig.theme.extend.colors;
 
 const COLORS = {
-  Destinasi: colors.primary[100], 
-  Video: colors.primary[500], 
+  Destinasi: colors.primary[500], // Example color for Destinasi
+  Video: colors.primary[100], // Example color for Video
 };
 
-export default function PieChartComponent({ width, height }) {
+export default function PieChartComponents({ width, height }) {
   return (
     <PieChart width={width} height={height}>
       <Pie

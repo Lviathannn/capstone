@@ -2,9 +2,7 @@ import { PeopleAltIcon, PersonIcon, AltRouteIcon } from "@/assets/icons";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
