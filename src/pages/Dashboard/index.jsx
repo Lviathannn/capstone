@@ -1,5 +1,14 @@
 import AreaChartComponents from "@/components/AreaChart";
 import { PeopleAltIcon, PersonIcon, AltRouteIcon } from "@/assets/icons";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default function DashboardPage() {
   return (
@@ -9,7 +18,7 @@ export default function DashboardPage() {
       <div className="flex w-full flex-col gap-4 bg-primary-50 p-6 font-sans">
         <h1 className="text-xl font-bold text-neutral-800">Overview</h1>
         <div className="flex gap-10">
-          <div className="w-4/6 flex flex-col gap-4">
+          <div className="flex w-4/6 flex-col gap-4">
             <div className="grid grid-cols-3 gap-6">
               <div className="flex flex-col gap-4 rounded-[10px] bg-primary-500 p-4">
                 <PeopleAltIcon />
@@ -33,7 +42,7 @@ export default function DashboardPage() {
                 </div>
               </div>
             </div>
-            <div className="border border-black bg-[#FAFAFA] rounded-xl">
+            <div className="rounded-xl border border-black bg-[#FAFAFA]">
               <div className="flex items-center justify-between px-4 py-4">
                 <h1 className="text-lg font-bold text-neutral-800">
                   Grafik Pertumbuhan Pengguna
@@ -55,6 +64,25 @@ export default function DashboardPage() {
               </div>
               <AreaChartComponents width="100%" height={250} />
             </div>
+            <Table>
+              <TableCaption>A list of your recent invoices.</TableCaption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[100px]">Invoice</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Method</TableHead>
+                  <TableHead className="text-right">Amount</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-medium">INV001</TableCell>
+                  <TableCell>Paid</TableCell>
+                  <TableCell>Credit Card</TableCell>
+                  <TableCell className="text-right">$250.00</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
           <div className="border border-black">a</div>
         </div>
