@@ -75,7 +75,7 @@ const data = [
   },
 ];
 
-export default function AreaChartComponents({ width, height }) {
+export default function AreaChartComponent({ width, height }) {
   const error = console.error;
   console.error = (...args) => {
     if (/defaultProps/.test(args[0])) return;

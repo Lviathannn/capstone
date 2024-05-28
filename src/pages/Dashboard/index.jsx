@@ -1,4 +1,3 @@
-import AreaChartComponents from "@/components/AreaChart";
 import { PeopleAltIcon, PersonIcon, AltRouteIcon } from "@/assets/icons";
 import {
   Table,
@@ -10,7 +9,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import PieChartComponents from "@/components/PieChart";
+import PieChartComponent from "@/components/PieChart";
+import AreaChartComponent from "@/components/AreaChart";
+import DonutChartComponent from "@/components/DonutChart";
+import HorizontalBarChart from "@/components/BarChart";
 
 export default function DashboardPage() {
   const rutes = [
@@ -101,40 +103,44 @@ export default function DashboardPage() {
                   </div>
                 </div>
               </div>
-              <AreaChartComponents width="100%" height={250} />
+              <AreaChartComponent width="100%" height={250} />
             </div>
             <div className="flex flex-col gap-3 rounded-xl border border-primary-300 bg-neutral-50 p-4">
               <h1 className="text-lg font-bold text-neutral-800">
                 Data Rute Pengguna
               </h1>
-              <Table className="border border-neutral-200">
-                <TableHeader className="!rounded-[12px] bg-primary-500 text-sm font-semibold text-neutral-50">
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead className="text-center">Username</TableHead>
-                    <TableHead className="text-center">Titik Awal</TableHead>
-                    <TableHead className="text-center">Titik Akhir</TableHead>
-                    <TableHead className="text-center">Durasi (hari)</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {rutes.map((rute) => (
-                    <TableRow
-                      key={rute.id}
-                      className="border-t border-neutral-700 text-sm font-normal text-neutral-800"
-                    >
-                      <TableCell>{rute.id}</TableCell>
-                      <TableCell>{rute.username}</TableCell>
-                      <TableCell>{rute.start}</TableCell>
-                      <TableCell>{rute.finish}</TableCell>
-                      <TableCell>{rute.duration}</TableCell>
+              <div className="rounded-xl border border-neutral-200 overflow-hidden">
+                <Table>
+                  <TableHeader className="bg-primary-500 text-sm font-semibold text-neutral-50">
+                    <TableRow>
+                      <TableHead>ID</TableHead>
+                      <TableHead className="text-center">Username</TableHead>
+                      <TableHead className="text-center">Titik Awal</TableHead>
+                      <TableHead className="text-center">Titik Akhir</TableHead>
+                      <TableHead className="text-center">
+                        Durasi (hari)
+                      </TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {rutes.map((rute) => (
+                      <TableRow
+                        key={rute.id}
+                        className="border-t border-neutral-700 text-sm font-normal text-neutral-800"
+                      >
+                        <TableCell>{rute.id}</TableCell>
+                        <TableCell>{rute.username}</TableCell>
+                        <TableCell>{rute.start}</TableCell>
+                        <TableCell>{rute.finish}</TableCell>
+                        <TableCell>{rute.duration}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           </div>
-          <div className="w-2/6">
+          <div className="flex w-2/6 flex-col gap-8">
             <div className="flex flex-col rounded-xl border border-primary-300 bg-neutral-50 p-4">
               <h1 className="text-lg font-bold text-neutral-800">
                 Total Konten Video
@@ -145,7 +151,7 @@ export default function DashboardPage() {
                     <span className="h-3 w-3 rounded-full bg-primary-500" />
                     <p className=" text-sm font-medium text-neutral-900">
                       <span className="font-bold">35 </span>
-                      Total Pengguna
+                      Total Video
                     </p>
                   </div>
                   <div className="flex items-center gap-1">
@@ -157,8 +163,17 @@ export default function DashboardPage() {
                   </div>
                 </div>
                 <div className="w-2/5">
-                  <PieChartComponents width={160} height={110} />
+                  <PieChartComponent width={150} height={110} />
                 </div>
+              </div>
+            </div>
+            <div className="flex flex-col rounded-xl border border-primary-300 bg-neutral-50 px-4 pt-6 gap-4">
+              <h1 className="text-neutral-800 text-lg font-bold">Kategori Destinasi</h1>
+              <div className="h-52 w-full">
+                <DonutChartComponent width="100%" height="100%" />
+              </div>
+              <div className="h-40 w-full px-2">
+                <HorizontalBarChart width="100%" height="100%" />
               </div>
             </div>
           </div>
