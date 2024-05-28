@@ -33,22 +33,22 @@ export default function Navbar() {
                 </div>
                 <ul className={`hidden md:flex md:space-x-8`}>
                     <li className="nav-item">
-                        <Link to="landing-hero" smooth={true} duration={500} className="nav-link text-neutral-50 hover:font-bold text-[16px] font-sans cursor-pointer transition-all duration-500 ease-in-out">
+                        <Link to="landing-hero" smooth={true} duration={500} className="nav-link text-neutral-50 hover:font-bold text-[16px] font-jakarta-sans cursor-pointer transition-all duration-500 ease-in-out">
                             Beranda
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link to="landing-destination" smooth={true} duration={500} className="nav-link text-neutral-50 hover:font-bold text-[16px] font-sans cursor-pointer transition-all duration-500 ease-in-out">
+                        <Link to="landing-destination" smooth={true} duration={500} className="nav-link text-neutral-50 hover:font-bold text-[16px] font-jakarta-sans cursor-pointer transition-all duration-500 ease-in-out">
                             Destinasi
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link to="landing-fitur" smooth={true} duration={500} className="nav-link text-neutral-50 hover:font-bold text-[16px] font-sans cursor-pointer transition-all duration-500 ease-in-out">
+                        <Link to="landing-fitur" smooth={true} duration={500} className="nav-link text-neutral-50 hover:font-bold text-[16px] font-jakarta-sans cursor-pointer transition-all duration-500 ease-in-out">
                             Fitur
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link to="landing-tentangkami" smooth={true} duration={500} className="nav-link text-neutral-50 hover:font-bold text-[16px] font-sans cursor-pointer transition-all duration-500 ease-in-out">
+                        <Link to="landing-tentangkami" smooth={true} duration={500} className="nav-link text-neutral-50 hover:font-bold text-[16px] font-jakarta-sans cursor-pointer transition-all duration-500 ease-in-out">
                             Tentang Kami
                         </Link>
                     </li>
@@ -62,22 +62,22 @@ export default function Navbar() {
                     {isOpen && (
                         <ul className="absolute top-16 left-0 bg-white w-full shadow-md py-2 px-4">
                             <li>
-                                <Link to="landing-hero" smooth={true} duration={500} onClick={toggleMenu} className="block text-black hover:text-[#0A6847] text-sm font-sans cursor-pointer py-1">
+                                <Link to="landing-hero" smooth={true} duration={500} onClick={toggleMenu} className="block text-black hover:text-[#0A6847] text-sm font-jakarta-sans cursor-pointer py-1">
                                     Beranda
                                 </Link>
                             </li>
                             <li>
-                                <Link to="landing-destination" smooth={true} duration={500} onClick={toggleMenu} className="block text-black hover:text-[#0A6847] text-sm font-sans cursor-pointer py-1">
+                                <Link to="landing-destination" smooth={true} duration={500} onClick={toggleMenu} className="block text-black hover:text-[#0A6847] text-sm font-jakarta-sans cursor-pointer py-1">
                                     Destinasi
                                 </Link>
                             </li>
                             <li>
-                                <Link to="landing-fitur" smooth={true} duration={500} onClick={toggleMenu} className="block text-black hover:text-[#0A6847] text-sm font-sans cursor-pointer py-1">
+                                <Link to="landing-fitur" smooth={true} duration={500} onClick={toggleMenu} className="block text-black hover:text-[#0A6847] text-sm font-jakarta-sans cursor-pointer py-1">
                                     Fitur
                                 </Link>
                             </li>
                             <li>
-                                <Link to="landing-tentangkami" smooth={true} duration={500} onClick={toggleMenu} className="block text-black hover:text-[#0A6847] text-sm font-sans cursor-pointer py-1">
+                                <Link to="landing-tentangkami" smooth={true} duration={500} onClick={toggleMenu} className="block text-black hover:text-[#0A6847] text-sm font-jakarta-sans cursor-pointer py-1">
                                     Tentang Kami
                                 </Link>
                             </li>
