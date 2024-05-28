@@ -1,3 +1,3 @@
 export default function HomePages() {
-  return <div>HomePages</div>;
+  return <div>Manage Admin</div>;
 }
