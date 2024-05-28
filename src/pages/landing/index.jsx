@@ -3,7 +3,7 @@ import LandingDestination from "./LandingDestination";
 import LandingFitur from "./LandingFitur";
 import LandingTentangkami from "./LandingTentangkami";
 import LandingAkses from "./LandingAkses";
-import Footer from "../../components/footer";
+import Footer from "@/components/footer";
 
 export default function LandingPage() {
     return (

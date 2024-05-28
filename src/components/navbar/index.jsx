@@ -1,6 +1,6 @@
 import { Link } from 'react-scroll';
 import { useState, useEffect } from 'react';
-import Logo from '../../assets/img/logo.png';
+import Logo from '@/assets/img/logo.png';
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +12,7 @@ export default function Navbar() {
 
     useEffect(() => {
         const handleScroll = () => {
-            if (window.scrollY > 50) {
+            if (window.scrollY > 100) {
                 setScrolled(true);
             } else {
                 setScrolled(false);
@@ -33,22 +33,22 @@ export default function Navbar() {
                 </div>
                 <ul className={`hidden md:flex md:space-x-8`}>
                     <li className="nav-item">
-                        <Link to="landing-hero" smooth={true} duration={500} className="nav-link text-white hover:font-bold text-[16px] font-sans cursor-pointer transition-all duration-500 ease-in-out">
+                        <Link to="landing-hero" smooth={true} duration={500} className="nav-link text-neutral-50 hover:font-bold text-[16px] font-sans cursor-pointer transition-all duration-500 ease-in-out">
                             Beranda
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link to="landing-destination" smooth={true} duration={500} className="nav-link text-white hover:font-bold text-[16px] font-sans cursor-pointer transition-all duration-500 ease-in-out">
+                        <Link to="landing-destination" smooth={true} duration={500} className="nav-link text-neutral-50 hover:font-bold text-[16px] font-sans cursor-pointer transition-all duration-500 ease-in-out">
                             Destinasi
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link to="landing-fitur" smooth={true} duration={500} className="nav-link text-white hover:font-bold text-[16px] font-sans cursor-pointer transition-all duration-500 ease-in-out">
+                        <Link to="landing-fitur" smooth={true} duration={500} className="nav-link text-neutral-50 hover:font-bold text-[16px] font-sans cursor-pointer transition-all duration-500 ease-in-out">
                             Fitur
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link to="landing-tentangkami" smooth={true} duration={500} className="nav-link text-white hover:font-bold text-[16px] font-sans cursor-pointer transition-all duration-500 ease-in-out">
+                        <Link to="landing-tentangkami" smooth={true} duration={500} className="nav-link text-neutral-50 hover:font-bold text-[16px] font-sans cursor-pointer transition-all duration-500 ease-in-out">
                             Tentang Kami
                         </Link>
                     </li>
