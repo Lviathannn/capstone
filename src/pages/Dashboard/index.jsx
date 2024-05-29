@@ -58,7 +58,7 @@ export default function DashboardPage() {
 
       <div className="flex w-full flex-col gap-4 bg-primary-50 p-6 font-sans">
         <h1 className="text-xl font-bold text-neutral-800">Overview</h1>
-        <div className="flex gap-10">
+        <div className="flex gap-9">
           <div className="flex w-4/6 flex-col gap-6">
             <div className="grid grid-cols-3 gap-6">
               <div className="flex flex-col gap-4 rounded-[10px] bg-primary-500 p-4">
