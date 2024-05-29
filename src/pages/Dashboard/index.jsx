@@ -111,13 +111,13 @@ export default function DashboardPage() {
               </h1>
               <div className="rounded-xl border border-neutral-200 overflow-hidden">
                 <Table>
-                  <TableHeader className="bg-primary-500 text-sm font-semibold text-neutral-50">
+                  <TableHeader className="bg-primary-500 text-sm font-semibold">
                     <TableRow>
-                      <TableHead>ID</TableHead>
-                      <TableHead className="text-center">Username</TableHead>
-                      <TableHead className="text-center">Titik Awal</TableHead>
-                      <TableHead className="text-center">Titik Akhir</TableHead>
-                      <TableHead className="text-center">
+                      <TableHead className="text-neutral-50">ID</TableHead>
+                      <TableHead className="text-center text-neutral-50">Username</TableHead>
+                      <TableHead className="text-center text-neutral-50">Titik Awal</TableHead>
+                      <TableHead className="text-center text-neutral-50">Titik Akhir</TableHead>
+                      <TableHead className="text-center text-neutral-50">
                         Durasi (hari)
                       </TableHead>
                     </TableRow>
