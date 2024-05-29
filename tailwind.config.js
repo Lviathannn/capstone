@@ -2,6 +2,10 @@ import tailwindAnimate from "tailwindcss-animate";
 
 /** @type {import('tailwindcss').Config} */
 export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
   darkMode: ["class"],
   content: [
     "./pages/**/*.{js,jsx}",
@@ -23,6 +27,29 @@ export default {
         "jakarta-sans": ["Plus Jakarta Sans", "sans-serif"],
       },
       colors: {
+        primary: {
+          50: "#ECF3F1",
+          100: "#CEE1DA",
+          200: "#9DC3B5",
+          300: "#6CA491",
+          400: "#3B866C",
+          500: "#0A6847",
+          600: "#085339",
+          700: "#063E2B",
+          800: "#042A1C",
+          900: "#02150E",
+        },
+        secondary: {
+          50: "#FDF4DC",
+          100: "#FAEABA",
+          200: "#F8DF97",
+          300: "#F5D575",
+          400: "#F3CA52",
+          500: "#C2A242",
+          600: "#927931",
+          700: "#615121",
+          800: "#312810",
+        },
         neutral: {
           50: "#FAFAFA",
           100: "#EAEAEA",
