@@ -56,7 +56,7 @@ export default function DashboardPage() {
     <div className="flex">
       <div className="w-[240px]">side nav</div>
 
-      <div className="flex w-full flex-col gap-4 bg-primary-50 p-6 font-sans">
+      <div className="flex w-full flex-col gap-4 bg-primary-50 p-6">
         <h1 className="text-xl font-bold text-neutral-800">Overview</h1>
         <div className="flex gap-9">
           <div className="flex w-4/6 flex-col gap-6">

@@ -1,11 +1,8 @@
-import tailwindAnimate from "tailwindcss-animate";
+import tailwindAnimate from "tailwindcss-animated";
 
 /** @type {import('tailwindcss').Config} */
+
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
   darkMode: ["class"],
   content: [
     "./pages/**/*.{js,jsx}",
@@ -19,6 +16,7 @@ export default {
       center: true,
       padding: "2rem",
       screens: {
+        "2xl": "1400px",
         "xl": "1300px",
       },
     },
@@ -27,6 +25,7 @@ export default {
         "jakarta-sans": ["Plus Jakarta Sans", "sans-serif"],
       },
       colors: {
+       
         primary: {
           DEFAULT: "#0A6847",
           foreground: "hsl(var(--primary-foreground))",
