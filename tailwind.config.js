@@ -1,6 +1,7 @@
 import tailwindAnimate from "tailwindcss-animated";
 
 /** @type {import('tailwindcss').Config} */
+
 export default {
   darkMode: ["class"],
   content: [
@@ -16,6 +17,7 @@ export default {
       padding: "2rem",
       screens: {
         "2xl": "1400px",
+        "xl": "1300px",
       },
     },
     extend: {
@@ -23,16 +25,44 @@ export default {
         "jakarta-sans": ["Plus Jakarta Sans", "sans-serif"],
       },
       colors: {
+       
+        primary: {
+          DEFAULT: "#0A6847",
+          foreground: "hsl(var(--primary-foreground))",
+          50: "#ECF3F1",
+          100: "#CEE1DA",
+          200: "#9DC3B5",
+          300: "#6CA491",
+          400: "#3B866C",
+          500: "#0A6847",
+          600: "#085339",
+          700: "#063E2B",
+          800: "#042A1C",
+          900: "#02150E",
+        },
+        secondary: {
+          DEFAULT: "F3CA52",
+          50: "#FDF4DC",
+          100: "#FAEABA",
+          200: "#F8DF97",
+          300: "#F5D575",
+          400: "#F3CA52",
+          500: "#C2A242",
+          600: "#927931",
+          700: "#615121",
+          800: "#312810",
+        },
         neutral: {
           50: "#FAFAFA",
-          100: "#D5D5D5",
-          200: "#BFBFBF",
-          300: "#AAAAAA",
-          400: "#959595",
-          500: "#777777",
-          600: "#595959",
-          700: "#3C3C3C",
-          800: "#1E1E1E",
+          100: "#EAEAEA",
+          200: "#D5D5D5",
+          300: "#BFBFBF",
+          400: "#AAAAAA",
+          500: "#959595",
+          600: "#777777",
+          700: "#595959",
+          800: "#3C3C3C",
+          900: "#1E1E1E",
         },
         info: {
           50: "#E0F2FD",
@@ -61,32 +91,6 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "#0A6847",
-          foreground: "hsl(var(--primary-foreground))",
-          50: "#ECF3F1",
-          100: "#CEE1DA",
-          200: "#9DC3B5",
-          300: "#6CA491",
-          400: "#3B866C",
-          500: "#0A6847",
-          600: "#085339",
-          700: "#063E2B",
-          800: "#042A1C",
-          900: "#02150E",
-        },
-        secondary: {
-          DEFAULT: "F3CA52",
-          50: "#FDF4DC",
-          100: "#FAEABA",
-          200: "#F8DF97",
-          300: "#F5D575",
-          400: "#F3CA52",
-          500: "#C2A242",
-          600: "#927931",
-          700: "#615121",
-          800: "#312810",
-        },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
