@@ -21,7 +21,7 @@ export default function VideoGraph() {
             </p>
           </div>
         </div>
-        <div className="w-full h-[200px] lg:w-2/5 flex justify-center">
+        <div className="w-full h-[200px] lg:h-[110px] lg:w-2/5 flex justify-center">
           <PieChartComponent width="100%" height="100%" />
         </div>
       </div>
