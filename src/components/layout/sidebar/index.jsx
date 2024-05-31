@@ -9,6 +9,8 @@ import {
 } from "@/assets/icons";
 import Logo from "@/assets/logo.svg";
 import { Link } from "react-router-dom";
+import { Link } from "react-scroll";
+import Logo from "@/assets/logo.svg";
 
 export default function SideBar() {
   return (
