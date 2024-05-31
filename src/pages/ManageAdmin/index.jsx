@@ -38,8 +38,9 @@ import IcSearch from "@/components/icons/ic-search.svg";
 import IcAdd from "@/components/icons/ic-add.svg";
 import IcEdit from "@/components/icons/ic-edit.svg";
 import IcDelete from "@/components/icons/ic-delete.svg";
-import { DataAdmin } from "@/constant";
 import Navbar from "@/components/layout/navbar-admin";
+import { DataAdmin } from "@/constant/DataAdmin";
+
 
 export default function DisplayAdmin() {
   return (

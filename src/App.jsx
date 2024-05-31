@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DisplayAdmin from "./pages/ManageAdmin";
 import LandingPage from "@/pages/landing";
 import { LoginPage } from "@/pages/login";
-import DashboardPage from "@/pages/Dashboard";
+import DashboardPage from "@/pages/dashboard";
 
 function App() {
   return (
