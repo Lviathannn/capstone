@@ -7,7 +7,6 @@ import {
   PanelLeft,
   Settings,
   ShoppingCart,
-  Truck,
   Users2,
 } from "lucide-react"
 
