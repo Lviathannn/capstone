@@ -44,12 +44,14 @@ export default function LoginForm() {
     setLoading(true);
     try {
       const res = await login(values);
+      console.log(res);
       dispatch(setUser(res.data));
       navigate("/dashboard");
       toast.success("Login berhasil", {
         description: "Anda akan diarahkan ke halaman dashboard",
       });
     } catch (error) {
+      console.log(error);
       toast.error("Login gagal", {
         description: error.message,
       });

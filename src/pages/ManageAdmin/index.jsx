@@ -8,18 +8,6 @@ import {
 } from "@/components/ui/table";
 
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-
-import {
   Card,
   CardContent,
   CardDescription,
@@ -30,14 +18,28 @@ import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
 
-import Success from "@/assets/ImgModal/success.svg";
 import IcAdmin from "@/components/icons/ic-admin.svg";
-import IcSearch from "@/components/icons/ic-search.svg";
 import IcAdd from "@/components/icons/ic-add.svg";
 import IcEdit from "@/components/icons/ic-edit.svg";
 import IcDelete from "@/components/icons/ic-delete.svg";
 import Navbar from "@/components/layouts/navbar-admin";
+import { ModalEdit } from "./EditAdmin.jsx/modalEdit";
+import Search from "@/components/icons/Search";
+import { ModalDelete } from "./DisplayAdmin.jsx/modalDelete";
+import { ModalAdd } from "./AddAdmin.jsx/modalAdd";
+
 import { DataAdmin } from "@/constant/DataAdmin";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function DisplayAdmin() {
   return (
@@ -60,12 +62,13 @@ export default function DisplayAdmin() {
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between">
-                  <div className="flex w-[400px] items-center gap-2 overflow-hidden rounded-[12px] border border-neutral-200 px-4 py-1">
-                    <img src={IcSearch} sizes="24" alt="" />
+                  <div className="relative h-[48px] w-[400px] bg-neutral-50">
+                    <Search className="absolute left-3 top-3" />
                     <Input
+                      className="border-solid-1 absolute h-full rounded-[10px] bg-transparent py-6 pl-12 font-jakarta-sans text-sm font-normal text-neutral-700"
                       type="text"
-                      placeholder="Cari..."
-                      className="h-fit border-none bg-transparent text-[14px] font-normal text-neutral-800 outline-none"
+                      placeholder="Masukan password admin"
+                      required
                     />
                   </div>
                   <div>
@@ -99,7 +102,6 @@ export default function DisplayAdmin() {
             </Card>
           </div>
         </div>
-
         <div className="overflow-hidden rounded-xl bg-neutral-50 shadow-md">
           <Table className="w-full">
             <TableHeader className="bg-primary-500 font-jakarta-sans text-sm font-semibold text-neutral-50 sm:w-full">
@@ -137,7 +139,7 @@ export default function DisplayAdmin() {
           <AlertDialogContent className="flex h-[365px] w-[464px] flex-col gap-6 bg-white sm:rounded-[16px] sm:p-6">
             <AlertDialogHeader className="flex flex-col gap-4">
               <AlertDialogHeader className="flex items-center justify-center">
-                <img className="h-[100px] w-[240px]" src={Success} alt="" />
+                {/* <img className="h-[100px] w-[240px]" src={Success} alt="" /> */}
               </AlertDialogHeader>
               <AlertDialogTitle className="text-center font-jakarta-sans text-lg font-bold">
                 Tambah Admin?
@@ -157,6 +159,10 @@ export default function DisplayAdmin() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+        =======
+        <ModalAdd></ModalAdd>
+        <ModalEdit></ModalEdit>
+        <ModalDelete></ModalDelete>
       </section>
     </main>
   );

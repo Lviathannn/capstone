@@ -11,6 +11,11 @@ import PieChartComponent from "@/components/PieChart";
 import AreaChartComponent from "@/components/features/AreaChart";
 import DonutChartComponent from "@/components/features/DonutChart";
 import HorizontalBarChart from "@/components/features/BarChart";
+import { Button } from "@/components/ui/button";
+import { logout } from "@/services/auth/logout";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { resetUser } from "@/lib/slice/authSlice";
 
 export default function DashboardPage() {
   const rutes = [
@@ -50,9 +55,26 @@ export default function DashboardPage() {
       duration: "3 (tiga)",
     },
   ];
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/login");
+      dispatch(resetUser());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="flex">
-      <div className="w-[240px]">side nav</div>
+      <div className="w-[240px]">
+        <Button variant="destructive" onClick={handleLogout}>
+          Logout
+        </Button>
+      </div>
 
       <div className="flex w-full flex-col gap-4 bg-primary-50 p-6">
         <h1 className="text-xl font-bold text-neutral-800">Overview</h1>
