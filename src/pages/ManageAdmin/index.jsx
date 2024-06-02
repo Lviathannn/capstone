@@ -9,18 +9,6 @@ import {
 } from "@/components/ui/table";
 
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-
-import {
   Card,
   CardContent,
   CardDescription,
@@ -32,13 +20,16 @@ import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
 
-import Success from "@/assets/ImgModal/success.svg";
 import IcAdmin from "@/components/icons/ic-admin.svg";
-import IcSearch from "@/components/icons/ic-search.svg";
 import IcAdd from "@/components/icons/ic-add.svg";
 import IcEdit from "@/components/icons/ic-edit.svg";
 import IcDelete from "@/components/icons/ic-delete.svg";
 import Navbar from "@/components/layout/navbar-admin";
+import { ModalEdit } from "./EditAdmin.jsx/modalEdit";
+import Search from "@/components/icons/Search";
+import { ModalDelete } from "./DisplayAdmin.jsx/modalDelete";
+import { ModalAdd } from "./AddAdmin.jsx/modalAdd";
+
 import { DataAdmin } from "@/constant/DataAdmin";
 
 
@@ -63,12 +54,13 @@ export default function DisplayAdmin() {
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between">
-                  <div className="flex w-[400px] items-center gap-2 overflow-hidden rounded-[12px] border border-neutral-200 px-4 py-1">
-                    <img src={IcSearch} sizes="24" alt="" />
+                  <div className="relative h-[48px] w-[400px] bg-neutral-50">
+                    <Search className="absolute left-3 top-3"/>
                     <Input
+                      className="h-full border-solid-1 font-jakarta-sans absolute rounded-[10px] bg-transparent pl-12 py-6 text-sm font-normal text-neutral-700"
                       type="text"
-                      placeholder="Cari..."
-                      className="h-fit border-none bg-transparent text-[14px] font-normal text-neutral-800 outline-none"
+                      placeholder="Masukan password admin"
+                      required
                     />
                   </div>
                   <div>
@@ -133,33 +125,9 @@ export default function DisplayAdmin() {
             </TableBody>
           </Table>
         </div>
-        <AlertDialog className="rounded bg-white">
-          <AlertDialogTrigger asChild className="sm:rounded">
-            <Button variant="outline">Show Dialog</Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent className="flex h-[365px] w-[464px] flex-col gap-6 bg-white sm:rounded-[16px] sm:p-6">
-            <AlertDialogHeader className="flex flex-col gap-4">
-              <AlertDialogHeader className="flex items-center justify-center">
-                <img className="h-[100px] w-[240px]" src={Success} alt="" />
-              </AlertDialogHeader>
-              <AlertDialogTitle className="font-jakarta-sans text-center text-lg font-bold">
-                Tambah Admin?
-              </AlertDialogTitle>
-              <AlertDialogDescription className="font-jakarta-sans w-full text-center text-sm font-medium text-neutral-600">
-                Sebelum menambahkan admin, pastikan informasi yang dimasukkan
-                benar dan sesuai. Apakah Anda yakin ingin menambahkan data ini?
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter className="flex items-center gap-6 sm:justify-center sm:space-x-0">
-              <AlertDialogCancel className="border-primary-500 text-primary-500 hover:text-primary-500 h-[42px] w-full text-[16px] font-medium sm:rounded-[12px]">
-                Batal
-              </AlertDialogCancel>
-              <AlertDialogAction className="bg-primary-500 hover:bg-primary-600 h-[42px] w-full text-[16px] font-medium text-neutral-100 sm:rounded-[12px]">
-                Tambah
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <ModalAdd></ModalAdd>
+        <ModalEdit></ModalEdit>
+        <ModalDelete></ModalDelete>
       </section>
     </main>
   );
