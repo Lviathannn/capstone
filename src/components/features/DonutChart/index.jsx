@@ -1,6 +1,12 @@
-import React from "react";
-import { PieChart, Pie, Tooltip, ResponsiveContainer, Label, Cell } from "recharts";
-import tailwindConfig from "../../../tailwind.config.js";
+import {
+  PieChart,
+  Pie,
+  Tooltip,
+  ResponsiveContainer,
+  Label,
+  Cell,
+} from "recharts";
+import tailwindConfig from "../../../../tailwind.config.js";
 
 const data = [
   { name: "Alam", value: 50 },

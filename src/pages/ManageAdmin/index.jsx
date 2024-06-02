@@ -1,7 +1,6 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -24,7 +23,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -38,14 +36,13 @@ import IcSearch from "@/components/icons/ic-search.svg";
 import IcAdd from "@/components/icons/ic-add.svg";
 import IcEdit from "@/components/icons/ic-edit.svg";
 import IcDelete from "@/components/icons/ic-delete.svg";
-import Navbar from "@/components/layout/navbar-admin";
+import Navbar from "@/components/layouts/navbar-admin";
 import { DataAdmin } from "@/constant/DataAdmin";
-
 
 export default function DisplayAdmin() {
   return (
     <main>
-      <Navbar></Navbar>
+      <Navbar />
       <section className="container mx-auto flex h-[3000px] flex-col gap-5 bg-slate-200 py-40">
         <div className="flex h-fit items-center justify-between gap-4">
           <div className="h-fit w-full overflow-hidden rounded-[10px] border-none shadow-md">
@@ -72,7 +69,7 @@ export default function DisplayAdmin() {
                     />
                   </div>
                   <div>
-                    <Button className="text-primary-500 flex items-center gap-4 overflow-hidden rounded-[12px] border border-neutral-300 bg-transparent px-4  py-6 shadow-sm hover:bg-neutral-100">
+                    <Button className="flex items-center gap-4 overflow-hidden rounded-[12px] border border-neutral-300 bg-transparent px-4 py-6  text-primary-500 shadow-sm hover:bg-neutral-100">
                       <img src={IcAdd} sizes="24" alt="" />
                       <span>Tambah Admin</span>
                     </Button>
@@ -95,7 +92,7 @@ export default function DisplayAdmin() {
                 <CardTitle className="text-2xl font-semibold text-neutral-900">
                   10
                 </CardTitle>
-                <div className="text-muted-foreground text-[16px] font-normal text-neutral-900">
+                <div className="text-[16px] font-normal text-muted-foreground text-neutral-900">
                   Total Admin
                 </div>
               </CardContent>
@@ -115,7 +112,7 @@ export default function DisplayAdmin() {
             <TableBody>
               {DataAdmin.map((item) => (
                 <TableRow
-                  className="font-jakarta-sans w-full text-sm font-normal text-neutral-800"
+                  className="w-full font-jakarta-sans text-sm font-normal text-neutral-800"
                   key={item.id}
                 >
                   <TableCell className="w-[459px]">{item.username}</TableCell>
@@ -142,19 +139,19 @@ export default function DisplayAdmin() {
               <AlertDialogHeader className="flex items-center justify-center">
                 <img className="h-[100px] w-[240px]" src={Success} alt="" />
               </AlertDialogHeader>
-              <AlertDialogTitle className="font-jakarta-sans text-center text-lg font-bold">
+              <AlertDialogTitle className="text-center font-jakarta-sans text-lg font-bold">
                 Tambah Admin?
               </AlertDialogTitle>
-              <AlertDialogDescription className="font-jakarta-sans w-full text-center text-sm font-medium text-neutral-600">
+              <AlertDialogDescription className="w-full text-center font-jakarta-sans text-sm font-medium text-neutral-600">
                 Sebelum menambahkan admin, pastikan informasi yang dimasukkan
                 benar dan sesuai. Apakah Anda yakin ingin menambahkan data ini?
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="flex items-center gap-6 sm:justify-center sm:space-x-0">
-              <AlertDialogCancel className="border-primary-500 text-primary-500 hover:text-primary-500 h-[42px] w-full text-[16px] font-medium sm:rounded-[12px]">
+              <AlertDialogCancel className="h-[42px] w-full border-primary-500 text-[16px] font-medium text-primary-500 hover:text-primary-500 sm:rounded-[12px]">
                 Batal
               </AlertDialogCancel>
-              <AlertDialogAction className="bg-primary-500 hover:bg-primary-600 h-[42px] w-full text-[16px] font-medium text-neutral-100 sm:rounded-[12px]">
+              <AlertDialogAction className="h-[42px] w-full bg-primary-500 text-[16px] font-medium text-neutral-100 hover:bg-primary-600 sm:rounded-[12px]">
                 Tambah
               </AlertDialogAction>
             </AlertDialogFooter>

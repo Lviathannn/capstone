@@ -2,7 +2,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import DisplayAdmin from "./pages/ManageAdmin";
 import LandingPage from "@/pages/landing";
 import { LoginPage } from "@/pages/login";
-import DashboardPage from "@/pages/dashboard";
+import DashboardPage from "@/pages/Dashboard";
+import { Toaster } from "@/components/ui/sonner";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
+      <Toaster />
     </BrowserRouter>
   );
 }
