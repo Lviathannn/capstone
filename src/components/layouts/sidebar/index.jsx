@@ -1,11 +1,4 @@
-import {
-  PeopleAltIcon,
-  PersonIcon,
-  AltRouteIcon,
-  DashboardIcon,
-  DestinationIcon,
-  LogoutIcon,
-} from "@/assets/icons";
+import { PeopleAltIcon, PersonIcon, AltRouteIcon, DashboardIcon, DestinationIcon, LogoutIcon } from "@/assets/icons";
 import Logo from "@/assets/logo.svg";
 import { VideoIcon } from "lucide-react";
 import { Link } from "react-router-dom";
