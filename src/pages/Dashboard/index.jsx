@@ -2,17 +2,20 @@ import { PeopleAltIcon, PersonIcon, AltRouteIcon } from "@/assets/icons";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import PieChartComponent from "@/components/PieChart";
-import AreaChartComponent from "@/components/AreaChart";
-import DonutChartComponent from "@/components/DonutChart";
-import HorizontalBarChart from "@/components/BarChart";
+import AreaChartComponent from "@/components/features/AreaChart";
+import DonutChartComponent from "@/components/features/DonutChart";
+import HorizontalBarChart from "@/components/features/BarChart";
+import { Button } from "@/components/ui/button";
+import { logout } from "@/services/auth/logout";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { resetUser } from "@/lib/slice/authSlice";
 
 export default function DashboardPage() {
   const rutes = [
@@ -52,9 +55,26 @@ export default function DashboardPage() {
       duration: "3 (tiga)",
     },
   ];
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/login");
+      dispatch(resetUser());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="flex">
-      <div className="w-[240px]">side nav</div>
+      <div className="w-[240px]">
+        <Button variant="destructive" onClick={handleLogout}>
+          Logout
+        </Button>
+      </div>
 
       <div className="flex w-full flex-col gap-4 bg-primary-50 p-6">
         <h1 className="text-xl font-bold text-neutral-800">Overview</h1>
@@ -109,14 +129,20 @@ export default function DashboardPage() {
               <h1 className="text-lg font-bold text-neutral-800">
                 Data Rute Pengguna
               </h1>
-              <div className="rounded-xl border border-neutral-200 overflow-hidden">
+              <div className="overflow-hidden rounded-xl border border-neutral-200">
                 <Table>
                   <TableHeader className="bg-primary-500 text-sm font-semibold">
                     <TableRow>
                       <TableHead className="text-neutral-50">ID</TableHead>
-                      <TableHead className="text-center text-neutral-50">Username</TableHead>
-                      <TableHead className="text-center text-neutral-50">Titik Awal</TableHead>
-                      <TableHead className="text-center text-neutral-50">Titik Akhir</TableHead>
+                      <TableHead className="text-center text-neutral-50">
+                        Username
+                      </TableHead>
+                      <TableHead className="text-center text-neutral-50">
+                        Titik Awal
+                      </TableHead>
+                      <TableHead className="text-center text-neutral-50">
+                        Titik Akhir
+                      </TableHead>
                       <TableHead className="text-center text-neutral-50">
                         Durasi (hari)
                       </TableHead>
@@ -167,8 +193,10 @@ export default function DashboardPage() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col rounded-xl border border-primary-300 bg-neutral-50 px-4 pt-6 gap-4">
-              <h1 className="text-neutral-800 text-lg font-bold">Kategori Destinasi</h1>
+            <div className="flex flex-col gap-4 rounded-xl border border-primary-300 bg-neutral-50 px-4 pt-6">
+              <h1 className="text-lg font-bold text-neutral-800">
+                Kategori Destinasi
+              </h1>
               <div className="h-52 w-full">
                 <DonutChartComponent width="100%" height="100%" />
               </div>

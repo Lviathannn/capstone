@@ -1,4 +1,3 @@
-import React from "react";
 import {
   AreaChart,
   Area,
@@ -9,7 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import tailwindConfig from "../../../tailwind.config.js";
+import tailwindConfig from "../../../../tailwind.config.js";
 const colors = tailwindConfig.theme.extend.colors;
 
 const data = [
