@@ -128,40 +128,35 @@ export default function DashboardPage() {
               </div>
             </form>
           </div>
-          <div className="flex w-2/6 flex-col gap-8">
-            <div className="flex flex-col rounded-xl border border-primary-300 bg-neutral-50 p-4">
-              <h1 className="text-lg font-bold text-neutral-800">
-                Total Konten Video
-              </h1>
-              <div className="flex w-full items-center">
-                <div className="flex w-3/5 flex-col gap-[15px]">
-                  <div className="flex items-center gap-1">
-                    <span className="h-3 w-3 rounded-full bg-primary-500" />
-                    <p className=" text-sm font-medium text-neutral-900">
-                      <span className="font-bold">35 </span>
-                      Total Video
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span className="h-3 w-3 rounded-full bg-primary-100" />
-                    <p className=" text-sm font-medium text-neutral-900">
-                      <span className="font-bold">65 </span>
-                      Total Destinasi
-                    </p>
-                  </div>
-                </div>
-                <div className="w-2/5">
-                  <PieChartComponent width={150} height={110} />
-                </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary" size="icon" className="rounded-full">
+                <CircleUser className="h-5 w-5" />
+                <span className="sr-only">Toggle user menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Logout</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </header>
+        <main className="flex">
+          <div className="flex w-full flex-col gap-4 bg-primary-50 p-6">
+            <h1 className="text-xl font-bold text-neutral-800">Overview</h1>
+            <div className="flex flex-col lg:flex-row gap-9">
+              <div className="flex w-full lg:w-4/6 flex-col gap-6">
+                <DataTotal />
+                <UserGraph />
+                <DataRute />
               </div>
-            </div>
-            <div className="flex flex-col rounded-xl border border-primary-300 bg-neutral-50 px-4 pt-6 gap-4">
-              <h1 className="text-neutral-800 text-lg font-bold">Kategori Destinasi</h1>
-              <div className="h-52 w-full">
-                <DonutChartComponent width="100%" height="100%" />
-              </div>
-              <div className="h-40 w-full px-2">
-                <HorizontalBarChart width="100%" height="100%" />
+              <div className="flex w-full lg:w-2/6 flex-col gap-8">
+                <VideoGraph />
+                <DestinationGraph />
               </div>
             </div>
           </div>
