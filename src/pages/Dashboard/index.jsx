@@ -21,7 +21,7 @@ export default function DashboardPage() {
                 <UserGraph />
                 <DataRute />
               </div>
-              <div className="flex w-full flex-col gap-8 lg:w-2/6">
+              <div className="flex w-full lg:w-2/6 flex-col gap-8">
                 <VideoGraph />
                 <DestinationGraph />
               </div>
