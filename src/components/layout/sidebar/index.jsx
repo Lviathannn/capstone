@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 import {
   Home,
   LineChart,
@@ -8,170 +8,161 @@ import {
   Settings,
   ShoppingCart,
   Users2,
-} from "lucide-react"
+} from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
   TooltipProvider,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
+import {
+  AltRouteIcon,
+  DashboardIcon,
+  DestinationIcon,
+  LogoutIcon,
+  PeopleAltIcon,
+  PersonIcon,
+  VideoIcon,
+} from "@/assets/icons";
 
-export function Dashboard() {
+export default function SideBar() {
   return (
-    <div className="flex min-h-screen  w-full flex-col bg-muted/40">
-      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
-        <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-          <Link
-            href="#"
-            className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
-          >
-            <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
-            <span className="sr-only">Acme Inc</span>
-          </Link>
-          <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-              >
-                <Home className="h-5 w-5" />
-                <span className="sr-only">Dashboard</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Dashboard</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-              >
-                <ShoppingCart className="h-5 w-5" />
-                <span className="sr-only">Orders</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Orders</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-              >
-                <Package className="h-5 w-5" />
-                <span className="sr-only">Products</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Products</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-              >
-                <Users2 className="h-5 w-5" />
-                <span className="sr-only">Customers</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Customers</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-              >
-                <LineChart className="h-5 w-5" />
-                <span className="sr-only">Analytics</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Analytics</TooltipContent>
-          </Tooltip>
-          </TooltipProvider>
-        </nav>
-        <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link
-                href="#"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-              >
-                <Settings className="h-5 w-5" />
-                <span className="sr-only">Settings</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">Settings</TooltipContent>
-          </Tooltip>
-          </TooltipProvider>
-        </nav>
-      </aside>
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button size="icon" variant="outline" className="sm:hidden">
-                <PanelLeft className="h-5 w-5" />
-                <span className="sr-only">Toggle Menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="sm:max-w-xs">
-              <nav className="grid gap-6 text-lg font-medium">
-                <Link
-                  href="#"
-                  className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-                >
-                  <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-                  <span className="sr-only">Acme Inc</span>
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <Home className="h-5 w-5" />
-                  Dashboard
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-foreground"
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  Orders
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <Package className="h-5 w-5" />
-                  Products
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <Users2 className="h-5 w-5" />
-                  Customers
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <LineChart className="h-5 w-5" />
-                  Settings
-                </Link>
-              </nav>
-            </SheetContent>
-          </Sheet>
-        </header>
+    <div className="relative bg-neutral-50">
+      <div className="absolute sm:fixed">
+        <aside
+          style={{ minHeight: "calc(100vh - 80px)" }}
+          className="inset-y-0 left-0 z-10 hidden w-[240px] flex-col bg-neutral-50 sm:flex"
+        >
+          <nav className="flex w-full flex-col items-center gap-4 px-[10px] sm:py-5">
+            <h1 className="text-primary-600 w-full px-[10px] text-lg font-bold">
+              Navigasi
+            </h1>
+            <Link
+              href="#"
+              className="hover:bg-primary-500 text-primary-400 flex w-full items-center gap-[10px] rounded-lg px-6 py-3 transition-colors hover:text-white"
+            >
+              <DashboardIcon></DashboardIcon>
+              <span className="text-[16px] font-normal">OverView</span>
+            </Link>
+            <Link
+              href="#"
+              className="hover:bg-primary-500 text-primary-400 flex w-full items-center gap-[10px] rounded-lg px-6 py-3 transition-colors hover:text-white"
+            >
+              <PersonIcon></PersonIcon>
+              <span className="text-[16px] font-normal">User</span>
+            </Link>
+            <Link
+              href="#"
+              className="hover:bg-primary-500 text-primary-400 flex w-full items-center gap-[10px] rounded-lg px-6 py-3 transition-colors hover:text-white"
+            >
+              <AltRouteIcon></AltRouteIcon>
+              <span className="text-[16px] font-normal">Rute</span>
+            </Link>
+            <Link
+              href="#"
+              className="hover:bg-primary-500 text-primary-400 flex w-full items-center gap-[10px] rounded-lg px-6 py-3 transition-colors hover:text-white"
+            >
+              <VideoIcon></VideoIcon>
+              <span className="text-[16px] font-normal">Konten</span>
+            </Link>
+            <Link
+              href="#"
+              className="hover:bg-primary-500 text-primary-400 flex w-full items-center gap-[10px] rounded-lg px-6 py-3 transition-colors hover:text-white"
+            >
+              <DestinationIcon></DestinationIcon>
+              <span className="text-[16px] font-normal">Destinasi</span>
+            </Link>
+            <Link
+              href="#"
+              className="hover:bg-primary-500 text-primary-400 flex w-full items-center gap-[10px] rounded-lg px-6 py-3 transition-colors hover:text-white"
+            >
+              <PeopleAltIcon></PeopleAltIcon>
+              <span className="text-[16px] font-normal">Admin</span>
+            </Link>
+          </nav>
+          <nav className="mt-auto flex w-full flex-col items-center gap-4 px-[10px] sm:py-5">
+            <h1 className="text-primary-600 w-full px-[10px] text-[16px] font-bold">
+              Lainnya
+            </h1>
+            <Button className="text-danger-500 flex w-full items-center justify-start gap-[10px] rounded-lg bg-transparent px-6 py-3 hover:bg-transparent ">
+              <LogoutIcon></LogoutIcon>
+              <span>Keluar</span>
+            </Button>
+          </nav>
+        </aside>
+        <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+          <header className="bg-background sticky top-0 z-30 flex h-14 items-center gap-4 border-b px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button size="icon" variant="outline" className="sm:hidden">
+                  <PanelLeft className="h-5 w-5" />
+                  <span className="sr-only">Toggle Menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="sm:max-w-xs">
+                <nav className="grid gap-6 text-lg font-medium">
+                  <Link
+                    href="#"
+                    className="hover:bg-primary-500 text-primary-400 flex w-full items-center gap-[10px] rounded-lg px-6 py-3 transition-colors hover:text-white"
+                  >
+                    <DashboardIcon></DashboardIcon>
+                    <span className="text-[16px] font-normal">OverView</span>
+                  </Link>
+                  <Link
+                    href="#"
+                    className="hover:bg-primary-500 text-primary-400 flex w-full items-center gap-[10px] rounded-lg px-6 py-3 transition-colors hover:text-white"
+                  >
+                    <PersonIcon></PersonIcon>
+                    <span className="text-[16px] font-normal">User</span>
+                  </Link>
+                  <Link
+                    href="#"
+                    className="hover:bg-primary-500 text-primary-400 flex w-full items-center gap-[10px] rounded-lg px-6 py-3 transition-colors hover:text-white"
+                  >
+                    <AltRouteIcon></AltRouteIcon>
+                    <span className="text-[16px] font-normal">Rute</span>
+                  </Link>
+                  <Link
+                    href="#"
+                    className="hover:bg-primary-500 text-primary-400 flex w-full items-center gap-[10px] rounded-lg px-6 py-3 transition-colors hover:text-white"
+                  >
+                    <VideoIcon></VideoIcon>
+                    <span className="text-[16px] font-normal">Konten</span>
+                  </Link>
+                  <Link
+                    href="#"
+                    className="hover:bg-primary-500 text-primary-400 flex w-full items-center gap-[10px] rounded-lg px-6 py-3 transition-colors hover:text-white"
+                  >
+                    <DestinationIcon></DestinationIcon>
+                    <span className="text-[16px] font-normal">Destinasi</span>
+                  </Link>
+                  <Link
+                    href="#"
+                    className="hover:bg-primary-500 text-primary-400 flex w-full items-center gap-[10px] rounded-lg px-6 py-3 transition-colors hover:text-white"
+                  >
+                    <PeopleAltIcon></PeopleAltIcon>
+                    <span className="text-[16px] font-normal">Admin</span>
+                  </Link>
+                  <div className="mt-auto flex w-full flex-col items-center gap-4 px-[10px] sm:py-5">
+                  <h1 className="text-primary-600 w-full px-[10px] text-[16px] font-bold">
+                    Lainnya
+                  </h1>
+                  <Button className="text-danger-500 flex w-full items-center justify-start gap-[10px] rounded-lg bg-transparent px-6 py-3 hover:bg-transparent ">
+                    <LogoutIcon></LogoutIcon>
+                    <span>Keluar</span>
+                  </Button>
+                </div>
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </header>
+        </div>
       </div>
     </div>
-  )
+  );
 }

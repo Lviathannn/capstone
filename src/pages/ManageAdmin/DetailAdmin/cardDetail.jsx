@@ -10,12 +10,12 @@ import {
 export const CardDetail = () => {
   return (
     <div>
-      <div className="h-fit w-full overflow-hidden rounded-[10px] border-none shadow-md">
+      <div className="w-full overflow-hidden rounded-[10px] border-none shadow-md">
         <Card
           x-chunk="dashboard-05-chunk-1"
-          className="flex justify-between items-end bg-neutral-50 p-4"
+          className="flex justify-between items-end bg-neutral-50 px-2"
         >
-          <CardHeader className="flex flex-col gap-4">
+          <CardHeader className="flex flex-col gap-2">
             <CardTitle className="text-[26px] font-bold text-neutral-800">
               Detail Admin
             </CardTitle>
