@@ -22,14 +22,14 @@ export default function SideBar() {
             <div className="mt-[15px] flex flex-col gap-1">
               <Link
                 to="#"
-                className="flex items-center gap-[10px] rounded-lg bg-primary-600 px-6 py-3 font-medium text-muted-foreground text-neutral-50 transition-all hover:text-neutral-200"
+                className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
               >
                 <DashboardIcon />
                 Overview
               </Link>
               <Link
                 to="#"
-                className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
+                className="flex items-center gap-[10px] rounded-lg bg-primary-600 px-6 py-3 font-medium text-muted-foreground text-neutral-50 transition-all hover:text-neutral-200"
               >
                 <PersonIcon />
                 User
