@@ -57,7 +57,7 @@ axiosInstance.interceptors.response.use(
       return;
     }
 
-    toast.error("Gagal untuk memuat data !", {
+    toast.error("Terjadi kesalahan !", {
       description: getShownMessage(error),
     });
 

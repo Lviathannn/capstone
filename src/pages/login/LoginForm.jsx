@@ -50,9 +50,7 @@ export default function LoginForm() {
         description: "Anda akan diarahkan ke halaman dashboard",
       });
     } catch (error) {
-      toast.error("Login gagal", {
-        description: error.message,
-      });
+      console.error(error);
     } finally {
       form.reset();
       setLoading(false);

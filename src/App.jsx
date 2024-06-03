@@ -4,10 +4,10 @@ import { DetailAdmin } from "./pages/ManageAdmin/DetailAdmin";
 import { AddAdmin } from "./pages/ManageAdmin/AddAdmin.jsx";
 import LandingPage from "@/pages/landing";
 import { LoginPage } from "@/pages/login";
-import DashboardPage from "@/pages/Dashboard";
 import { Toaster } from "@/components/ui/sonner";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import DashboardPage from "@/pages/Dashboard";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
