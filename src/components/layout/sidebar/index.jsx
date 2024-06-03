@@ -1,8 +1,35 @@
-import Logo from "@/assets/logo.svg"
-import { PeopleAltIcon, PersonIcon, AltRouteIcon, DashboardIcon, DestinationIcon, LogoutIcon, VideoIcon } from "@/assets/icons";
+import Logo from "@/assets/logo.svg";
+import {
+  PeopleAltIcon,
+  PersonIcon,
+  AltRouteIcon,
+  DashboardIcon,
+  DestinationIcon,
+  LogoutIcon,
+  VideoIcon,
+} from "@/assets/icons";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { logout } from "@/services/auth/logout";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { resetUser } from "@/lib/slice/authSlice";
 
 export default function SideBar() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/login");
+      dispatch(resetUser());
+    } catch {
+      toast.error("Gagal keluar dari aplikasi");
+    }
+  };
+
   return (
     <div className="hidden border-r bg-muted/40 md:block">
       <div className="fixed flex h-full max-h-screen flex-col md:w-[220px] lg:w-[240px]">
@@ -64,15 +91,16 @@ export default function SideBar() {
               </Link>
             </div>
           </nav>
-          <div className="flex flex-col px-2 lg:px-[10px]">
+          <div className="flex flex-col gap-3 px-2 py-5 lg:px-[10px]">
             <h1 className="font-bold text-primary-600 lg:px-[10px]">Lainnya</h1>
-            <Link
-              to="/"
-              className="flex gap-[10px] px-3 py-6 font-medium text-danger-500"
+            <Button
+              className="flex justify-start gap-[10px] px-3 py-6 font-medium text-danger-500 hover:bg-danger-500 hover:text-white"
+              variant="ghost"
+              onClick={handleLogout}
             >
               <LogoutIcon />
               Keluar
-            </Link>
+            </Button>
           </div>
         </div>
       </div>

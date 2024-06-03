@@ -15,13 +15,13 @@ export default function DashboardPage() {
         <main className="flex">
           <div className="flex w-full flex-col gap-4 bg-primary-50 p-6">
             <h1 className="text-xl font-bold text-neutral-800">Overview</h1>
-            <div className="flex flex-col lg:flex-row gap-9">
-              <div className="flex w-full lg:w-4/6 flex-col gap-6">
+            <div className="flex flex-col gap-9 lg:flex-row">
+              <div className="flex w-full flex-col gap-6 lg:w-4/6">
                 <DataTotal />
                 <UserGraph />
                 <DataRute />
               </div>
-              <div className="flex w-full lg:w-2/6 flex-col gap-8">
+              <div className="flex w-full flex-col gap-8 lg:w-2/6">
                 <VideoGraph />
                 <DestinationGraph />
               </div>
