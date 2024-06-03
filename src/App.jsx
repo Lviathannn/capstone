@@ -6,17 +6,35 @@ import LandingPage from "@/pages/landing";
 import { LoginPage } from "@/pages/login";
 import DashboardPage from "@/pages/Dashboard";
 import { Toaster } from "@/components/ui/sonner";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 
 function App() {
+  const currentUser = useSelector((state) => state.auth.user);
+
   return (
     <BrowserRouter>
       <Routes>
+        {/* Protected Routes */}
+        <Route
+          path="/detail"
+          element={currentUser ? <DetailAdmin /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/add"
+          element={currentUser ? <AddAdmin /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/manage-admin"
+          element={currentUser ? <DisplayAdmin /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/dashboard"
+          element={currentUser ? <DashboardPage /> : <Navigate to="/login" />}
+        />
+        {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
-        <Route path="/detail" element={<DetailAdmin />} />
-        <Route path="/add" element={<AddAdmin />} />
-        <Route path="/manage-admin" element={<DisplayAdmin />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
       <Toaster />
     </BrowserRouter>
