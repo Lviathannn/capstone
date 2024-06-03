@@ -1,9 +1,5 @@
-import Logo from "@/assets/logo.svg";
-import { Link } from "react-router-dom";
-import { Link } from "react-scroll";
-import Logo from "@/assets/logo.svg";
-import { PeopleAltIcon, PersonIcon, AltRouteIcon, DashboardIcon, DestinationIcon, LogoutIcon } from "@/assets/icons";
-import Logo from "@/assets/logo.svg";
+import Logo from "@/assets/logo.svg"
+import { PeopleAltIcon, PersonIcon, AltRouteIcon, DashboardIcon, DestinationIcon, LogoutIcon, VideoIcon } from "@/assets/icons";
 import { Link } from "react-router-dom";
 
 export default function SideBar() {
@@ -18,7 +14,7 @@ export default function SideBar() {
             <img src={Logo} className="h-32 w-32" />
           </Link>
         </div>
-        <div className="flex h-full flex-col justify-between border border-black">
+        <div className="flex h-full flex-col justify-between">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-[10px] lg:py-6">
             <h1 className="px-[10px] text-lg font-bold text-primary-600">
               Navigasi
