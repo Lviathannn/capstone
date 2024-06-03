@@ -1,6 +1,9 @@
+import Logo from "@/assets/logo.svg";
+import { Link } from "react-router-dom";
+import { Link } from "react-scroll";
+import Logo from "@/assets/logo.svg";
 import { PeopleAltIcon, PersonIcon, AltRouteIcon, DashboardIcon, DestinationIcon, LogoutIcon } from "@/assets/icons";
 import Logo from "@/assets/logo.svg";
-import { VideoIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function SideBar() {
