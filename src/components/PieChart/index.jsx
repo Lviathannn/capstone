@@ -9,8 +9,8 @@ const data01 = [
 const colors = tailwindConfig.theme.extend.colors;
 
 const COLORS = {
-  Destinasi: colors.primary[100], 
-  Video: colors.primary[500], 
+  Destinasi: colors.primary[100],
+  Video: colors.primary[500],
 };
 
 export default function PieChartComponent({ width, height }) {
@@ -25,7 +25,11 @@ export default function PieChartComponent({ width, height }) {
         stroke="none"
       >
         {data01.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={COLORS[entry.name]} className=" outline-none"/>
+          <Cell
+            key={`cell-${index}`}
+            fill={COLORS[entry.name]}
+            className=" outline-none"
+          />
         ))}
       </Pie>
       <Tooltip />
