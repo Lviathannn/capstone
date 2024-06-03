@@ -38,7 +38,7 @@ export default function HeaderAdmin() {
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="flex flex-col h-screen justify-between">
+        <SheetContent side="left" className="flex flex-col h-full justify-between">
           <nav className="grid gap-2 text-lg font-medium">
             <Link
               to="/"
