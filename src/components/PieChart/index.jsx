@@ -1,4 +1,4 @@
-import { PieChart, Pie, Tooltip, Cell } from "recharts";
+import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer } from "recharts";
 import tailwindConfig from "../../../tailwind.config.js";
 
 const data01 = [
@@ -15,24 +15,26 @@ const COLORS = {
 
 export default function PieChartComponent({ width, height }) {
   return (
-    <PieChart width={width} height={height}>
-      <Pie
-        dataKey="value"
-        data={data01}
-        cx={50}
-        cy={50}
-        outerRadius={55}
-        stroke="none"
-      >
-        {data01.map((entry, index) => (
-          <Cell
-            key={`cell-${index}`}
-            fill={COLORS[entry.name]}
-            className=" outline-none"
-          />
-        ))}
-      </Pie>
-      <Tooltip />
-    </PieChart>
+    <ResponsiveContainer width={width} height={height}>
+      <PieChart>
+        <Pie
+          dataKey="value"
+          data={data01}
+          cx="50%"
+          cy="50%"
+          outerRadius="100%"
+          stroke="none"
+        >
+          {data01.map((entry, index) => (
+            <Cell
+              key={`cell-${index}`}
+              fill={COLORS[entry.name]}
+              className=" outline-none"
+            />
+          ))}
+        </Pie>
+        <Tooltip />
+      </PieChart>
+    </ResponsiveContainer>
   );
 }
