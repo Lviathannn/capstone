@@ -57,6 +57,15 @@ axiosInstance.interceptors.response.use(
       return;
     }
 
+    if (error?.response?.status === 401) {
+      toast.error("Unauthorized", {
+        description: "Login untuk melanjutkan",
+      });
+
+      store.dispatch(resetUser());
+      return;
+    }
+
     toast.error("Terjadi kesalahan !", {
       description: getShownMessage(error),
     });
