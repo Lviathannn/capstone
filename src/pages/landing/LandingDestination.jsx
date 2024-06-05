@@ -31,7 +31,7 @@ export default function LandingDestination() {
                         {[
                             { count: '100+', text: 'Destinasi wisata eksklusif di Indonesia yang siap untuk dijelajahi' },
                             { count: '38', text: 'Provinsi di Indonesia dengan keunikan dan pesona masing-masing.' },
-                            { count: '68', text: 'Panduan rute perjalanan di Indonesia yang membantu Anda menjelajahi negeri.' },
+                            { count: '3', text: 'Kategori destinasi yang bisa kamu pilih sesuai dengan minat dan preferensimu.' },
                             { count: '32M+', text: 'Pengunjung yang telah menikmati pengalaman wisata di Indonesia bersama kami.' },
                         ].map((item, index) => (
                             <div key={index} className="bg-neutral-50 p-4 rounded-lg shadow-lg text-start font-jakarta-sans">
