@@ -1,10 +1,17 @@
+import { useSelector } from "react-redux";
 import LoginForm from "./LoginForm";
 import Logo from "@/assets/img/logo-white.png";
+import { Navigate } from "react-router-dom";
 
 export function LoginPage() {
+  const user = useSelector((state) => state.auth.user);
+
+  if (user) {
+    return <Navigate to="/dashboard" />;
+  }
   return (
     <div className="bg-image h-screen w-full bg-cover bg-center lg:grid lg:min-h-[600px] lg:grid-cols-2 ">
-      <div className="flex h-screen items-center justify-center rounded-none bg-neutral-50 py-12 lg:rounded-r-3xl">
+      <div className="container flex h-screen items-center justify-center rounded-none bg-neutral-50 py-12 lg:rounded-r-3xl">
         <div className="mx-auto grid w-[460px] gap-[42px]">
           <div className="grid w-full">
             <h1 className="text-[40px] font-bold text-primary">

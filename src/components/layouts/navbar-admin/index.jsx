@@ -1,4 +1,3 @@
-import { Link } from "react-scroll";
 import { useState, useEffect } from "react";
 import Logo from "@/assets/logo.svg";
 
@@ -7,7 +6,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 

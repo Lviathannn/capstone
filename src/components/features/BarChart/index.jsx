@@ -1,5 +1,4 @@
-import React from "react";
-import tailwindConfig from "../../../tailwind.config.js";
+import tailwindConfig from "../../../../tailwind.config.js";
 import {
   BarChart,
   XAxis,
@@ -30,7 +29,7 @@ const HorizontalBarChart = ({ width, height }) => {
     value,
     percentage:
       totalValue === 0 ? 0 : ((value / totalValue) * 100).toFixed(0) + "%",
-    remainder: totalValue - value, 
+    remainder: totalValue - value,
   }));
 
   const BarChartLabel = ({ y, value, name }) => (
