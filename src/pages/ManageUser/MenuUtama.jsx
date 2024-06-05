@@ -1,4 +1,6 @@
+import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import person from "@/assets/icons/person.png";
 import plus from "@/assets/icons/plus.png";
 import search from "@/assets/icons/search.png";
@@ -18,6 +20,8 @@ import SideBar from "@/components/layout/sidebar";
 import HeaderAdmin from "@/components/layout/header";
 
 export default function MenuUtama() {
+  const navigate = useNavigate();
+
   const users = [
     {
       namaPengguna: 'john_doe',
@@ -125,13 +129,17 @@ export default function MenuUtama() {
   // Handle pagination click
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const handleUserClick = (user) => {
+    navigate(`/manage-user/detail`, { state: { user } });
+  };
+
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr]">
       <SideBar />
       <div className="flex flex-col">
         <HeaderAdmin />
         <main className="flex">
-          <div className="flex w-full flex-col gap-6 bg-primary-50 p-6 font-sans">
+          <div className="flex w-full flex-col gap-6 bg-primary-50 px-10 py-6 font-sans">
             <div className="grid grid-cols-12 gap-4">
               <div className="col-span-10 bg-neutral-50 p-4 rounded-lg">
                 <h1 className="text-[26px] font-[700] text-neutral-800 font-jakarta-sans">Kelola User</h1>
@@ -145,10 +153,10 @@ export default function MenuUtama() {
                       className="w-full border-none outline-none bg-transparent font-jakarta-sans text-neutral-800" 
                     />
                   </div>
-                  <button className="flex items-center border px-4 py-3 text-primary-500 rounded-lg font-jakarta-sans">
+                  <Link to="/manage-user/create" className="flex items-center border px-4 py-3 text-primary-500 rounded-lg font-jakarta-sans">
                     <img src={plus} alt="Plus Icon" className="w-6 h-6 mr-4" />
                     Tambah ...
-                  </button>
+                  </Link>
                 </div>
               </div>
               <div className="col-span-2 bg-neutral-50 p-4 flex flex-col items-left justify-center rounded-lg">
@@ -173,7 +181,7 @@ export default function MenuUtama() {
                 </TableHeader>
                 <TableBody className="bg-neutral-50 font-jakarta-sans">
                   {currentUsers.map((user, index) => (
-                    <TableRow key={index}>
+                    <TableRow key={index} onClick={() => handleUserClick(user)} className="cursor-pointer">
                       <TableCell>{user.namaPengguna}</TableCell>
                       <TableCell>{user.namaLengkap}</TableCell>
                       <TableCell>{user.email}</TableCell>
