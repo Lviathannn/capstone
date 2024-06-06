@@ -4,7 +4,7 @@ import { store } from "./store";
 import { resetUser, updateToken } from "./slice/authSlice";
 
 export const axiosInstance = axios.create({
-  baseURL: "/api",
+  baseURL: import.meta.env.VITE_API_URL,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",

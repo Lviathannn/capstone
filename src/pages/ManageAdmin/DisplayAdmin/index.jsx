@@ -1,4 +1,4 @@
-import Navbar from "@/components/layout/navbar-admin";
+
 import SideBar from "@/components/layout/sidebar";
 
 import {
@@ -16,11 +16,12 @@ import Search from "@/components/icons/Search";
 import IcAdmin from "@/components/icons/ic-admin.svg";
 import IcAdd from "@/components/icons/ic-add.svg";
 import { TableAdmin } from "@/pages/ManageAdmin/DisplayAdmin/tableAdmin";
+import HeaderAdmin from "@/components/layout/header";
 
 export const DisplayAdmin = () => {
   return (
     <main className="bg-neutral-50">
-      <Navbar></Navbar>
+      <HeaderAdmin></HeaderAdmin>
       <SideBar></SideBar>
       <div
         className="bg-primary-50 mt-[80px] rounded-t-2xl sm:ml-[240px]"

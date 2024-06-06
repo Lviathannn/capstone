@@ -1,13 +1,13 @@
 import { CardHead } from "@/components/layout/manageAdmin/cardHead"
 import { FormAdd } from "./form"
-import Navbar from "@/components/layout/navbar-admin"
 import SideBar from "@/components/layout/sidebar"
+import HeaderAdmin from "@/components/layout/header"
 
 
 export const AddAdmin = () => {
     return(
         <main className="bg-neutral-50">
-            <Navbar></Navbar>
+            <HeaderAdmin></HeaderAdmin>
             <SideBar></SideBar>
             <section className="bg-primary-50 sm:ml-[240px] mt-[80px] rounded-t-2xl" 
             style={{minHeight: "calc(100vh - 80px)"}}
