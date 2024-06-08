@@ -23,17 +23,23 @@ export const AlertConfirm = ({
   textDialogCancel,
   textDialogSubmit,
   bgBtn,
+  onConfirm,
+  backround
 }) => {
   const [succes, setSucces] = useState();
 
-  function handleSubmit() {
+  function handleSubmit(e) {
+    e.preventDefault();
     setSucces(true);
+    if (onConfirm) {
+      onConfirm();
+    }
   }
   return (
     <div>
-      <AlertDialog className="rounded bg-white">
-        <AlertDialogTrigger asChild className="sm:rounded hidden">
-          <Button variant="outline">{textBtn}</Button>
+      <AlertDialog className={`rounded bg-white ${backround}`}>
+        <AlertDialogTrigger asChild className="sm:rounded">
+          <Button variant="outline" className={`${backround}`}>{textBtn}</Button>
         </AlertDialogTrigger>
         <AlertDialogContent className="flex h-[365px] w-[464px] flex-col gap-6 bg-white sm:rounded-[16px] sm:p-6">
           <AlertDialogHeader className="flex flex-col gap-4">
@@ -52,7 +58,9 @@ export const AlertConfirm = ({
               {textDialogCancel}
             </AlertDialogCancel>
             {bgBtn ? (
-              <AlertDialogAction className="bg-danger-500 hover:bg-primary-600 h-[42px] w-full text-[16px] font-medium text-neutral-100 sm:rounded-[12px]">
+              <AlertDialogAction
+              onClick={handleSubmit}
+               className="bg-danger-500 hover:bg-primary-600 h-[42px] w-full text-[16px] font-medium text-neutral-100 sm:rounded-[12px]">
                 {textDialogSubmit}
               </AlertDialogAction>
             ) : (

@@ -69,7 +69,7 @@ axiosInstance.interceptors.response.use(
     toast.error("Terjadi kesalahan !", {
       description: getShownMessage(error),
     });
-
+    console.log(error);
     return Promise.reject(error);
   },
 );

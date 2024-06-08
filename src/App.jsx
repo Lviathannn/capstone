@@ -11,7 +11,6 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import DashboardPage from "@/pages/Dashboard";
 
-
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
 
@@ -21,7 +20,7 @@ function App() {
         <Route path="/edit" element={<EditAdmin />} />
         {/* Protected Routes */}
         <Route
-          path="/detail"
+          path="/detail/:id"
           element={currentUser ? <DetailAdmin /> : <Navigate to="/login" />}
         />
         <Route

@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
 export const CardDetail = () => {
   return (
@@ -24,7 +25,9 @@ export const CardDetail = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            <Link to={"/manage-admin"}>
             <Button className="bg-primary-500 hover:bg-primary-600 h-[48px] w-[135px] py-[13px] px-10 text-sm font-medium text-neutral-100 sm:rounded-[12px]">Kembali</Button>
+            </Link>
           </CardContent>
         </Card>
       </div>

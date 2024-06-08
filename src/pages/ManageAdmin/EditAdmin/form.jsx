@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 
 export const FormEdit = () => {
+  const { id } = useParams();
   const fileInputRef = useRef(null);
 
   const handleClick = () => {
