@@ -11,9 +11,9 @@ import {
 } from "recharts";
 
 const data = [
-  { name: "Alam", value: 100 },
+  { name: "Alam", value: 50 },
   { name: "Seni Budaya", value: 30 },
-  { name: "Sejarah", value: 30 },
+  { name: "Sejarah", value: 20 },
 ];
 
 const colors = tailwindConfig.theme.extend.colors;
