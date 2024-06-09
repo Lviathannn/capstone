@@ -4,7 +4,7 @@ import { DetailAdmin } from "./pages/ManageAdmin/DetailAdmin";
 import { AddAdmin } from "./pages/ManageAdmin/AddAdmin.jsx";
 import LandingPage from "@/pages/landing";
 import { LoginPage } from "@/pages/login";
-import DashboardPage from "@/pages/Dashboard";
+import DashboardPage from "@/pages/dashboard";
 import ManageUser from "@/pages/ManageUser";
 import UserDetail from "@/pages/ManageUser/UserDetail";
 import UserCreate from "./pages/ManageUser/UserCreate";
