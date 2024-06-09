@@ -1,13 +1,18 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import DisplayAdmin from "./pages/ManageAdmin";
-import { DetailAdmin } from "./pages/ManageAdmin/DetailAdmin";
-import { AddAdmin } from "./pages/ManageAdmin/AddAdmin.jsx";
+import { DetailAdmin } from "@/pages/ManageAdmin/DetailAdmin/index";
+import { AddAdmin } from "@/pages/ManageAdmin/AddAdmin/index";
 import LandingPage from "@/pages/landing";
 import { LoginPage } from "@/pages/login";
+
+import { DisplayAdmin } from "@/pages/ManageAdmin/DisplayAdmin/index";
+import { EditAdmin } from "@/pages/ManageAdmin/EditAdmin/index";
+
+
 import DashboardPage from "@/pages/dashboard";
 import ManageUser from "@/pages/ManageUser";
 import UserDetail from "@/pages/ManageUser/UserDetail";
 import UserCreate from "./pages/ManageUser/UserCreate";
+
 import { Toaster } from "@/components/ui/sonner";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
@@ -18,9 +23,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/edit" element={<EditAdmin />} />
         {/* Protected Routes */}
         <Route
-          path="/detail"
+          path="/detail/:id"
           element={currentUser ? <DetailAdmin /> : <Navigate to="/login" />}
         />
         <Route

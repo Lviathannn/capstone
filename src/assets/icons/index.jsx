@@ -1,15 +1,28 @@
-export const PeopleAltIcon = () => {
+export const PeopleAltIcon = ({ className }) => {
   return (
     <svg
       width="24"
       height="24"
-      viewBox="0 0 25 24"
+      className={className}
+      viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clipPath="url(#clip0_488_762)">
+      <g clip-path="url(#clip0_926_1507)">
         <path
-          d="M17.17 13.13C18.54 14.06 19.5 15.32 19.5 17V20H23.5V17C23.5 14.82 19.93 13.53 17.17 13.13Z"
+          d="M16.67 13.13C18.04 14.06 19 15.32 19 17V20H23V17C23 14.82 19.43 13.53 16.67 13.13Z"
+          fill="currentColor"
+        />
+        <path
+          d="M15 12C17.21 12 19 10.21 19 8C19 5.79 17.21 4 15 4C14.53 4 14.09 4.1 13.67 4.24C14.5 5.27 15 6.58 15 8C15 9.42 14.5 10.73 13.67 11.76C14.09 11.9 14.53 12 15 12Z"
+          fill="currentColor"
+        />
+        <path
+          d="M9 12C11.21 12 13 10.21 13 8C13 5.79 11.21 4 9 4C6.79 4 5 5.79 5 8C5 10.21 6.79 12 9 12ZM9 6C10.1 6 11 6.9 11 8C11 9.1 10.1 10 9 10C7.9 10 7 9.1 7 8C7 6.9 7.9 6 9 6Z"
+          fill="currentColor"
+        />
+        <path
+          d="M9 13C6.33 13 1 14.34 1 17V20H17V17C17 14.34 11.67 13 9 13ZM15 18H3V17.01C3.2 16.29 6.3 15 9 15C11.7 15 14.8 16.29 15 17V18Z"
           fill="currentColor"
         />
         <path
@@ -26,94 +39,81 @@ export const PeopleAltIcon = () => {
         />
       </g>
       <defs>
-        <clipPath id="clip0_488_762">
-          <rect
-            width="24"
-            height="24"
-            fill="white"
-            transform="translate(0.5)"
-          />
+        <clipPath id="clip0_926_1507">
+          <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
     </svg>
   );
 };
 
-export const PersonIcon = () => {
+export const PersonIcon = ({ className }) => {
   return (
     <svg
       width="24"
       height="24"
-      viewBox="0 0 25 24"
+      className={className}
+      viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clipPath="url(#clip0_488_790)">
+      <g clip-path="url(#clip0_926_1480)">
         <path
           d="M12.5 12C14.71 12 16.5 10.21 16.5 8C16.5 5.79 14.71 4 12.5 4C10.29 4 8.5 5.79 8.5 8C8.5 10.21 10.29 12 12.5 12ZM12.5 14C9.83 14 4.5 15.34 4.5 18V20H20.5V18C20.5 15.34 15.17 14 12.5 14Z"
           fill="currentColor"
         />
       </g>
       <defs>
-        <clipPath id="clip0_488_790">
-          <rect
-            width="24"
-            height="24"
-            fill="white"
-            transform="translate(0.5)"
-          />
+        <clipPath id="clip0_926_1480">
+          <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
     </svg>
   );
 };
 
-export const AltRouteIcon = () => {
+export const AltRouteIcon = ({ className }) => {
   return (
     <svg
-      width="25"
+      width="24"
       height="24"
-      viewBox="0 0 25 24"
+      viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clipPath="url(#clip0_488_774)">
+      <g clip-path="url(#clip0_926_1488)">
         <path
           d="M10.28 11.16L8.86 12.58C8.18 11.89 7.52 11 7.07 9.64L9.01 9.15C9.33 10.04 9.78 10.65 10.28 11.16ZM11.5 6L7.5 2L3.5 6H6.52C6.54 6.81 6.6 7.54 6.71 8.17L8.65 7.68C8.58 7.2 8.53 6.63 8.52 6H11.5ZM21.5 6L17.5 2L13.5 6H16.49C16.39 9.68 15.21 10.75 13.95 11.88C13.45 12.32 12.94 12.8 12.5 13.43C12.16 12.94 11.77 12.55 11.37 12.19L9.96 13.6C10.89 14.45 11.5 15.14 11.5 17V22H13.5V17C13.5 14.98 14.21 14.34 15.29 13.37C16.67 12.13 18.37 10.59 18.49 6H21.5Z"
           fill="currentColor"
         />
       </g>
       <defs>
-        <clipPath id="clip0_488_774">
-          <rect
-            width="24"
-            height="24"
-            fill="white"
-            transform="translate(0.5)"
-          />
+        <clipPath id="clip0_926_1488">
+          <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
     </svg>
   );
 };
 
-export const DashboardIcon = () => {
+export const DashboardIcon = ({ className }) => {
   return (
     <svg
       width="24"
       height="24"
+      className={className}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clipPath="url(#clip0_811_1564)">
+      <g clip-path="url(#clip0_926_1473)">
         <path
           d="M3 13H11V3H3V13ZM3 21H11V15H3V21ZM13 21H21V11H13V21ZM13 3V9H21V3H13Z"
           fill="currentColor"
         />
       </g>
       <defs>
-        <clipPath id="clip0_811_1564">
+        <clipPath id="clip0_926_1473">
           <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
@@ -121,23 +121,24 @@ export const DashboardIcon = () => {
   );
 };
 
-export const VideoIcon = () => {
+export const VideoIcon = ({ className }) => {
   return (
     <svg
       width="24"
       height="24"
+      className={className}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clipPath="url(#clip0_811_1586)">
+      <g clip-path="url(#clip0_926_1495)">
         <path
           d="M4 6H2V20C2 21.1 2.9 22 4 22H18V20H4V6ZM20 2H8C6.9 2 6 2.9 6 4V16C6 17.1 6.9 18 8 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM12 14.5V5.5L18 10L12 14.5Z"
           fill="currentColor"
         />
       </g>
       <defs>
-        <clipPath id="clip0_811_1586">
+        <clipPath id="clip0_926_1495">
           <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
@@ -145,11 +146,12 @@ export const VideoIcon = () => {
   );
 };
 
-export const DestinationIcon = () => {
+export const DestinationIcon = ({ className }) => {
   return (
     <svg
       width="24"
       height="24"
+      className={className}
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -162,7 +164,7 @@ export const DestinationIcon = () => {
   );
 };
 
-export const LogoutIcon = () => {
+export const LogoutIcon = ({ className }) => {
   return (
     <svg
       width="24"
@@ -171,14 +173,14 @@ export const LogoutIcon = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clipPath="url(#clip0_811_1614)">
+      <g clip-path="url(#clip0_927_961)">
         <path
           d="M17 7L15.59 8.41L18.17 11H8V13H18.17L15.59 15.58L17 17L22 12L17 7ZM4 5H12V3H4C2.9 3 2 3.9 2 5V19C2 20.1 2.9 21 4 21H12V19H4V5Z"
-          fill="#C42C11"
+          fill="currentColor"
         />
       </g>
       <defs>
-        <clipPath id="clip0_811_1614">
+        <clipPath id="clip0_927_961">
           <rect width="24" height="24" fill="white" />
         </clipPath>
       </defs>
