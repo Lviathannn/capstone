@@ -2,6 +2,7 @@ import {
   CircleUser,
   Menu,
   Search,
+  Slash,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,8 +26,23 @@ import {
   VideoIcon,
   LogoutIcon,
 } from "@/assets/icons";
+import { useState, useEffect } from "react";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function HeaderAdmin() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <div className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <Sheet>
@@ -100,22 +116,81 @@ export default function HeaderAdmin() {
         </SheetContent>
       </Sheet>
       <div className="w-full flex-1">
-        <form>
-          <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search products..."
-              className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
-            />
+        <nav>
+          <div className="container mx-auto flex items-center justify-between px-4 py-5 lg:px-0">
+            <div className="flex items-center gap-5">
+              <ul className={`hidden md:flex md:space-x-8`}>
+                <li>
+                  <Breadcrumb>
+                    <BreadcrumbList>
+                      <BreadcrumbItem>
+                        <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+                      </BreadcrumbItem>
+                      <BreadcrumbSeparator>
+                        <Slash />
+                      </BreadcrumbSeparator>
+                      <BreadcrumbItem>
+                        <BreadcrumbLink className="text-primary-500" href="/manage-user">
+                          User
+                        </BreadcrumbLink>
+                      </BreadcrumbItem>
+                    </BreadcrumbList>
+                  </Breadcrumb>
+                </li>
+              </ul>
+              <div className="md:hidden">
+                <button
+                  onClick={toggleMenu}
+                  className="text-white hover:text-[#0A6847] focus:outline-none"
+                >
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M4 6h16M4 12h16m-7 6h7"
+                    ></path>
+                  </svg>
+                </button>
+                {isOpen && (
+                  <ul className="absolute left-0 top-16 w-full bg-white px-4 py-2 shadow-md">
+                    <li>
+                      <Breadcrumb>
+                        <BreadcrumbList>
+                          <BreadcrumbItem>
+                            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                          </BreadcrumbItem>
+                          <BreadcrumbSeparator>
+                            <Slash />
+                          </BreadcrumbSeparator>
+                          <BreadcrumbItem>
+                            <BreadcrumbLink href="/components">
+                              Components
+                            </BreadcrumbLink>
+                          </BreadcrumbItem>
+                        </BreadcrumbList>
+                      </Breadcrumb>
+                    </li>
+                  </ul>
+                )}
+              </div>
+            </div>
           </div>
-        </form>
+        </nav>
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">
-            <CircleUser className="h-5 w-5" />
-            <span className="sr-only">Toggle user menu</span>
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
