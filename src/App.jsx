@@ -11,6 +11,10 @@ import UserCreate from "./pages/ManageUser/UserCreate";
 import { Toaster } from "@/components/ui/sonner";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import ManageContent from "./pages/manageContent";
+import CreateContent from "./pages/manageContent/createContent";
+import DetailContent from "./pages/manageContent/detailContent";
+import EditContent from "./pages/manageContent/editContent";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -42,6 +46,10 @@ function App() {
         <Route path="/manage-user" element={<ManageUser />} />
         <Route path="/manage-user/detail" element={<UserDetail />} />
         <Route path="/manage-user/create" element={<UserCreate />} />
+        <Route path="/manage-content" element={<ManageContent />} />
+        <Route path="manage-content/create" element={<CreateContent />} />
+        <Route path="manage-content/detail" element={<DetailContent />} />
+        <Route path="manage-content/edit" element={<EditContent />}/>
       </Routes>
       <Toaster />
     </BrowserRouter>
