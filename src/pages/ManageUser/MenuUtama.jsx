@@ -6,23 +6,16 @@ import plus from "@/assets/icons/plus.png";
 import search from "@/assets/icons/search.png";
 import edit from "@/assets/icons/edit.png";
 import deleteIcon from "@/assets/icons/delete.png";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import SideBar from "@/components/layout/sidebar";
 import HeaderAdmin from "@/components/layout/header";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
+import AlertDelete from "@/assets/img/alert delete.png";
 
 export default function MenuUtama() {
   const navigate = useNavigate();
 
-  const users = [
+  const usersData = [
     {
       namaPengguna: 'john_doe',
       namaLengkap: 'John Doe',
@@ -115,22 +108,29 @@ export default function MenuUtama() {
     }
   ];
 
+  const [users, setUsers] = useState(usersData);
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 5;
 
-  // Calculate the total number of pages
   const totalPages = Math.ceil(users.length / usersPerPage);
 
-  // Get current users for the page
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
 
-  // Handle pagination click
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const handleUserClick = (user) => {
+  const handleUserDetailClick = (user) => {
     navigate(`/manage-user/detail`, { state: { user } });
+  };
+  
+  const handleUserClick = (user) => {
+    navigate(`/manage-user/edit`, { state: { user } });
+  };
+
+  const handleDeleteUser = (userToDelete) => {
+    const updatedUsers = users.filter(user => user !== userToDelete);
+    setUsers(updatedUsers);
   };
 
   return (
@@ -181,21 +181,38 @@ export default function MenuUtama() {
                 </TableHeader>
                 <TableBody className="bg-neutral-50 font-jakarta-sans">
                   {currentUsers.map((user, index) => (
-                    <TableRow key={index} onClick={() => handleUserClick(user)} className="cursor-pointer">
-                      <TableCell>{user.namaPengguna}</TableCell>
-                      <TableCell>{user.namaLengkap}</TableCell>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.noTelpon}</TableCell>
-                      <TableCell>{user.jenisKelamin}</TableCell>
-                      <TableCell>{user.kota}</TableCell>
-                      <TableCell>{user.provinsi}</TableCell>
+                    <TableRow key={index}>
+                      <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.namaPengguna}</TableCell>
+                      <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.namaLengkap}</TableCell>
+                      <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.email}</TableCell>
+                      <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.noTelpon}</TableCell>
+                      <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.jenisKelamin}</TableCell>
+                      <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.kota}</TableCell>
+                      <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.provinsi}</TableCell>
                       <TableCell>
-                        <button className="mr-2">
+                        <button className="mr-2" onClick={() => handleUserClick(user)}>
                           <img src={edit} alt="Edit Icon" className="w-6 h-6" />
                         </button>
-                        <button>
-                          <img src={deleteIcon} alt="Delete Icon" className="w-6 h-6" />
-                        </button>
+                        <AlertDialog>
+                          <AlertDialogTrigger>
+                            <img src={deleteIcon} alt="Delete Icon" className="w-6 h-6" />
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader className="pb-6">
+                              <div className="flex justify-center pb-6">
+                                <img src={AlertDelete} alt="Alert Add" className="w-[240px] h-[100px]" />
+                              </div>
+                              <AlertDialogTitle className="text-lg font-bold text-neutral-900 font-jakarta-sans text-center pb-4">Hapus User?</AlertDialogTitle>
+                              <AlertDialogDescription className="text-sm font-medium text-neutral-600 font-jakarta-sans text-center">
+                                Anda akan menghapus data ini. Tindakan ini tidak dapat dibatalkan. Apakah Anda yakin ingin menghapus data ini?
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter className="flex justify-center w-full">
+                              <AlertDialogCancel className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-danger-500 hover:text-neutral-50 hover:border-none mx-2 w-full text-center">Batal</AlertDialogCancel>
+                              <AlertDialogAction className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-danger-500 hover:text-neutral-50 hover:border-none mx-2 w-full text-center" onClick={() => handleDeleteUser(user)}>Hapus</AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </TableCell>
                     </TableRow>
                   ))}
