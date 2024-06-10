@@ -1,6 +1,6 @@
 import { axiosInstance } from "@/lib/axios";
 
-export const getUsers = async (token,page) => {
+export const getRoutes = async (token,page) => {
   try {
     const res = await axiosInstance.get(`admin/routes?page=${page}`, {
       headers: {
