@@ -1,17 +1,12 @@
-import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import person from "@/assets/icons/person.png";
-import plus from "@/assets/icons/plus.png";
 import search from "@/assets/icons/search.png";
-import edit from "@/assets/icons/edit.png";
 import IcDelete from "@/components/icons/ic-delete.svg";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -20,16 +15,18 @@ import SideBar from "@/components/layout/sidebar";
 import HeaderAdmin from "@/components/layout/header";
 import { useSelector } from "react-redux";
 import { getRoutes } from "@/services/ManageRoute/getRoute";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import IlusDelete from "@/assets/ImgModal/Ilustrasi-delete.svg";
 import { AlertConfirm } from "@/components/layout/manageAdmin/alertConfirm";
-import { AlertNotif } from "@/components/layout/manageAdmin/alertNotif";
-
-import Succes from "@/assets/ImgModal/Ilustrasi-succes.svg";
+import { deleteRoutes } from "@/services/ManageRoute/deleteRoute";
 
 export default function ManageRoute() {
+  const token = useSelector((state) => state.auth.user?.access_token);
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  
   const useGetAdmin = (page) => {
-    const token = useSelector((state) => state.auth.user?.access_token); // Mengambil token dari Redux state
     const { data, error, isLoading } = useQuery({
       queryKey: ["admin", page],
       queryFn: () => getRoutes(token, page),
@@ -40,47 +37,40 @@ export default function ManageRoute() {
     });
     return { data, error, isLoading };
   };
-  const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(1);
+  
   const { data, error, isLoading } = useGetAdmin(currentPage);
   const totalPages = data?.pagination?.last_page;
   const [searchTerm, setSearchTerm] = useState("");
-  const [deleted, setDeleted] = useState("");
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
 
-  // Handle pagination click
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const filteredData = data?.data?.filter((item) =>
     item.username.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  console.log(filteredData);
-
-  const handleRouteClick = (user) => {
-    navigate(`/manage-route/${user.id}`)
-  };
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
   const createDeletedMutation = useMutation({
-    mutationFn: (id) => deleteAdmins(token, id),
+    mutationFn: (id) => deleteRoutes(token, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", currentPage] });
-      toast.success("Route deleted successfully");
-      console.log("success bro!");
+      setOpenSuccess(true);
     },
     onError: (error) => {
+      setOpenError(true);
       console.error("Delete error:", error);
     },
   });
 
-  const handleDeletedById = (id) => {
-    setDeleted(id);
-    console.log(`Menghapus admin dengan ID: ${id}`);
-    // createDeletedMutation.mutate(id);
+  const handleRouteClick = (user) => {
+    navigate(`/manage-route/${user.id}`);
   };
-  console.log(data);
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+  const handleDeletedById = (id) => {
+    createDeletedMutation.mutate(id);
+  };
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr]">
@@ -190,6 +180,10 @@ export default function ManageRoute() {
                             textDialogSubmit="Hapus"
                             bgBtn="True"
                             onConfirm={() => handleDeletedById(route.id)}
+                            successOpen={openSuccess}
+                            setSuccessOpen={setOpenSuccess}
+                            errorOpen={openError}
+                            setErrorOpen={setOpenError}
                           ></AlertConfirm>
                         </TableCell>
                       </TableRow>
@@ -202,7 +196,9 @@ export default function ManageRoute() {
               <button
                 onClick={() => paginate(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`rounded-lg bg-neutral-50 px-4 py-2 shadow-sm ${currentPage === 1 ? "text-neutral-400" : "text-primary-500"}`}
+                className={`rounded-lg bg-neutral-50 px-4 py-2 shadow-sm ${
+                  currentPage === 1 ? "text-neutral-400" : "text-primary-500"
+                }`}
               >
                 &lt;
               </button>
@@ -212,7 +208,11 @@ export default function ManageRoute() {
               <button
                 onClick={() => paginate(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`rounded-lg bg-neutral-50 px-4 py-2 shadow-sm ${currentPage === totalPages ? "text-neutral-400" : "text-primary-500"}`}
+                className={`rounded-lg bg-neutral-50 px-4 py-2 shadow-sm ${
+                  currentPage === totalPages
+                    ? "text-neutral-400"
+                    : "text-primary-500"
+                }`}
               >
                 &gt;
               </button>

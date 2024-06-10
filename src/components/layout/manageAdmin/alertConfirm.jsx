@@ -1,4 +1,3 @@
-// AlertConfirm.js
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,10 +9,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { AlertNotif } from "./alertNotif";
 import Succes from "@/assets/ImgModal/Ilustrasi-succes.svg";
+import Error from "@/assets/ImgModal/Ilustrasi-failed.svg";
 
 export const AlertConfirm = ({
   textBtn,
@@ -24,12 +22,18 @@ export const AlertConfirm = ({
   textDialogSubmit,
   bgBtn,
   onConfirm,
+  successOpen,
+  setSuccessOpen,
+  errorOpen,
+  setErrorOpen,
 }) => {
-  const [successOpen, setSuccessOpen] = useState(false);
-
-  const handleConfirm = () => {
-    onConfirm();
-    setSuccessOpen(true);
+  const handleConfirm = async () => {
+    try {
+      await onConfirm();
+    } catch (err) {
+      setErrorOpen(true);
+      console.error("Error deleting data: ", err);
+    }
   };
 
   return (
@@ -79,6 +83,15 @@ export const AlertConfirm = ({
         img={Succes}
         title="Sukses!"
         desc="Proses berhasil dilakukan."
+        type="success"
+      />
+      <AlertNotif
+        open={errorOpen}
+        onOpenChange={setErrorOpen}
+        img={Error}
+        title="Gagal"
+        desc="Proses gagal dilakukan"
+        type="error"
       />
     </div>
   );

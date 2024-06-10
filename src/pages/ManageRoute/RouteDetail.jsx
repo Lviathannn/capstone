@@ -25,15 +25,15 @@ export default function RouteDetail() {
     return { data, error, isLoading };
   };
   const { data, error, isLoading } = useGetRouteById(id);
+  const detailRoute = data?.data;
+  
   const defaultDestinasiCount = 3;
   const destinasi = data?.data.destinasi || [];
-
   const extendedDestinasi = Array.from(
     { length: defaultDestinasiCount },
     (_, index) => destinasi[index] || {},
   );
 
-  const detailRoute = data?.data;
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr]">
