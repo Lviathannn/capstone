@@ -73,12 +73,12 @@ export default function UserDetail() {
                         </RadioGroup>
                     </div>
                     <div className="col-span-6 mb-6">
-                        <Label className="text-sm font-bold font-jakarta-sans pb-2" htmlFor="province">Provinsi</Label>
-                        <Input id="province" placeholder="Provinsi" value={user?.provinsi || ''} readOnly />
-                    </div>
-                    <div className="col-span-6 mb-6">
                         <Label className="text-sm font-bold font-jakarta-sans pb-2" htmlFor="city">Kota/Kabupaten</Label>
                         <Input id="city" placeholder="Kota/Kabupaten" value={user?.kota || ''} readOnly />
+                    </div>
+                    <div className="col-span-6 mb-6">
+                        <Label className="text-sm font-bold font-jakarta-sans pb-2" htmlFor="province">Provinsi</Label>
+                        <Input id="province" placeholder="Provinsi" value={user?.provinsi || ''} readOnly />
                     </div>
                 </div>
             </div>

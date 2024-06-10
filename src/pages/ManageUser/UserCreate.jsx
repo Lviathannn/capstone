@@ -152,30 +152,12 @@ export default function UserCreate() {
                                 </RadioGroup>
                             </div>
                             <div className="col-span-6">
-                                <Label htmlFor="province" className="text-sm font-bold font-jakarta-sans pb-2">Provinsi</Label>
-                                <Select value={userData.province} onValueChange={value => handleSelectChange('province', value)}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Pilih Provinsi" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="jakarta">Jakarta</SelectItem>
-                                        <SelectItem value="jawaBarat">Jawa Barat</SelectItem>
-                                        <SelectItem value="jawaTimur">Jawa Timur</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <Label htmlFor="city" className="text-sm font-bold font-jakarta-sans pb-2">Kota/Kabupaten</Label>
+                                <Input type="text" id="city" name="city" value={userData.city} onChange={handleInputChange} />
                             </div>
                             <div className="col-span-6">
-                                <Label htmlFor="city" className="text-sm font-bold font-jakarta-sans pb-2">Kota/Kabupaten</Label>
-                                <Select value={userData.city} onValueChange={value => handleSelectChange('city', value)}>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Pilih Kota/Kabupaten" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="jakarta">Jakarta</SelectItem>
-                                        <SelectItem value="bandung">Bandung</SelectItem>
-                                        <SelectItem value="surabaya">Surabaya</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <Label htmlFor="province" className="text-sm font-bold font-jakarta-sans pb-2">Provinsi</Label>
+                                <Input type="text" id="province" name="province" value={userData.province} onChange={handleInputChange} />
                             </div>
                         </div>
                     </div>
@@ -183,7 +165,7 @@ export default function UserCreate() {
                     <div className="flex justify-end mt-4">
                         <Button variant="outlined" color="primary" className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-primary-500 hover:text-neutral-50 mr-6" onClick={() => navigate('/manage-user')}>Kembali</Button>
                         <AlertDialog>
-                            <AlertDialogTrigger className="border-primary-500 border px-7 py-1 rounded-lg bg-neutral-50 text-primary-500 hover:bg-primary-500 hover:text-neutral-50 text-center">Tambah</AlertDialogTrigger>
+                            <AlertDialogTrigger className="border-primary-500 border px-7 py-1 rounded-lg bg-neutral-50 text-primary-500 hover:bg-primary-500 hover:text-neutral-50 text-center text-sm font-medium">Tambah</AlertDialogTrigger>
                             <AlertDialogContent>
                                 <AlertDialogHeader className="pb-6">
                                     <div className="flex justify-center pb-6">

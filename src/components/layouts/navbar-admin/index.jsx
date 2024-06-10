@@ -14,35 +14,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
   return (
     <nav
-      className={`fixed left-0 top-0 z-50 w-full transition-all duration-500 ${scrolled ? "bg-primary-400" : "bg-neutral-50"}`}
+      className={`fixed left-0 top-0 z-50 w-full bg-neutral-50`}
     >
-      <div className="container mx-auto flex items-center justify-between px-4 py-5 lg:px-0">
-        <div className="flex items-center gap-5">
+      <div className="container mx-auto flex items-center justify-between py-5 lg:px-0">
+        <div className="w-full flex items-center gap-16">
           <div className="flex items-center">
-            <img src={Logo} alt="Logo" className="w-[160px]" />
+            <img src={Logo} alt="Logo" className="w-[130px]" />
           </div>
           <ul className={`hidden md:flex md:space-x-8`}>
             <li>

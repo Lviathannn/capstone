@@ -1,12 +1,12 @@
 import { Input } from "@/components/ui/input";
 import DefaultPhoto from "@/assets/default-photo.svg";
-import Lock from "@/components/icons/Lock";
 import { Label } from "@/components/ui/label";
 import Visibility from "@/components/icons/Visibility";
 import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 
-export const FormAdd = () => {
+export const FormEdit = () => {
+  const { id } = useParams();
   const fileInputRef = useRef(null);
 
   const handleClick = () => {
@@ -25,7 +25,7 @@ export const FormAdd = () => {
   }
   return (
     <div className="flex flex-col gap-10">
-      <div className="flex h-fit w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 py-[132px] shadow-md">
+      <div className="flex h-[476px] w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 shadow-md">
         <div className="relative rounded-full bg-neutral-200 p-[76px]">
           <div className=" mx-auto">
             <img sizes="60" src={DefaultPhoto} alt="photo" />
@@ -90,7 +90,7 @@ export const FormAdd = () => {
           Kembali
         </Button>
         <Button className="bg-primary-500 hover:bg-primary-600 h-[42px] w-[180px] text-sm font-medium text-neutral-100 sm:rounded-[12px]">
-          Tambah Admin
+          Simpan
         </Button>
       </div>
     </div>

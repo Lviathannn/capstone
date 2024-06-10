@@ -22,11 +22,10 @@ import IcAdmin from "@/components/icons/ic-admin.svg";
 import IcAdd from "@/components/icons/ic-add.svg";
 import IcEdit from "@/components/icons/ic-edit.svg";
 import IcDelete from "@/components/icons/ic-delete.svg";
-import Navbar from "@/components/layouts/navbar-admin";
-import { ModalEdit } from "./EditAdmin.jsx/modalEdit";
+import { ModalEdit } from "./EditAdmin/modalEdit";
 import Search from "@/components/icons/Search";
-import { ModalDelete } from "./DisplayAdmin.jsx/modalDelete";
-import { ModalAdd } from "./AddAdmin.jsx/modalAdd";
+import { ModalDelete } from "./DisplayAdmin/modalDelete";
+import { ModalAdd } from "./AddAdmin/modalAdd";
 
 import { DataAdmin } from "@/constant/DataAdmin";
 import {
@@ -40,11 +39,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import HeaderAdmin from "@/components/layout/header";
 
 export default function DisplayAdmin() {
   return (
     <main>
-      <Navbar />
+      <HeaderAdmin></HeaderAdmin>
       <section className="container mx-auto flex h-[3000px] flex-col gap-5 bg-slate-200 py-40">
         <div className="flex h-fit items-center justify-between gap-4">
           <div className="h-fit w-full overflow-hidden rounded-[10px] border-none shadow-md">
@@ -159,7 +159,6 @@ export default function DisplayAdmin() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-        =======
         <ModalAdd></ModalAdd>
         <ModalEdit></ModalEdit>
         <ModalDelete></ModalDelete>

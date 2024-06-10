@@ -1,3 +1,4 @@
+
 import Logo from "@/assets/logo.svg";
 import {
   PeopleAltIcon,
@@ -83,7 +84,7 @@ export default function SideBar() {
                 Destinasi
               </Link>
               <Link
-                to="#"
+                to="/manage-admin"
                 className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
               >
                 <PeopleAltIcon />
