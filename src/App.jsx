@@ -7,10 +7,11 @@ import { LoginPage } from "@/pages/login";
 import DashboardPage from "@/pages/Dashboard";
 import ManageUser from "@/pages/ManageUser";
 import UserDetail from "@/pages/ManageUser/UserDetail";
-import UserCreate from "./pages/ManageUser/UserCreate";
+import UserCreate from "@/pages/ManageUser/UserCreate";
 import { Toaster } from "@/components/ui/sonner";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import UserEdit from "@/pages/ManageUser/UserEdit";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -42,6 +43,7 @@ function App() {
         <Route path="/manage-user" element={<ManageUser />} />
         <Route path="/manage-user/detail" element={<UserDetail />} />
         <Route path="/manage-user/create" element={<UserCreate />} />
+        <Route path="/manage-user/edit" element={<UserEdit />} />
       </Routes>
       <Toaster />
     </BrowserRouter>
