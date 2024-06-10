@@ -1,4 +1,3 @@
-// AlertConfirm.js
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,6 +10,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import Succes from "@/assets/ImgModal/Ilustrasi-succes.svg";
 
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,11 @@ import { useState } from "react";
 import { AlertNotif } from "./alertNotif";
 import Succes from "@/assets/ImgModal/Ilustrasi-succes.svg";
 >>>>>>> b8242bd (feat:detail route)
+=======
+import { AlertNotif } from "./alertNotif";
+import Succes from "@/assets/ImgModal/Ilustrasi-succes.svg";
+import Error from "@/assets/ImgModal/Ilustrasi-failed.svg";
+>>>>>>> 6f7d814 (feat:delete route & alert notif)
 
 export const AlertConfirm = ({
   textBtn,
@@ -32,6 +37,7 @@ export const AlertConfirm = ({
   textDialogSubmit,
   bgBtn,
   onConfirm,
+<<<<<<< HEAD
 <<<<<<< HEAD
   backround
 }) => {
@@ -52,12 +58,20 @@ export const AlertConfirm = ({
         </AlertDialogTrigger>
         <AlertDialogContent className="flex h-[365px] w-[464px] flex-col gap-6 bg-white sm:rounded-[16px] sm:p-6">
 =======
+=======
+  successOpen,
+  setSuccessOpen,
+  errorOpen,
+  setErrorOpen,
+>>>>>>> 6f7d814 (feat:delete route & alert notif)
 }) => {
-  const [successOpen, setSuccessOpen] = useState(false);
-
-  const handleConfirm = () => {
-    onConfirm();
-    setSuccessOpen(true);
+  const handleConfirm = async () => {
+    try {
+      await onConfirm();
+    } catch (err) {
+      setErrorOpen(true);
+      console.error("Error deleting data: ", err);
+    }
   };
 
   return (
@@ -139,6 +153,15 @@ export const AlertConfirm = ({
         img={Succes}
         title="Sukses!"
         desc="Proses berhasil dilakukan."
+        type="success"
+      />
+      <AlertNotif
+        open={errorOpen}
+        onOpenChange={setErrorOpen}
+        img={Error}
+        title="Gagal"
+        desc="Proses gagal dilakukan"
+        type="error"
       />
 >>>>>>> b8242bd (feat:detail route)
     </div>
