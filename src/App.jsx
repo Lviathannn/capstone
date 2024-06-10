@@ -17,6 +17,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import ManageRoute from "@/pages/ManageRoute";
+import RouteDetail from "@/pages/ManageRoute/RouteDetail";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -83,6 +84,7 @@ function App() {
         <Route path="/manage-user/detail" element={<UserDetail />} />
         <Route path="/manage-user/create" element={<UserCreate />} />
         <Route path="/manage-route" element={<ManageRoute />} />
+        <Route path="/manage-route/:id" element={<RouteDetail />} />
       </Routes>
       <Toaster />
     </BrowserRouter>

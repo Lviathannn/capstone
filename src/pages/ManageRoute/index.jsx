@@ -5,7 +5,7 @@ import person from "@/assets/icons/person.png";
 import plus from "@/assets/icons/plus.png";
 import search from "@/assets/icons/search.png";
 import edit from "@/assets/icons/edit.png";
-import deleteIcon from "@/assets/icons/delete.png";
+import IcDelete from "@/components/icons/ic-delete.svg";
 import {
   Table,
   TableBody,
@@ -19,16 +19,20 @@ import {
 import SideBar from "@/components/layout/sidebar";
 import HeaderAdmin from "@/components/layout/header";
 import { useSelector } from "react-redux";
-import { getUsers } from "@/services/ManageRoute/getRoute";
-import { useQuery } from "@tanstack/react-query";
+import { getRoutes } from "@/services/ManageRoute/getRoute";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import IlusDelete from "@/assets/ImgModal/Ilustrasi-delete.svg";
+import { AlertConfirm } from "@/components/layout/manageAdmin/alertConfirm";
+import { AlertNotif } from "@/components/layout/manageAdmin/alertNotif";
 
+import Succes from "@/assets/ImgModal/Ilustrasi-succes.svg";
 
 export default function ManageRoute() {
   const useGetAdmin = (page) => {
     const token = useSelector((state) => state.auth.user?.access_token); // Mengambil token dari Redux state
     const { data, error, isLoading } = useQuery({
       queryKey: ["admin", page],
-      queryFn: () => getUsers(token, page),
+      queryFn: () => getRoutes(token, page),
       enabled: !!token,
       onError: (error) => {
         console.error("Query error:", error);
@@ -41,7 +45,8 @@ export default function ManageRoute() {
   const { data, error, isLoading } = useGetAdmin(currentPage);
   const totalPages = data?.pagination?.last_page;
   const [searchTerm, setSearchTerm] = useState("");
-  
+  const [deleted, setDeleted] = useState("");
+
   // Handle pagination click
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -51,13 +56,30 @@ export default function ManageRoute() {
 
   console.log(filteredData);
 
-  const handleUserClick = (user) => {
-    navigate(`/manage-user/detail`, { state: { user } });
+  const handleRouteClick = (user) => {
+    navigate(`/manage-route/${user.id}`)
   };
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
+  const createDeletedMutation = useMutation({
+    mutationFn: (id) => deleteAdmins(token, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", currentPage] });
+      toast.success("Route deleted successfully");
+      console.log("success bro!");
+    },
+    onError: (error) => {
+      console.error("Delete error:", error);
+    },
+  });
+
+  const handleDeletedById = (id) => {
+    setDeleted(id);
+    console.log(`Menghapus admin dengan ID: ${id}`);
+    // createDeletedMutation.mutate(id);
+  };
   console.log(data);
 
   return (
@@ -106,57 +128,69 @@ export default function ManageRoute() {
               <Table>
                 <TableHeader className="bg-primary-500 text-sm font-semibold">
                   <TableRow>
-                    <TableHead className="font-jakarta-sans text-neutral-50">
+                    <TableHead className="text-center font-jakarta-sans text-neutral-50">
                       Nama Pengguna
                     </TableHead>
-                    <TableHead className="font-jakarta-sans text-neutral-50">
+                    <TableHead className="text-center font-jakarta-sans text-neutral-50">
                       Kota
                     </TableHead>
-                    <TableHead className="font-jakarta-sans text-neutral-50">
+                    <TableHead className="text-center font-jakarta-sans text-neutral-50">
                       Destinasi 1
                     </TableHead>
-                    <TableHead className="font-jakarta-sans text-neutral-50">
+                    <TableHead className="text-center font-jakarta-sans text-neutral-50">
                       Destinasi 2
                     </TableHead>
-                    <TableHead className="font-jakarta-sans text-neutral-50">
+                    <TableHead className="text-center font-jakarta-sans text-neutral-50">
                       Destinasi 3
                     </TableHead>
-                    <TableHead className="font-jakarta-sans text-neutral-50">
+                    <TableHead className="text-center font-jakarta-sans text-neutral-50">
                       Estimasi Biaya
                     </TableHead>
-                    <TableHead className="font-jakarta-sans text-neutral-50">
+                    <TableHead className="text-center font-jakarta-sans  text-neutral-50">
                       Aksi
                     </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody className="bg-neutral-50 font-jakarta-sans">
-                  {filteredData?.map((user, index) => {
-                    const fullDestinations = [...(user?.destinasi || [])];
+                  {filteredData?.map((route, index) => {
+                    const fullDestinations = [...(route?.destinasi || [])];
                     while (fullDestinations.length < 3) {
                       fullDestinations.push({ nama_destinasi: "-" });
                     }
                     return (
-                      <TableRow
-                        key={index}
-                        onClick={() => handleUserClick(user)}
-                        className="cursor-pointer"
-                      >
-                        <TableCell>{user.username}</TableCell>
-                        <TableCell>{user.kota}</TableCell>
+                      <TableRow key={index}>
+                        <TableCell
+                          onClick={() => handleRouteClick(route)}
+                          className="cursor-pointer"
+                        >
+                          {route.username}
+                        </TableCell>
+                        <TableCell>{route.kota}</TableCell>
                         {fullDestinations.map((destinasi, index) => (
                           <TableCell key={index}>
                             {destinasi.nama_destinasi}
                           </TableCell>
                         ))}
-                        <TableCell>{user.estimasi_biaya}</TableCell>
-                        <TableCell>
-                          <button>
-                            <img
-                              src={deleteIcon}
-                              alt="Delete Icon"
-                              className="h-6 w-6"
-                            />
-                          </button>
+                        <TableCell>{route.estimasi_biaya}</TableCell>
+                        <TableCell className="text-center">
+                          <AlertConfirm
+                            textBtn={
+                              <img
+                                src={IcDelete}
+                                sizes="24"
+                                alt=""
+                                className="border-none"
+                              />
+                            }
+                            img={IlusDelete}
+                            title="Hapus Admin?"
+                            desc="Anda akan menghapus admin ini. Tindakan ini tidak dapat
+        dibatalkan. Apakah Anda yakin ingin menghapus data ini?"
+                            textDialogCancel="Batal"
+                            textDialogSubmit="Hapus"
+                            bgBtn="True"
+                            onConfirm={() => handleDeletedById(route.id)}
+                          ></AlertConfirm>
                         </TableCell>
                       </TableRow>
                     );
