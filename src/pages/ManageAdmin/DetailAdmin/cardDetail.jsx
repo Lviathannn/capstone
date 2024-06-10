@@ -6,16 +6,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
 export const CardDetail = () => {
   return (
     <div>
-      <div className="h-fit w-full overflow-hidden rounded-[10px] border-none shadow-md">
+      <div className="w-full overflow-hidden rounded-[10px] border-none shadow-md">
         <Card
           x-chunk="dashboard-05-chunk-1"
-          className="flex justify-between items-end bg-neutral-50 p-4"
+          className="flex justify-between items-end bg-neutral-50 px-2"
         >
-          <CardHeader className="flex flex-col gap-4">
+          <CardHeader className="flex flex-col gap-2">
             <CardTitle className="text-[26px] font-bold text-neutral-800">
               Detail Admin
             </CardTitle>
@@ -24,7 +25,9 @@ export const CardDetail = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            <Link to={"/manage-admin"}>
             <Button className="bg-primary-500 hover:bg-primary-600 h-[48px] w-[135px] py-[13px] px-10 text-sm font-medium text-neutral-100 sm:rounded-[12px]">Kembali</Button>
+            </Link>
           </CardContent>
         </Card>
       </div>

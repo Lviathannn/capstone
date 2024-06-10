@@ -19,6 +19,15 @@ export default function DashboardPage() {
               <div className="flex w-full flex-col gap-6 lg:w-4/6">
                 <DataTotal />
                 <UserGraph />
+                {/* <iframe
+                  width="600"
+                  height="800"
+                  src="https://lookerstudio.google.com/embed/reporting/80dc46e8-cf01-4a11-93df-656a53f413c7/page/1M"
+                  frameBorder="0"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+                ></iframe> */}
                 <DataRute />
               </div>
               <div className="flex w-full flex-col gap-8 lg:w-2/6">
