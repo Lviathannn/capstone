@@ -12,10 +12,15 @@ import ManageUser from "@/pages/ManageUser";
 import UserDetail from "@/pages/ManageUser/UserDetail";
 import UserCreate from "@/pages/ManageUser/UserCreate";
 import UserEdit from "@/pages/ManageUser/UserEdit";
+import ManageContent from "./pages/manageContent";
+import DetailContent from "./pages/manageContent/detailContent";
+import EditContent from "./pages/manageContent/editContent";
+import CreateContent from "./pages/manageContent/createContent";
 
 import { Toaster } from "@/components/ui/sonner";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
