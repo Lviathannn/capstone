@@ -8,7 +8,7 @@ export const PeopleAltIcon = ({ className }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_926_1507)">
+      <g clipPath="url(#clip0_926_1507)">
         <path
           d="M16.67 13.13C18.04 14.06 19 15.32 19 17V20H23V17C23 14.82 19.43 13.53 16.67 13.13Z"
           fill="currentColor"
@@ -57,7 +57,7 @@ export const PersonIcon = ({ className }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_926_1480)">
+      <g clipPath="url(#clip0_926_1480)">
         <path
           d="M12.5 12C14.71 12 16.5 10.21 16.5 8C16.5 5.79 14.71 4 12.5 4C10.29 4 8.5 5.79 8.5 8C8.5 10.21 10.29 12 12.5 12ZM12.5 14C9.83 14 4.5 15.34 4.5 18V20H20.5V18C20.5 15.34 15.17 14 12.5 14Z"
           fill="currentColor"
@@ -81,7 +81,7 @@ export const AltRouteIcon = ({ className }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_926_1488)">
+      <g clipPath="url(#clip0_926_1488)">
         <path
           d="M10.28 11.16L8.86 12.58C8.18 11.89 7.52 11 7.07 9.64L9.01 9.15C9.33 10.04 9.78 10.65 10.28 11.16ZM11.5 6L7.5 2L3.5 6H6.52C6.54 6.81 6.6 7.54 6.71 8.17L8.65 7.68C8.58 7.2 8.53 6.63 8.52 6H11.5ZM21.5 6L17.5 2L13.5 6H16.49C16.39 9.68 15.21 10.75 13.95 11.88C13.45 12.32 12.94 12.8 12.5 13.43C12.16 12.94 11.77 12.55 11.37 12.19L9.96 13.6C10.89 14.45 11.5 15.14 11.5 17V22H13.5V17C13.5 14.98 14.21 14.34 15.29 13.37C16.67 12.13 18.37 10.59 18.49 6H21.5Z"
           fill="currentColor"
@@ -106,7 +106,7 @@ export const DashboardIcon = ({ className }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_926_1473)">
+      <g clipPath="url(#clip0_926_1473)">
         <path
           d="M3 13H11V3H3V13ZM3 21H11V15H3V21ZM13 21H21V11H13V21ZM13 3V9H21V3H13Z"
           fill="currentColor"
@@ -131,7 +131,7 @@ export const VideoIcon = ({ className }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_926_1495)">
+      <g clipPath="url(#clip0_926_1495)">
         <path
           d="M4 6H2V20C2 21.1 2.9 22 4 22H18V20H4V6ZM20 2H8C6.9 2 6 2.9 6 4V16C6 17.1 6.9 18 8 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM12 14.5V5.5L18 10L12 14.5Z"
           fill="currentColor"
@@ -173,7 +173,7 @@ export const LogoutIcon = ({ className }) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_927_961)">
+      <g clipPath="url(#clip0_927_961)">
         <path
           d="M17 7L15.59 8.41L18.17 11H8V13H18.17L15.59 15.58L17 17L22 12L17 7ZM4 5H12V3H4C2.9 3 2 3.9 2 5V19C2 20.1 2.9 21 4 21H12V19H4V5Z"
           fill="currentColor"
