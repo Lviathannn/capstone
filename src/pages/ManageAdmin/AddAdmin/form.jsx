@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import Visibility from "@/components/icons/Visibility";
 import { Button } from "@/components/ui/button";
 import { useRef, useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addUsers } from "@/services/manageAdmin/addUsers";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -19,9 +19,10 @@ export const FormAdd = () => {
   console.log(token);
   const [formData, setFormData] = useState({
     username: "",
-    password:"",
-    foto:null
+    password: "",
+    foto: null,
   });
+
   const [preview, setPreview] = useState(null);
   const [alert, setAlert] = useState(false);
   const navigate = useNavigate();
@@ -31,17 +32,17 @@ export const FormAdd = () => {
 
   const createPostMutation = useMutation({
     mutationFn: (formData) => addUsers(token, formData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin']});
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin"] });
       toast.success("User added successfully");
       console.log("success bro!");
       setFormData({
         username: "",
-        password:"",
-        foto:null
+        password: "",
+        foto: null,
       });
       navigate("/manage-admin");
-    }
+    },
   });
 
   const handleFileChange = (e) => {
@@ -50,24 +51,30 @@ export const FormAdd = () => {
       setFormData({ ...formData, foto: file });
       setPreview(URL.createObjectURL(file));
     }
+    console.log("Nama file", file);
   };
 
   function handleSubmit() {
     console.log("hai");
     const newData = new FormData();
-    newData.append('username', formData.username);
-    newData.append('password', formData.password);
+    newData.append("username", formData.username);
+    newData.append("password", formData.password);
     if (formData.foto) {
-      newData.append('foto', formData.foto);
+      newData.append("foto", formData.foto);
     }
+    console.log(newData);
     createPostMutation.mutate(newData);
   }
   return (
     <div className="flex flex-col gap-10">
       <div className="flex h-[476px] w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 shadow-md">
-        <div className="relative rounded-full w-[212px] bg-neutral-200 ">
+        <div className="relative w-[212px] rounded-full bg-neutral-200 ">
           <div className=" mx-auto">
-            <img className="rounded-full w-[212px] h-[212px]" src={preview || DefaultPhoto} alt="photo" />
+            <img
+              className="h-[212px] w-[212px] rounded-full"
+              src={preview || DefaultPhoto}
+              alt="photo"
+            />
           </div>
           <div className="absolute left-0 top-0 rounded-full">
             <Input
@@ -79,10 +86,14 @@ export const FormAdd = () => {
           </div>
           <Button
             onClick={handleClick}
-            className="absolute left-0 top-0 rounded-full border-none bg-transparent hover:bg-transparent p-[108px] "
+            className="absolute left-0 top-0 rounded-full border-none bg-transparent p-[108px] hover:bg-transparent "
           ></Button>
         </div>
-        <form action="" onSubmit={handleSubmit} className="mx-auto flex-1 flex  w-full flex-col gap-10">
+        <form
+          action=""
+          onSubmit={handleSubmit}
+          className="mx-auto flex w-full  flex-1 flex-col gap-10"
+        >
           <div className="grid gap-2">
             <div className="flex items-center">
               <Label
@@ -98,7 +109,9 @@ export const FormAdd = () => {
                 id="username"
                 type="text"
                 value={formData.username}
-                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, username: e.target.value })
+                }
                 required
                 placeholder="Masukan nama admin"
               />
@@ -119,7 +132,9 @@ export const FormAdd = () => {
                 id="password"
                 type="password"
                 value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
                 placeholder="Masukan password admin"
                 required
               />
@@ -127,24 +142,24 @@ export const FormAdd = () => {
             </div>
           </div>
           <div className="flex items-center justify-end gap-6">
-        <Link to="/manage-admin"><Button className="border-primary-500 text-primary-500 hover:text-primary-500 h-[42px] w-[180px] border bg-white hover:bg-primary-50 text-sm font-medium sm:rounded-[12px]">
-          Kembali
-        </Button></Link>
-        <AlertConfirm
-        textBtn="Modal Add"
-        img={Add}
-        title="Tambah Admin?"
-        desc="Sebelum menambahkan admin, pastikan informasi yang dimasukkan
+            <Link to="/manage-admin">
+              <Button className="border-primary-500 text-primary-500 hover:text-primary-500 hover:bg-primary-50 h-[42px] w-[180px] border bg-white text-sm font-medium sm:rounded-[12px]">
+                Kembali
+              </Button>
+            </Link>
+            <AlertConfirm
+              textBtn="Modal Add"
+              img={Add}
+              title="Tambah Admin?"
+              desc="Sebelum menambahkan admin, pastikan informasi yang dimasukkan
         benar dan sesuai. Apakah Anda yakin ingin menambahkan data ini?"
-        textDialogCancel="Batal"
-        textDialogSubmit="Tambah"
-        onConfirm={handleSubmit}
-      ></AlertConfirm>
-        
-      </div>
+              textDialogCancel="Batal"
+              textDialogSubmit="Tambah"
+              onConfirm={handleSubmit}
+            />
+          </div>
         </form>
       </div>
-      
     </div>
   );
 };

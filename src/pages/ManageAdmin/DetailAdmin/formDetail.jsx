@@ -5,13 +5,13 @@ import Visibility from "@/components/icons/Visibility";
 import { getAdminById } from "@/services/manageAdmin/getAdminById";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 
 export const useGetAdminId = (id) => {
   const token = useSelector((state) => state.auth.user?.access_token); // Mengambil token dari Redux state
   const { data, error, isLoading } = useQuery({
-    queryKey: ["admin", id],
+    queryKey: ["admin"],
     queryFn: () => getAdminById(token, id),
     enabled: !!token,
     onError: (error) => {
@@ -37,7 +37,7 @@ export const FormDetail = () => {
     <div className="flex flex-col gap-10">
       <div className="flex h-fit w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 py-[132px] shadow-md">
         <div className="mx-auto rounded-full bg-neutral-200 w-[212px]">
-            <img className="rounded-full w-[212px] h-[212px]" src={data?.data?.foto_profil} alt="photo" />
+            <img className="rounded-full w-[212px] h-[212px]" src={data?.data?.foto_profil || DefaultPhoto } alt="photo" />
         </div>
         <form action="" className="mx-auto flex-1 flex w-full flex-col gap-10">
           <div className="flex w-full gap-10">

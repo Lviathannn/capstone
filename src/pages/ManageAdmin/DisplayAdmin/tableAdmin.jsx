@@ -25,7 +25,7 @@ import { Input } from "@/components/ui/input";
 import IcEdit from "@/components/icons/ic-edit.svg";
 import IcDelete from "@/components/icons/ic-delete.svg";
 import { useSelector } from "react-redux";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUsers } from "@/services/manageAdmin/getUsers";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -78,6 +78,7 @@ export const TableAdmin = () => {
 
   const handleDeletedById = (id) => {
     setDeleted(id);
+    
     console.log(`Menghapus admin dengan ID: ${id}`);
     createDeletedMutation.mutate(id);
   };
@@ -86,7 +87,7 @@ export const TableAdmin = () => {
     setSearchTerm(e.target.value);
   };
   const filteredData = data?.data?.filter((item) =>
-    item.username.toLowerCase().includes(searchTerm.toLowerCase()),
+    item.username.toLowerCase().includes(searchTerm.toLowerCase()), 
   );
 
   const handleDetail = (id) =>{
@@ -189,12 +190,16 @@ export const TableAdmin = () => {
               <TableBody>
                 {filteredData.map((item) => (
                       <TableRow
-                      onClick={() =>handleDetail(item.id)}
+                       
                       key={item.id}
                       className="font-jakarta-sans w-full text-sm font-normal text-neutral-800"
                       
                     >
-                      <TableCell className="w-[459px]">
+                      <TableCell className="w-[459px]" onClick={(e) => {
+                         if (!e.target.closest('AlertConfirm') && !e.target.closest('Link')) {
+                          handleDetail(item.id);
+                         }
+                       }} >
                         {item.username}
                       </TableCell>
                       <TableCell className="w-[459px]">
@@ -206,7 +211,7 @@ export const TableAdmin = () => {
                             <img src={IcEdit} sizes="24" alt="" />
                           </Link>
                         </div>
-                        <div>
+                        <div >
                           <AlertConfirm
                             backround="outline-none bg-transparent border-none rounded-0 w-fit h-fit p-0 hover:bg-transparent"
                             textBtn={<img src={IcDelete} sizes="24" alt="" />}
@@ -217,7 +222,7 @@ export const TableAdmin = () => {
                             textDialogCancel="Batal"
                             textDialogSubmit="Hapus"
                             bgBtn="True"
-                            onConfirm={() => handleDeletedById(item.id)}
+                            onConfirm={(e) =>handleDeletedById(item.id)}
                           ></AlertConfirm>
                         </div>
                       </TableCell>

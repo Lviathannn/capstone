@@ -2,6 +2,7 @@ import HeaderAdmin from "@/components/layout/header";
 import { CardHead } from "@/components/layout/manageAdmin/cardHead";
 import SideBar from "@/components/layout/sidebar";
 import { FormEdit } from "@/pages/ManageAdmin/EditAdmin/form";
+import { FormEditAdmin } from "./formEdit";
 
 export const EditAdmin = () => {
   return (
@@ -17,7 +18,7 @@ export const EditAdmin = () => {
               title="Edit Admin"
               desc="Edit detail data admin."
             ></CardHead>
-            <FormEdit></FormEdit>
+            <FormEditAdmin></FormEditAdmin>
           </div>
         </div>
       </section>

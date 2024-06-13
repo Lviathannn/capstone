@@ -24,22 +24,31 @@ export const AlertConfirm = ({
   textDialogSubmit,
   bgBtn,
   onConfirm,
+  onClose,
+  onClick,
   backround
 }) => {
   const [succes, setSucces] = useState();
 
   function handleSubmit(e) {
     e.preventDefault();
+    e.stopPropagation(); 
     setSucces(true);
     if (onConfirm) {
       onConfirm();
     }
+    // if (onClose) {
+    //   onClose();
+    // }
+    // if (onClick) {
+    //   onClose();
+    // }
   }
   return (
     <div>
       <AlertDialog className={`rounded bg-white ${backround}`}>
-        <AlertDialogTrigger asChild className="sm:rounded">
-          <Button variant="outline" className={`${backround}`}>{textBtn}</Button>
+        <AlertDialogTrigger asChild className={`sm:rounded ${backround}`}>
+          <Button variant="outline" className={`w-full ${backround}`}>{textBtn}</Button>
         </AlertDialogTrigger>
         <AlertDialogContent className="flex h-[365px] w-[464px] flex-col gap-6 bg-white sm:rounded-[16px] sm:p-6">
           <AlertDialogHeader className="flex flex-col gap-4">

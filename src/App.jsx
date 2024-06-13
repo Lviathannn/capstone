@@ -10,6 +10,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import DashboardPage from "@/pages/Dashboard";
+import { FormAddAdmin } from "./pages/ManageAdmin/AddAdmin/formAdd";
+import { FormEdit } from "./pages/ManageAdmin/EditAdmin/form";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -17,11 +19,14 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/edit" element={<EditAdmin />} />
         {/* Protected Routes */}
         <Route
           path="/detail/:id"
           element={currentUser ? <DetailAdmin /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/edit/:id"
+          element={currentUser ? <EditAdmin /> : <Navigate to="/login" />}
         />
         <Route
           path="/add"

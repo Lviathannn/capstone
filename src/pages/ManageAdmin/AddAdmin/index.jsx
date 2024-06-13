@@ -2,6 +2,7 @@ import { CardHead } from "@/components/layout/manageAdmin/cardHead"
 import { FormAdd } from "./form"
 import SideBar from "@/components/layout/sidebar"
 import HeaderAdmin from "@/components/layout/header"
+import { FormAddAdmin } from "./formAdd"
 
 
 export const AddAdmin = () => {
@@ -18,7 +19,7 @@ export const AddAdmin = () => {
                 title="Tambah Admin"
                 desc="Tambah data admin baru disini."
                 ></CardHead>
-                <FormAdd></FormAdd>
+                <FormAddAdmin></FormAddAdmin>
                 </div>
             </div>
         </section>
