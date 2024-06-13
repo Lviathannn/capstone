@@ -107,10 +107,7 @@ export const TableAdmin = () => {
   }
 
   return (
-    <div
-      className="bg-primary-50 mt-[80px] rounded-t-2xl sm:ml-[240px]"
-      style={{ minHeight: "calc(100vh - 80px)" }}
-    >
+   
       <section className="container mx-auto flex h-full flex-col gap-5 py-6">
         <div className="flex h-fit items-center justify-between gap-4">
           <div className="h-fit w-full overflow-hidden rounded-[10px] border-none shadow-md">
@@ -255,6 +252,5 @@ export const TableAdmin = () => {
           </div>
         </section>
       </section>
-    </div>
   );
 };

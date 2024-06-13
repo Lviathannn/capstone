@@ -31,7 +31,7 @@ function App() {
       <Routes>
         {/* Protected Routes */}
         <Route
-          path="/detail"
+          path="/detail/:id"
           element={currentUser ? <DetailAdmin /> : <Navigate to="/login" />}
         />
         <Route

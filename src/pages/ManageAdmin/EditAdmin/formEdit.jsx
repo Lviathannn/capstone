@@ -113,49 +113,30 @@ export const FormEditAdmin = () => {
     }
   };
 
-  function onSubmit(values) {
+ async function onSubmit(values) {
     try {
-      //const values = form.getValues();
-      console.log("Data : ",values);
-    //   if (!values.password) {
-    //     values.password = data?.data?.password; // use the previous password if the new password is not provided
-    //   }
-    //    if (values.foto_profil == null){
-    //     values.foto = data?.data?.foto_profil;
-    //    }
-    //    const formData = new FormData();
-    //    formData.append("username", values.username);
-    //    if (values.password) {
-    //      formData.append("password", values.password);
-    //    }
-    //    if (values.foto_profil && (values.foto_profil instanceof File || typeof values.foto_profil === 'string')) {
-    //     formData.append("foto_profil", values.foto_profil);
-    //   }
-
-    //   // Log FormData entries for debugging
-    //   for (let pair of formData.entries()) {
-    //     console.log(pair[0] + ": " + pair[1]);
-    //   }
-      
-    //   console.log(formData)
-
     const formData = new FormData();
     formData.append('username', values.username);
     if (values.password) {
       formData.append('password', values.password);
     }
-    if (values.foto_profil instanceof File) {
+    // Handle foto_profil if it's a URL from Cloudinary
+    if (typeof values.foto_profil === 'string' && values.foto_profil.includes('cloudinary')) {
+        try {
+          const response = await fetch(values.foto_profil);
+          const blob = await response.blob();
+          const fileName = values.foto_profil.substring(values.foto_profil.lastIndexOf('/') + 1); // Mengambil nama file dari URL
+          const file = new File([blob], fileName, { type: blob.type });
+          formData.append('foto_profil', file);
+        } catch (error) {
+          toast.error('Failed to update profile picture');
+          return;
+        }
+      } else if (values.foto_profil instanceof File) {
         formData.append('foto_profil', values.foto_profil);
       } else if (data?.data?.foto_profil) {
         formData.append('foto_profil', data.data.foto_profil);
       }
-
-    // if (!values.foto_profil) {
-    //     values.foto_profil = data?.data?.foto_profil;
-    //   }
-      // Log the values for debugging
-      console.log("Submit values:", values);
-      console.log("Foto Profil:", formData);
       createUpdateMutation.mutate(formData);
     } catch (error) {
       console.log(error);

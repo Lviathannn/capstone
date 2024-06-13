@@ -12,6 +12,8 @@ import {
 import { AlertNotif } from "./alertNotif";
 import Succes from "@/assets/ImgModal/Ilustrasi-succes.svg";
 import Error from "@/assets/ImgModal/Ilustrasi-failed.svg";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export const AlertConfirm = ({
   textBtn,
@@ -81,14 +83,14 @@ export const AlertConfirm = ({
             {bgBtn ? (
               <AlertDialogAction
                 className="h-[42px] w-full bg-danger-500 text-[16px] font-medium text-neutral-100 hover:bg-primary-600 sm:rounded-[12px]"
-                onClick={handleConfirm}
+                onClick={handleSubmit}
               >
                 {textDialogSubmit}
               </AlertDialogAction>
             ) : (
               <AlertDialogAction
                 className="h-[42px] w-full bg-primary-500 text-[16px] font-medium text-neutral-100 hover:bg-primary-600 sm:rounded-[12px]"
-                onClick={handleConfirm}
+                onClick={handleSubmit}
               >
                 {textDialogSubmit}
               </AlertDialogAction>
@@ -97,7 +99,7 @@ export const AlertConfirm = ({
         </AlertDialogContent>
       </AlertDialog>
 
-      <AlertNotif
+      {/* <AlertNotif
         open={successOpen}
         onOpenChange={setSuccessOpen}
         img={Succes}
@@ -112,7 +114,7 @@ export const AlertConfirm = ({
         title="Gagal"
         desc="Proses gagal dilakukan"
         type="error"
-      />
+      /> */}
     </div>
   );
 };

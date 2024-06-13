@@ -7,10 +7,12 @@ import { FormAddAdmin } from "./formAdd"
 
 export const AddAdmin = () => {
     return(
+        <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr]">
+      <SideBar />
+      <div className="flex flex-col">
+        <HeaderAdmin />
         <main className="bg-neutral-50">
-            <HeaderAdmin></HeaderAdmin>
-            <SideBar></SideBar>
-            <section className="bg-primary-50 sm:ml-[240px] mt-[80px] rounded-t-2xl" 
+            <section className="bg-primary-50 rounded-t-2xl" 
             style={{minHeight: "calc(100vh - 80px)"}}
             >
             <div className="container mx-auto " >
@@ -24,5 +26,7 @@ export const AddAdmin = () => {
             </div>
         </section>
         </main>
+        </div>
+        </div>
     )
 }
