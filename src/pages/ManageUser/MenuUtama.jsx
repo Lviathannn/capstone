@@ -12,125 +12,77 @@ import HeaderAdmin from "@/components/layout/header";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import AlertDelete from "@/assets/img/alert delete.png";
 
+import { useSelector } from 'react-redux';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { getUsers } from '@/services/manageUser/getUsers';
+import { deleteUsers } from '@/services/manageUser/deleteUsers';
+
+export const useGetUser = (page) => {
+  const token = useSelector((state) => state.auth.user?.access_token); // Mengambil token dari Redux state
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["user", page],
+    queryFn: () => getUsers(token, page),
+    enabled: !!token,
+    onError: (error) => {
+      console.error("Query error:", error);
+    },
+  });
+  return { data, error, isLoading };
+};
+
 export default function MenuUtama() {
   const navigate = useNavigate();
-
-  const usersData = [
-    {
-      namaPengguna: 'john_doe',
-      namaLengkap: 'John Doe',
-      email: 'john.doe@example.com',
-      noTelpon: '081234567890',
-      jenisKelamin: 'Laki-laki',
-      kota: 'Jakarta',
-      provinsi: 'DKI Jakarta'
-    },
-    {
-      namaPengguna: 'jane_smith',
-      namaLengkap: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      noTelpon: '082345678901',
-      jenisKelamin: 'Perempuan',
-      kota: 'Bandung',
-      provinsi: 'Jawa Barat'
-    },
-    {
-      namaPengguna: 'budi_santoso',
-      namaLengkap: 'Budi Santoso',
-      email: 'budi.santoso@example.com',
-      noTelpon: '083456789012',
-      jenisKelamin: 'Laki-laki',
-      kota: 'Surabaya',
-      provinsi: 'Jawa Timur'
-    },
-    {
-      namaPengguna: 'susan_tan',
-      namaLengkap: 'Susan Tan',
-      email: 'susan.tan@example.com',
-      noTelpon: '084567890123',
-      jenisKelamin: 'Perempuan',
-      kota: 'Medan',
-      provinsi: 'Sumatera Utara'
-    },
-    {
-      namaPengguna: 'david_lee',
-      namaLengkap: 'David Lee',
-      email: 'david.lee@example.com',
-      noTelpon: '085678901234',
-      jenisKelamin: 'Laki-laki',
-      kota: 'Makassar',
-      provinsi: 'Sulawesi Selatan'
-    },
-    {
-      namaPengguna: 'lisa_black',
-      namaLengkap: 'Lisa Black',
-      email: 'lisa.black@example.com',
-      noTelpon: '086789012345',
-      jenisKelamin: 'Perempuan',
-      kota: 'Yogyakarta',
-      provinsi: 'DI Yogyakarta'
-    },
-    {
-      namaPengguna: 'michael_jordan',
-      namaLengkap: 'Michael Jordan',
-      email: 'michael.jordan@example.com',
-      noTelpon: '087890123456',
-      jenisKelamin: 'Laki-laki',
-      kota: 'Semarang',
-      provinsi: 'Jawa Tengah'
-    },
-    {
-      namaPengguna: 'angela_white',
-      namaLengkap: 'Angela White',
-      email: 'angela.white@example.com',
-      noTelpon: '088901234567',
-      jenisKelamin: 'Perempuan',
-      kota: 'Palembang',
-      provinsi: 'Sumatera Selatan'
-    },
-    {
-      namaPengguna: 'robert_brown',
-      namaLengkap: 'Robert Brown',
-      email: 'robert.brown@example.com',
-      noTelpon: '089012345678',
-      jenisKelamin: 'Laki-laki',
-      kota: 'Balikpapan',
-      provinsi: 'Kalimantan Timur'
-    },
-    {
-      namaPengguna: 'samantha_green',
-      namaLengkap: 'Samantha Green',
-      email: 'samantha.green@example.com',
-      noTelpon: '080123456789',
-      jenisKelamin: 'Perempuan',
-      kota: 'Denpasar',
-      provinsi: 'Bali'
-    }
-  ];
-
-  const [users, setUsers] = useState(usersData);
+  const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 5;
+  const { data, error, isLoading } = useGetUser(currentPage);
 
-  const totalPages = Math.ceil(users.length / usersPerPage);
+  // Menambahkan token ke dalam variabel lokal
+  const token = useSelector((state) => state.auth.user?.access_token);
 
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+  const createDeletedMutation = useMutation({
+    // Mengakses token di dalam fungsi createDeletedMutation
+    mutationFn: (id) => deleteUsers(token, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["user", currentPage]);
+      console.log("User deleted successfully");
+    },
+    onError: (error) => {
+      console.error("Delete error:", error);
+    },
+  });
+  
+  const handleDeleteUser = (user) => {
+    const userId = user.id;
+    createDeletedMutation.mutate(userId);
+  };
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  const users = data?.data || [];
+  const totalUsers = data?.pagination?.total || 0;
+  const totalPages = data?.pagination?.last_page || 1;
+  const usersPerPage = data?.pagination?.per_page || 10;
 
   const handleUserDetailClick = (user) => {
-    navigate(`/manage-user/detail`, { state: { user } });
+    const {id} = user;
+    navigate(`/manage-user/detail`, { state: { id } });
   };
   
   const handleUserClick = (user) => {
-    navigate(`/manage-user/edit`, { state: { user } });
+    const {id} = user;
+    navigate(`/manage-user/edit`, { state: { id} });
   };
 
-  const handleDeleteUser = (userToDelete) => {
-    const updatedUsers = users.filter(user => user !== userToDelete);
-    setUsers(updatedUsers);
+  const paginate = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
   };
 
   return (
@@ -161,7 +113,7 @@ export default function MenuUtama() {
               </div>
               <div className="col-span-2 bg-neutral-50 p-4 flex flex-col items-left justify-center rounded-lg">
                 <img src={person} alt="Person Icon" className="w-6 h-6 mb-4" />
-                <p className="text-[26px] font-[700] text-neutral-800 font-jakarta-sans">{users.length}</p>
+                <p className="text-[26px] font-[700] text-neutral-800 font-jakarta-sans">{totalUsers}</p>
                 <p className="text-[16px] font-[400] text-neutral-800 font-jakarta-sans">Total User</p>
               </div>
             </div>
@@ -171,7 +123,7 @@ export default function MenuUtama() {
                   <TableRow>
                     <TableHead className="text-neutral-50 font-jakarta-sans">Nama Pengguna</TableHead>
                     <TableHead className="text-neutral-50 font-jakarta-sans">Nama Lengkap</TableHead>
-                    <TableHead className="text-neutral-50 font-jakarta-sans">Email</TableHead>
+                                      <TableHead className="text-neutral-50 font-jakarta-sans">Email</TableHead>
                     <TableHead className="text-neutral-50 font-jakarta-sans">Nomor Telepon</TableHead>
                     <TableHead className="text-neutral-50 font-jakarta-sans">Jenis Kelamin</TableHead>
                     <TableHead className="text-neutral-50 font-jakarta-sans">Kota</TableHead>
@@ -180,13 +132,13 @@ export default function MenuUtama() {
                   </TableRow>
                 </TableHeader>
                 <TableBody className="bg-neutral-50 font-jakarta-sans">
-                  {currentUsers.map((user, index) => (
-                    <TableRow key={index}>
-                      <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.namaPengguna}</TableCell>
-                      <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.namaLengkap}</TableCell>
+                  {users.map((user) => (
+                    <TableRow key={user.id}>
+                      <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.username}</TableCell>
+                      <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.nama_lengkap}</TableCell>
                       <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.email}</TableCell>
-                      <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.noTelpon}</TableCell>
-                      <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.jenisKelamin}</TableCell>
+                      <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.no_telepon}</TableCell>
+                      <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.jenis_kelamin}</TableCell>
                       <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.kota}</TableCell>
                       <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.provinsi}</TableCell>
                       <TableCell>

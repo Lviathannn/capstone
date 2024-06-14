@@ -41,6 +41,22 @@ function App() {
             path="/dashboard"
             element={currentUser ? <DashboardPage /> : <Navigate to="/login" />}
           />
+          {/* <Route
+            path="/manage-user"
+            element={currentUser ? <ManageUser /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/manage-user/detail"
+            element={currentUser ? <UserDetail /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/manage-user/create"
+            element={currentUser ? <UserCreate /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/manage-user/edit"
+            element={currentUser ? <UserEdit /> : <Navigate to="/login" />}
+          /> */}
           {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
