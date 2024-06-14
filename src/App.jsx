@@ -24,7 +24,6 @@ import { Navigate } from "react-router-dom";
 import ManageRoute from "@/pages/ManageRoute";
 import DetailRoute from "@/pages/ManageRoute/DetailRoute";
 
-
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
 
