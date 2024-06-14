@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import DefaultPhoto from "@/assets/default-photo.svg";
-
+import EditPhoto from "@/assets/edit-photo.svg";
 import Eye from "@/components/icons/Eye";
 import { Button } from "@/components/ui/button";
 import { useRef, useState } from "react";
@@ -36,7 +36,8 @@ export const FormAddAdmin = () => {
   const [visible, setVisible] = useState(false);
   const [preview, setPreview] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  console.log(token);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -54,10 +55,13 @@ export const FormAddAdmin = () => {
       toast.success("User added successfully");
       console.log("success bro!");
       form.reset();
+      
       navigate("/manage-admin");
+      setOpenSuccess(true);
+      
     },
     onError: (error) => {
-      console.error(error);
+      setOpenError(true);
     },
   });
 
@@ -104,17 +108,17 @@ export const FormAddAdmin = () => {
       <div>
         <Form {...form}>
           <form className="grid gap-10" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex h-[476px] w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 shadow-md">
-              <div>
+            <div className="sm:flex grid h-[476px] w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 shadow-md">
+              <div className="sm:block flex justify-center">
                 <FormField
                   name="foto_profil"
                   render={() => (
                     <FormItem>
                       <FormControl>
-                        <div className="relative w-[212px] rounded-full bg-neutral-200 ">
+                        <div className="relative sm:w-[212px] w-fit sm:mt-0 mt-5 sm:mb-0 mb-8 rounded-full bg-neutral-200 ">
                           <div className=" mx-auto">
                             <img
-                              className="h-[212px] w-[212px] rounded-full"
+                              className="sm:h-[212px] sm:w-[212px] h-[180px] w-[180px] rounded-full"
                               src={preview || DefaultPhoto}
                               alt="photo"
                             />
@@ -130,8 +134,15 @@ export const FormAddAdmin = () => {
                           <Button
                             type="button"
                             onClick={handleClick}
-                            className="absolute left-0 top-0 rounded-full border-none bg-transparent p-[108px] hover:bg-transparent "
-                          ></Button>
+                            className="absolute left-0 top-0 rounded-full border-none bg-transparent sm:p-[108px] p-[90px] hover:bg-neutral-700 hover:bg-opacity-5 "
+                            style={{ 
+                              backgroundImage: `url(${EditPhoto})`,
+                              backgroundSize: '60px', 
+                              backgroundRepeat: 'no-repeat',
+                              backgroundPosition: 'center', 
+                            }}
+                          >
+                          </Button>
                         </div>
                       </FormControl>
                     </FormItem>
@@ -188,24 +199,28 @@ export const FormAddAdmin = () => {
                 />
               </div>
             </div>
-            <div className="flex items-center justify-end gap-6">
+            <div className="flex items-center sm:justify-end justify-between gap-6">
               <Link to="/manage-admin">
-                <Button className="border-primary-500 text-primary-500 hover:text-primary-500 hover:bg-primary-50 h-[42px] w-[180px] border bg-white text-sm font-medium sm:rounded-[12px]">
+                <Button className="border-primary-500 text-primary-500 hover:text-primary-500 hover:bg-primary-50 h-[42px] sm:w-[180px] w-[150px] border bg-white text-sm font-medium sm:rounded-[12px]">
                   Kembali
                 </Button>
               </Link>
-              <div className="w-[180px]">
+              <div className="sm:w-[180px] w-[150px]">
                 <AlertConfirm
-                  textBtn="Modal Add"
+                  textBtn="Tambah"
                   img={Add}
                   title="Tambah Admin?"
-                  desc="Sebelum menambahkan admin, pastikan informasi yang dimasukkan
-        benar dan sesuai. Apakah Anda yakin ingin menambahkan data ini?"
+                  desc="Pastikan informasi benar dan sesuai sebelum menambahkan data. Yakin ingin menambahkan data ini?"
                   textDialogCancel="Batal"
                   textDialogSubmit="Tambah"
                   onConfirm={form.handleSubmit(onSubmit)}
+                  disabled={!form.watch('username') || !form.watch('password')}
                   //onClick={() => {handleConfirmClick}}
-                  backround={`w-[180px] h-[42px] bg-primary-500 hover:bg-primary-600 py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
+                  backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
+                  successOpen={openSuccess}
+                  setSuccessOpen={setOpenSuccess}
+                  errorOpen={openError}
+                  setErrorOpen={setOpenError}
                 ></AlertConfirm>
               </div>
             </div>

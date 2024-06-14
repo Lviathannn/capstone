@@ -12,7 +12,6 @@ import {
 import { AlertNotif } from "./alertNotif";
 import Succes from "@/assets/ImgModal/Ilustrasi-succes.svg";
 import Error from "@/assets/ImgModal/Ilustrasi-failed.svg";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
 export const AlertConfirm = ({
@@ -24,45 +23,35 @@ export const AlertConfirm = ({
   textDialogSubmit,
   bgBtn,
   onConfirm,
-  onClose,
-  onClick,
-  backround
-}) => {
-  const [succes, setSucces] = useState();
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    e.stopPropagation(); 
-    setSucces(true);
-    if (onConfirm) {
-      onConfirm();
-    }
-    // if (onClose) {
-    //   onClose();
-    // }
-    // if (onClick) {
-    //   onClose();
-    // }
-    /* =======
+  backround,
+  disabled,
   successOpen,
   setSuccessOpen,
   errorOpen,
   setErrorOpen,
 }) => {
+  // function handleSubmit(e) {
+  //   e.preventDefault();
+  //   e.stopPropagation(); 
+  //   setSucces(true);
+  //   if (onConfirm) {
+  //     onConfirm();
+  //   }
+  // }
   const handleConfirm = async () => {
     try {
-      await onConfirm();
+        await onConfirm();
+        setSuccessOpen(true);
     } catch (err) {
       setErrorOpen(true);
       console.error("Error deleting data: ", err);
     }
-  };*/
-  }
+  };
   return (
     <div>
       <AlertDialog className={`rounded bg-white ${backround}`}>
         <AlertDialogTrigger asChild className={`sm:rounded ${backround}`}>
-          <Button variant="outline" className={`w-full ${backround}`}>{textBtn}</Button>
+          <Button variant="outline" className={`w-full  ${disabled ? 'bg-gray-400 hover:bg-gray-400 cursor-not-allowed' : 'bg-primary-500 hover:bg-primary-600'}${backround}`}>{textBtn}</Button>
         </AlertDialogTrigger>
         <AlertDialogContent className="flex w-[464px] flex-col gap-6 bg-white sm:rounded-[16px] sm:p-6">
           <AlertDialogHeader className="flex flex-col gap-4">
@@ -82,15 +71,15 @@ export const AlertConfirm = ({
             </AlertDialogCancel>
             {bgBtn ? (
               <AlertDialogAction
-                className="h-[42px] w-full bg-danger-500 text-[16px] font-medium text-neutral-100 hover:bg-primary-600 sm:rounded-[12px]"
-                onClick={handleSubmit}
+                className="h-[42px] w-full bg-danger-500 text-[16px] font-medium text-neutral-100 hover:bg-danger-600 sm:rounded-[12px]"
+                onClick={handleConfirm}
               >
                 {textDialogSubmit}
               </AlertDialogAction>
             ) : (
               <AlertDialogAction
                 className="h-[42px] w-full bg-primary-500 text-[16px] font-medium text-neutral-100 hover:bg-primary-600 sm:rounded-[12px]"
-                onClick={handleSubmit}
+                onClick={handleConfirm}
               >
                 {textDialogSubmit}
               </AlertDialogAction>
@@ -99,7 +88,7 @@ export const AlertConfirm = ({
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* <AlertNotif
+      <AlertNotif
         open={successOpen}
         onOpenChange={setSuccessOpen}
         img={Succes}
@@ -114,7 +103,7 @@ export const AlertConfirm = ({
         title="Gagal"
         desc="Proses gagal dilakukan"
         type="error"
-      /> */}
+      />
     </div>
   );
 };

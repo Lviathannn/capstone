@@ -5,11 +5,9 @@ import Eye from "@/components/icons/Eye";
 import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addUsers } from "@/services/manageAdmin/addUsers";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
-import Add from "@/assets/ImgModal/Ilustrasi-add.svg";
 import { AlertConfirm } from "@/components/layout/manageAdmin/alertConfirm";
 import { useForm } from "react-hook-form";
 import Edit from "@/assets/ImgModal/Ilustrasi-edit.svg";
@@ -45,7 +43,10 @@ export const useGetAdminId = (id) => {
     return { data, error, isLoading };
   };
 
-export const FormEditAdmin = () => {
+export const FormEditAdmin = (openSuccess,
+  setOpenSuccess,
+  openError,
+  setOpenError,) => {
   const { id } = useParams();
   const fileInputRef = useRef(null);
   const queryClient = useQueryClient();
@@ -71,14 +72,6 @@ export const FormEditAdmin = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin"] });
       toast.success("User update successfully");
-    //   form.reset({
-    //     username: updatedData?.username || data?.data?.username || "",
-    //     password: "", // Leave password empty initially for security reasons
-    //     foto_profil: updatedData?.foto_profil || data?.data?.foto_profil || null,
-    //   });
-    //   if (updatedData?.foto_profil || data?.data?.foto_profil) {
-    //     setPreview(updatedData?.foto_profil || data?.data?.foto_profil);
-    //   }
       navigate('/manage-admin')
     },
     onError: (error) => {
@@ -120,7 +113,7 @@ export const FormEditAdmin = () => {
     if (values.password) {
       formData.append('password', values.password);
     }
-    // Handle foto_profil if it's a URL from Cloudinary
+    // Handle foto_profil if it's a URL
     if (typeof values.foto_profil === 'string' && values.foto_profil.includes('cloudinary')) {
         try {
           const response = await fetch(values.foto_profil);
@@ -149,17 +142,17 @@ export const FormEditAdmin = () => {
       <div>
         <Form {...form}>
           <form className="grid gap-10" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex h-[476px] w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 shadow-md">
-              <div>
+            <div className="grid sm:flex h-[476px] w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 sm:py-0 py-5 shadow-md">
+              <div className="sm:block flex justify-center">
                 <FormField
                   name="foto_profil"
                   render={() => (
                     <FormItem>
                       <FormControl>
-                        <div className="relative w-[212px] rounded-full bg-neutral-200 ">
+                        <div className="relative sm:w-[212px] w-fit rounded-full bg-neutral-200 ">
                           <div className=" mx-auto">
                             <img
-                              className="h-[212px] w-[212px] rounded-full"
+                              className="h-[180px] w-[180px] sm:h-[212px] sm:w-[212px] rounded-full"
                               src={preview || DefaultPhoto}
                               alt="photo"
                             />
@@ -235,22 +228,26 @@ export const FormEditAdmin = () => {
             </div>
             <div className="flex items-center justify-end gap-6">
               <Link to="/manage-admin">
-                <Button type="button" className="border-primary-500 text-primary-500 hover:text-primary-500 hover:bg-primary-50 h-[42px] w-[180px] border bg-white text-sm font-medium sm:rounded-[12px]">
+                <Button type="button" className="border-primary-500 text-primary-500 hover:text-primary-500 hover:bg-primary-50 h-[42px] w-[150px] sm:w-[180px] border bg-white text-sm font-medium sm:rounded-[12px]">
                   Kembali
                 </Button>
               </Link>
-              <div className="w-[180px]">
+              <div className="w-[150px] sm:w-[180px]">
                 <AlertConfirm
                   textBtn="Simpan"
                   img={Edit}
                   title="Edit Admin?"
-                  desc="Sebelum mengedit admin, pastikan informasi yang dimasukkan benar
-                  dan sesuai. Apakah Anda yakin ingin mengedit data ini?"
+                  desc="Pastikan perubahan Anda benar. Yakin ingin mengubah dan menyimpan data ini?"
                   textDialogCancel="Periksa Kembali"
                   textDialogSubmit="Simpan"
                   onConfirm={form.handleSubmit(onSubmit)}
+                  disabled={!form.watch('username')}
+                  successOpen={openSuccess}
+                  setSuccessOpen={setOpenSuccess}
+                  errorOpen={openError}
+                  setErrorOpen={setOpenError}
                   //onClick={() => {handleConfirmClick}}
-                  backround={`w-[180px] h-[42px] bg-primary-500 hover:bg-primary-600 py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
+                  backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
                 ></AlertConfirm>
               </div>
             </div>

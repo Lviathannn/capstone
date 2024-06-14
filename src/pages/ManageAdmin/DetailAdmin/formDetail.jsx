@@ -34,10 +34,10 @@ export const FormDetail = () => {
 
 
   return (
-    <div className="flex flex-col gap-10">
-      <div className="flex h-fit w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 py-[132px] shadow-md">
-        <div className="mx-auto rounded-full bg-neutral-200 w-[212px]">
-            <img className="rounded-full w-[212px] h-[212px]" src={data?.data?.foto_profil || DefaultPhoto } alt="photo" />
+    <div className="flex flex-col sm:gap-10 gap-5">
+      <div className="grid sm:flex h-fit w-full items-center sm:gap-10 gap-5 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 sm:py-[132px] py-8 shadow-md">
+        <div className="mx-auto rounded-full bg-neutral-200 sm:w-[212px] w-fit">
+            <img className="rounded-full w-[180px] h-[180px] sm:w-[212px] sm:h-[212px]" src={data?.data?.foto_profil || DefaultPhoto } alt="photo" />
         </div>
         <form action="" className="mx-auto flex-1 flex w-full flex-col gap-10">
           <div className="flex w-full gap-10">
@@ -55,7 +55,6 @@ export const FormDetail = () => {
                   className=" border-solid-1 font-jakarta-sans rounded-[10px] bg-white px-[12px] py-5 text-sm font-normal text-neutral-700"
                   id="username"
                   type="text"
-                  value={data?.data?.username}
                   required
                   placeholder="Masukan nama admin"
                 />
