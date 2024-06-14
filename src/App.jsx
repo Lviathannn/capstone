@@ -22,7 +22,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import ManageRoute from "@/pages/ManageRoute";
-import RouteDetail from "@/pages/ManageRoute/RouteDetail";
+import DetailRoute from "@/pages/ManageRoute/DetailRoute";
 
 
 function App() {
@@ -60,7 +60,7 @@ function App() {
         <Route path="/manage-user/detail" element={<UserDetail />} />
         <Route path="/manage-user/create" element={<UserCreate />} />
         <Route path="/manage-route" element={<ManageRoute />} />
-        <Route path="/manage-route/:id" element={<RouteDetail />} />
+        <Route path="/manage-route/:id" element={<DetailRoute />} />
         <Route path="/manage-content" element={<ManageContent />} />
         <Route path="manage-content/create" element={<CreateContent />} />
         <Route path="manage-content/detail" element={<DetailContent />} />

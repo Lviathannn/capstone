@@ -3,7 +3,7 @@ import { axiosInstance } from "@/lib/axios";
 export const deleteRoutes = async (token,id) => {
   try {
     console.log(`Menghapus admin dengan ID: ${id}, menggunakan token: ${token}`);
-    const res = await axiosInstance.delete(`admin/routes/${id}`,{
+    const res = await axiosInstance.delete(`admin/routes1/${id}`,{
       headers: {
         Authorization: `Bearer ${token}`,
       },
