@@ -7,7 +7,7 @@ import { LoginPage } from "@/pages/login";
 import { DisplayAdmin } from "@/pages/ManageAdmin/DisplayAdmin/index";
 import { EditAdmin } from "@/pages/ManageAdmin/EditAdmin/index";
 
-import DashboardPage from "@/pages/dashboard";
+import DashboardPage from "@/pages/Dashboard";
 import ManageUser from "@/pages/ManageUser";
 import UserDetail from "@/pages/ManageUser/UserDetail";
 import UserCreate from "@/pages/ManageUser/UserCreate";
