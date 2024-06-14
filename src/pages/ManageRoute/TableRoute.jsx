@@ -76,12 +76,12 @@ export const TableRoute = ({
                     />
                   }
                   img={IlusDelete}
-                  title="Hapus Admin?"
-                  desc="Anda akan menghapus admin ini. Tindakan ini tidak dapat
+                  title="Hapus Data !"
+                  desc="Anda akan menghapus datat ini. Tindakan ini tidak dapat
         dibatalkan. Apakah Anda yakin ingin menghapus data ini?"
                   textDialogCancel="Batal"
                   textDialogSubmit="Hapus"
-                  bgBtn="True"
+                  bgBtn={true}
                   onConfirm={() => handleDeletedById(route.id)}
                   successOpen={openSuccess}
                   setSuccessOpen={setOpenSuccess}
