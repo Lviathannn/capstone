@@ -25,6 +25,26 @@ export default function DataContent() {
       namaDestinasi: 'Danau Toba',
       deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
       linkTerkait: 'danau.toba@example.com',
+    },
+    {
+      namaDestinasi: 'Danau Toba',
+      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
+      linkTerkait: 'danau.toba@example.com',
+    },
+    {
+      namaDestinasi: 'Danau Toba',
+      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
+      linkTerkait: 'danau.toba@example.com',
+    },
+    {
+      namaDestinasi: 'Danau Toba',
+      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
+      linkTerkait: 'danau.toba@example.com',
+    },
+    {
+      namaDestinasi: 'Danau Toba',
+      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
+      linkTerkait: 'danau.toba@example.com',
     }
   ];
 

@@ -1,31 +1,32 @@
 import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer } from "recharts";
 import tailwindConfig from "../../../tailwind.config.js";
 
-const data01 = [
-  { name: "Destinasi", value: 65 },
-  { name: "Video", value: 35 },
-];
-
-const colors = tailwindConfig.theme.extend.colors;
-
-const COLORS = {
-  Destinasi: colors.primary[100],
-  Video: colors.primary[500],
-};
-
-export default function PieChartComponent({ width, height }) {
+export default function PieChartComponent({ width, height, dataVid }) {
+  const total = dataVid?.total_content + dataVid?.total_destinasi;
+  
+  const dataVidContent = [
+    { name: "Video", value: (dataVid?.total_content / total) * 100 },
+    { name: "Destinasi", value: (dataVid?.total_destinasi / total) * 100 },
+  ];
+  
+  const colors = tailwindConfig.theme.extend.colors;
+  
+  const COLORS = {
+    Video: colors.primary[500],
+    Destinasi: colors.primary[100],
+  };
   return (
     <ResponsiveContainer width={width} height={height}>
       <PieChart>
         <Pie
           dataKey="value"
-          data={data01}
+          data={dataVidContent}
           cx="50%"
           cy="50%"
           outerRadius="100%"
           stroke="none"
         >
-          {data01.map((entry, index) => (
+          {dataVidContent.map((entry, index) => (
             <Cell
               key={`cell-${index}`}
               fill={COLORS[entry.name]}
