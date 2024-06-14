@@ -12,6 +12,7 @@ import {
 import { AlertNotif } from "./alertNotif";
 import Succes from "@/assets/ImgModal/Ilustrasi-succes.svg";
 import Error from "@/assets/ImgModal/Ilustrasi-failed.svg";
+import { Button } from "@/components/ui/button";
 
 export const AlertConfirm = ({
   textBtn,
@@ -22,25 +23,35 @@ export const AlertConfirm = ({
   textDialogSubmit,
   bgBtn,
   onConfirm,
+  backround,
+  disabled,
   successOpen,
   setSuccessOpen,
   errorOpen,
   setErrorOpen,
 }) => {
+  // function handleSubmit(e) {
+  //   e.preventDefault();
+  //   e.stopPropagation(); 
+  //   setSucces(true);
+  //   if (onConfirm) {
+  //     onConfirm();
+  //   }
+  // }
   const handleConfirm = async () => {
     try {
-      await onConfirm();
+        await onConfirm();
+        setSuccessOpen(true);
     } catch (err) {
       setErrorOpen(true);
       console.error("Error deleting data: ", err);
     }
   };
-
   return (
     <div>
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <button>{textBtn}</button>
+      <AlertDialog className={`rounded bg-white ${backround}`}>
+        <AlertDialogTrigger asChild className={`sm:rounded ${backround}`}>
+          <Button variant="outline" className={`w-full  ${disabled ? 'bg-gray-400 hover:bg-gray-400 cursor-not-allowed' : 'bg-primary-500 hover:bg-primary-600'}${backround}`}>{textBtn}</Button>
         </AlertDialogTrigger>
         <AlertDialogContent className="flex w-[464px] flex-col gap-6 bg-white sm:rounded-[16px] sm:p-6">
           <AlertDialogHeader className="flex flex-col gap-4">
@@ -60,7 +71,7 @@ export const AlertConfirm = ({
             </AlertDialogCancel>
             {bgBtn ? (
               <AlertDialogAction
-                className="h-[42px] w-full bg-danger-500 text-[16px] font-medium text-neutral-100 hover:bg-primary-600 sm:rounded-[12px]"
+                className="h-[42px] w-full bg-danger-500 text-[16px] font-medium text-neutral-100 hover:bg-danger-600 sm:rounded-[12px]"
                 onClick={handleConfirm}
               >
                 {textDialogSubmit}

@@ -1,4 +1,3 @@
-
 import SideBar from "@/components/layout/sidebar";
 
 import {
@@ -20,10 +19,19 @@ import HeaderAdmin from "@/components/layout/header";
 
 export const DisplayAdmin = () => {
   return (
-    <main className="bg-neutral-50">
-      <HeaderAdmin></HeaderAdmin>
-      <SideBar></SideBar>
-      <TableAdmin></TableAdmin>
-    </main>
+    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr]">
+      <SideBar />
+      <div className="flex flex-col">
+        <HeaderAdmin />
+        <main className="bg-neutral-50">
+          <section
+            className="bg-primary-50 rounded-t-2xl "
+            style={{ minHeight: "calc(100vh - 80px)" }}
+          >
+            <TableAdmin></TableAdmin>
+          </section>
+        </main>
+      </div>
+    </div>
   );
 };

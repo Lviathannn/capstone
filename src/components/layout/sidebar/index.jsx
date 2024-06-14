@@ -39,9 +39,9 @@ export default function SideBar() {
   };
 
   return (
-    <div className="hidden border-r bg-muted/40 md:block">
+    <div className="hidden border-none bg-muted/40 md:block">
       <div className="fixed flex h-full max-h-screen flex-col md:w-[220px] lg:w-[240px]">
-        <div className="flex h-14 items-center border-b px-4 lg:h-[60px]">
+        <div className="flex h-14 items-center px-4 lg:h-[60px]">
           <Link
             to="/"
             className="flex w-full items-center justify-center gap-2 font-semibold"
