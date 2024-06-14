@@ -75,7 +75,7 @@ const data = [
   },
 ];
 
-export default function AreaChartComponent({ width, height }) {
+export default function AreaChartComponent({ width, height, dataGraph }) {
   const error = console.error;
   console.error = (...args) => {
     if (/defaultProps/.test(args[0])) return;
@@ -86,7 +86,7 @@ export default function AreaChartComponent({ width, height }) {
       <AreaChart
         width={width}
         height={height}
-        data={data}
+        data={dataGraph}
         margin={{ top: 10, right: 40, left: 0, bottom: 30 }}
       >
         <defs>
@@ -104,7 +104,7 @@ export default function AreaChartComponent({ width, height }) {
           </linearGradient>
         </defs>
         <XAxis
-          dataKey="name"
+          dataKey="bulan"
           tick={{ fill: colors.neutral[800], fontSize: 14, fontWeight: 500 }}
           tickLine={0}
           axisLine={false}
@@ -119,7 +119,7 @@ export default function AreaChartComponent({ width, height }) {
         <Tooltip />
         <Area
           type="monotone"
-          dataKey="Total"
+          dataKey="total_pengguna"
           stroke={colors.primary[400]}
           strokeWidth={2}
           fillOpacity={1}
@@ -127,7 +127,7 @@ export default function AreaChartComponent({ width, height }) {
         />
         <Area
           type="monotone"
-          dataKey="Baru"
+          dataKey="pengguna_baru"
           stroke={colors.secondary[200]}
           strokeWidth={2}
           fillOpacity={1}

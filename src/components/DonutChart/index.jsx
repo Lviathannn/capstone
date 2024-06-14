@@ -2,35 +2,28 @@ import React from "react";
 import { PieChart, Pie, Tooltip, ResponsiveContainer, Label, Cell } from "recharts";
 import tailwindConfig from "../../../tailwind.config.js";
 
-const data = [
-  { name: "Alam", value: 50 },
-  { name: "Seni Budaya", value: 30 },
-  { name: "Sejarah", value: 20 },
-];
-
-const colors = tailwindConfig.theme.extend.colors;
-const COLORS = {
-  Alam: colors.primary[800],
-  "Seni Budaya": colors.primary[400],
-  Sejarah: colors.primary[200],
-};
-
-export default function DonutChartComponent({ width, height }) {
+export default function DonutChartComponent({ width, height, dataDestinasi }) {
+  const colors = tailwindConfig.theme.extend.colors;
+  const COLORS = {
+    "Alam": colors.primary[800],
+    "Seni dan Budaya": colors.primary[400],
+    "Sejarah": colors.primary[200],
+  };
   return (
     <ResponsiveContainer width={width} height={height}>
       <PieChart>
         <Tooltip />
         <Pie
-          data={data}
-          dataKey="value"
+          data={dataDestinasi}
+          dataKey="total"
           outerRadius={100}
           innerRadius={80}
           cx="50%"
           cy="50%"
           stroke="none"
         >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[entry.name]} />
+          {dataDestinasi?.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={COLORS[entry.nama_kategori]} />
           ))}
           <Label
             value="3 Kategori"
