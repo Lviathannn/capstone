@@ -41,7 +41,7 @@ function App() {
             path="/dashboard"
             element={currentUser ? <DashboardPage /> : <Navigate to="/login" />}
           />
-          {/* <Route
+          <Route
             path="/manage-user"
             element={currentUser ? <ManageUser /> : <Navigate to="/login" />}
           />
@@ -56,15 +56,11 @@ function App() {
           <Route
             path="/manage-user/edit"
             element={currentUser ? <UserEdit /> : <Navigate to="/login" />}
-          /> */}
+          />
           {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/manage-user" element={<ManageUser />} />
-          <Route path="/manage-user/detail" element={<UserDetail />} />
-          <Route path="/manage-user/create" element={<UserCreate />} />
-          <Route path="/manage-user/edit" element={<UserEdit />} />
         </Routes>
         <Toaster />
       </BrowserRouter>

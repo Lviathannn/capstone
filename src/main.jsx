@@ -8,7 +8,7 @@ import { Provider } from "react-redux";
 import { persistor, store } from "@/lib/store.js";
 import { PersistGate } from "redux-persist/integration/react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { QueryClient, QueryClientProvider } from "react-query"; // Ensure this is imported from the correct package
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const queryClient = new QueryClient();
 

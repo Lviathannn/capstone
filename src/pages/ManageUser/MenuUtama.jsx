@@ -34,6 +34,7 @@ export default function MenuUtama() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
   const { data, error, isLoading } = useGetUser(currentPage);
 
   // Menambahkan token ke dalam variabel lokal
@@ -69,6 +70,16 @@ export default function MenuUtama() {
   const totalPages = data?.pagination?.last_page || 1;
   const usersPerPage = data?.pagination?.per_page || 10;
 
+  const filteredUsers = users.filter(user => 
+    user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.nama_lengkap.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.no_telepon.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.jenis_kelamin.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.kota.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.provinsi.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const handleUserDetailClick = (user) => {
     const {id} = user;
     navigate(`/manage-user/detail`, { state: { id } });
@@ -103,6 +114,8 @@ export default function MenuUtama() {
                       type="text" 
                       placeholder="Cari ..." 
                       className="w-full border-none outline-none bg-transparent font-jakarta-sans text-neutral-800" 
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
                     />
                   </div>
                   <Link to="/manage-user/create" className="flex items-center border px-4 py-3 text-primary-500 rounded-lg font-jakarta-sans">
@@ -123,7 +136,7 @@ export default function MenuUtama() {
                   <TableRow>
                     <TableHead className="text-neutral-50 font-jakarta-sans">Nama Pengguna</TableHead>
                     <TableHead className="text-neutral-50 font-jakarta-sans">Nama Lengkap</TableHead>
-                                      <TableHead className="text-neutral-50 font-jakarta-sans">Email</TableHead>
+                    <TableHead className="text-neutral-50 font-jakarta-sans">Email</TableHead>
                     <TableHead className="text-neutral-50 font-jakarta-sans">Nomor Telepon</TableHead>
                     <TableHead className="text-neutral-50 font-jakarta-sans">Jenis Kelamin</TableHead>
                     <TableHead className="text-neutral-50 font-jakarta-sans">Kota</TableHead>
@@ -132,7 +145,7 @@ export default function MenuUtama() {
                   </TableRow>
                 </TableHeader>
                 <TableBody className="bg-neutral-50 font-jakarta-sans">
-                  {users.map((user) => (
+                  {filteredUsers.map((user) => (
                     <TableRow key={user.id}>
                       <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.username}</TableCell>
                       <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.nama_lengkap}</TableCell>
