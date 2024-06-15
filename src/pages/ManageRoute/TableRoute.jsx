@@ -67,12 +67,12 @@ export const TableRoute = ({
               <TableCell>{route.estimasi_biaya}</TableCell>
               <TableCell className="text-center">
                 <AlertConfirm
+                backround="outline-none bg-transparent border-none rounded-0 w-fit h-fit p-0 hover:bg-transparent"
                   textBtn={
                     <img
                       src={IcDelete}
                       sizes="24"
                       alt=""
-                      className="border-none"
                     />
                   }
                   img={IlusDelete}

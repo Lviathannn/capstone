@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import DefaultPhoto from "@/assets/default-photo.svg";
-
+import EditPhoto from "@/assets/edit-photo.svg";
 import Eye from "@/components/icons/Eye";
 import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
@@ -23,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { updateAdmins } from "@/services/manageAdmin/updateAdmin";
 import { useQuery } from "@tanstack/react-query";
 import { getAdminById } from "@/services/manageAdmin/getAdminById";
+import VisibilityOff from "@/components/icons/VisibilityOff";
 
 const formSchema = zod.object({
   username: zod.string().min(2).max(50),
@@ -32,21 +33,23 @@ const formSchema = zod.object({
 
 export const useGetAdminId = (id) => {
     const token = useSelector((state) => state.auth.user?.access_token); // Mengambil token dari Redux state
+    const [openSuccess, setOpenSuccess] = useState(false);
+    const [openError, setOpenError] = useState(false);
     const { data, error, isLoading } = useQuery({
       queryKey: ["admin"],
       queryFn: () => getAdminById(token, id),
       enabled: !!token,
+      onSuccess: () => { setOpenSuccess(true)},
+
       onError: (error) => {
+        setOpenError(true);
         console.error("Query error:", error);
       },
     });
     return { data, error, isLoading };
   };
 
-export const FormEditAdmin = (openSuccess,
-  setOpenSuccess,
-  openError,
-  setOpenError,) => {
+export const FormEditAdmin = () => {
   const { id } = useParams();
   const fileInputRef = useRef(null);
   const queryClient = useQueryClient();
@@ -56,7 +59,8 @@ export const FormEditAdmin = (openSuccess,
   const [visible, setVisible] = useState(false);
   const [preview, setPreview] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  console.log(token);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -73,9 +77,11 @@ export const FormEditAdmin = (openSuccess,
       queryClient.invalidateQueries({ queryKey: ["admin"] });
       toast.success("User update successfully");
       navigate('/manage-admin')
+      setOpenSuccess(true);
     },
     onError: (error) => {
-        console.error(error);
+        setOpenError(true);
+        toast.error("Update data gagal dilakukan")
       },
   });
 
@@ -168,8 +174,12 @@ export const FormEditAdmin = (openSuccess,
                           <Button
                             type="button"
                             onClick={handleClick}
-                            className="absolute left-0 top-0 rounded-full border-none bg-transparent p-[108px] hover:bg-transparent "
-                          ></Button>
+                            className="absolute w-full h-full left-0 top-0 rounded-full border-none bg-transparent hover:bg-transparent "
+                          >
+                            {preview&&
+                              <div className="z-20 bg-transparent rounded-full hover:bg-[#D5D5D580] hover:bg-opacity-30 absolute w-full h-full left-0 top-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"><img className="" sizes="60" src={EditPhoto}></img></div>
+                            } 
+                          </Button>
                         </div>
                       </FormControl>
                     </FormItem>
@@ -217,7 +227,9 @@ export const FormEditAdmin = (openSuccess,
                             type="button"
                             onClick={() => setVisible(!visible)}
                           >
-                            <Eye />
+                            { 
+                              visible ? <VisibilityOff /> : <Eye /> 
+                            }
                           </button>
                         </div>
                       </FormControl>
@@ -245,6 +257,7 @@ export const FormEditAdmin = (openSuccess,
                   successOpen={openSuccess}
                   setSuccessOpen={setOpenSuccess}
                   errorOpen={openError}
+                  isLoading={isLoading}
                   setErrorOpen={setOpenError}
                   //onClick={() => {handleConfirmClick}}
                   backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}

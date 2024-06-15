@@ -2,6 +2,7 @@ import { Input } from "@/components/ui/input";
 import DefaultPhoto from "@/assets/default-photo.svg";
 import EditPhoto from "@/assets/edit-photo.svg";
 import Eye from "@/components/icons/Eye";
+import VisibilityOff from "@/components/icons/VisibilityOff";
 import { Button } from "@/components/ui/button";
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -23,8 +24,8 @@ import { z as zod } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchema = zod.object({
-  username: zod.string().min(2).max(50),
-  password: zod.string().min(1).max(50),
+  username: zod.string().min(6).max(16),
+  password: zod.string().min(8).max(16),
   foto_profil: zod.any().nullable(), // Allowing nullable foto for validation
 });
 
@@ -55,7 +56,6 @@ export const FormAddAdmin = () => {
       toast.success("User added successfully");
       console.log("success bro!");
       form.reset();
-      
       navigate("/manage-admin");
       setOpenSuccess(true);
       
@@ -77,29 +77,12 @@ export const FormAddAdmin = () => {
       form.setValue("foto_profil", file);
       setPreview(URL.createObjectURL(file));
     }
-    console.log("Nama file", file);
   };
-
-  //   const handleConfirmClick = () => {
-  //     const values = form.getValues();
-  //     const result = formSchema.safeParse(values);
-
-  //     if (!result.success) {
-  //         result.error.errors.forEach((error) => {
-  //             toast.error(error.message);
-  //           });
-  //     } else {
-  //       form.handleSubmit(onSubmit)();
-  //     }
-  //   };
 
   function onSubmit(values) {
     try {
-      console.log(values);
-      console.log("coba submit");
       createPostMutation.mutate(values);
     } catch (error) {
-      console.log(error);
       toast.error("Tidak berhasil menambahkan Admin");
     }
   }
@@ -134,14 +117,11 @@ export const FormAddAdmin = () => {
                           <Button
                             type="button"
                             onClick={handleClick}
-                            className="absolute left-0 top-0 rounded-full border-none bg-transparent sm:p-[108px] p-[90px] hover:bg-neutral-700 hover:bg-opacity-5 "
-                            style={{ 
-                              backgroundImage: `url(${EditPhoto})`,
-                              backgroundSize: '60px', 
-                              backgroundRepeat: 'no-repeat',
-                              backgroundPosition: 'center', 
-                            }}
+                            className="z-10 absolute w-full h-full left-0 top-0 rounded-full bg-transparent border-none hover:bg-transparent"
                           >
+                            {preview&&
+                              <div className="z-20 bg-transparent rounded-full hover:bg-[#D5D5D580] hover:bg-opacity-30 absolute w-full h-full left-0 top-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"><img className="" sizes="60" src={EditPhoto}></img></div>
+                            } 
                           </Button>
                         </div>
                       </FormControl>
@@ -190,7 +170,9 @@ export const FormAddAdmin = () => {
                             type="button"
                             onClick={() => setVisible(!visible)}
                           >
-                            <Eye />
+                            { 
+                              visible ? <VisibilityOff /> : <Eye /> 
+                            }
                           </button>
                         </div>
                       </FormControl>
@@ -215,7 +197,6 @@ export const FormAddAdmin = () => {
                   textDialogSubmit="Tambah"
                   onConfirm={form.handleSubmit(onSubmit)}
                   disabled={!form.watch('username') || !form.watch('password')}
-                  //onClick={() => {handleConfirmClick}}
                   backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
                   successOpen={openSuccess}
                   setSuccessOpen={setOpenSuccess}
