@@ -23,9 +23,9 @@ export const DisplayAdmin = () => {
       <SideBar />
       <div className="flex flex-col">
         <HeaderAdmin />
-        <main className="bg-neutral-50">
+        <main className="bg-neutral-50 h-full">
           <section
-            className="bg-primary-50 rounded-t-2xl "
+            className="bg-primary-50 rounded-t-2xl h-full "
             style={{ minHeight: "calc(100vh - 80px)" }}
           >
             <TableAdmin></TableAdmin>

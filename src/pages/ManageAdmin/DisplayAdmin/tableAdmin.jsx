@@ -33,7 +33,7 @@ import { AlertConfirm } from "@/components/layout/manageAdmin/alertConfirm";
 import { deleteAdmins } from "@/services/manageAdmin/deleteAdmins";
 import { toast } from "sonner";
 import { Clear } from "@/components/icons/Clear";
-import notFound from "@/assets/icons/not-found.svg"
+import notFound from "@/assets/icons/not-found.svg";
 
 export const useGetAdmin = (page) => {
   const token = useSelector((state) => state.auth.user?.access_token); // Mengambil token dari Redux state
@@ -56,6 +56,7 @@ export const TableAdmin = () => {
   const totalPages = data?.pagination?.last_page;
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
+  const [deleted, setDeleted] = useState('');
   const inputRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
@@ -182,103 +183,104 @@ export const TableAdmin = () => {
           </Card>
         </div>
       </div>
-      {filteredData && filteredData.length === 0 ?  
-      ( <div className="flex items-center justify-center flex-col gap-5 w-full h-full">
-        <img className="w-[200px] h-[200px]" src={notFound} alt="" />
-        <span className="flex items-center mx-auto text-[16px] font-medium">Maaf, Hasil Pencarian Tidak Ditemukan!</span>
-      </div>)
-      : (
-      <section className="flex flex-col gap-4">
-        <div className="overflow-hidden rounded-xl bg-neutral-50 shadow-md">
-          <Table className="w-full">
-            <TableHeader className="bg-primary-500 font-jakarta-sans text-sm font-semibold text-neutral-50 sm:w-full">
-              <TableRow className="text-neutral-50 sm:max-w-full">
-                <TableHead className="w-fit text-neutral-50 sm:w-[459px] ">
-                  Username
-                </TableHead>
-                <TableHead className="w-fit text-neutral-50 sm:w-[459px] ">
-                  Tanggal Pembuatan
-                </TableHead>
-                <TableHead className="w-fit text-center text-neutral-50 sm:w-[200px] ">
-                  Aksi
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredData.map((item) => (
-                <TableRow
-                  key={item.id}
-                  className="w-full font-jakarta-sans text-sm font-normal text-neutral-800"
-                >
-                  <TableCell
-                    className="w-fit sm:w-[459px]"
-                    onClick={(e) => {
-                      if (
-                        !e.target.closest("AlertConfirm") &&
-                        !e.target.closest("Link")
-                      ) {
-                        handleDetail(item.id);
-                      }
-                    }}
-                  >
-                    {item.username}
-                  </TableCell>
-                  <TableCell className="w-fit sm:w-[459px]">
-                    {item.tanggal_pembuatan}
-                  </TableCell>
-                  <TableCell className="flex w-fit items-center justify-center gap-2 px-0 sm:w-full sm:gap-7">
-                    <div>
-                      <Link to={`/edit/${item.id}`}>
-                        <img src={IcEdit} sizes="24" alt="" />
-                      </Link>
-                    </div>
-                    <div>
-                      <AlertConfirm
-                        backround="outline-none bg-transparent border-none rounded-0 w-fit h-fit p-0 hover:bg-transparent"
-                        textBtn={<img src={IcDelete} sizes="24" alt="" />}
-                        img={IlusDelete}
-                        title="Hapus Admin?"
-                        desc="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
-                        textDialogCancel="Batal"
-                        textDialogSubmit="Hapus"
-                        bgBtn="True"
-                        successOpen={openSuccess}
-                        setSuccessOpen={setOpenSuccess}
-                        errorOpen={openError}
-                        setErrorOpen={setOpenError}
-                        onConfirm={(e) => handleDeletedById(item.id)}
-                      ></AlertConfirm>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-        <div className="pagination my-3 flex items-center justify-center">
-          <Button
-            className={`rounded-lg bg-neutral-50 px-4 py-2 shadow-sm hover:text-neutral-50 ${currentPage === 1 ? "text-neutral-400" : "text-primary-500"}`}
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          >
-            &lt;
-          </Button>
-          <span className="px-8 py-2 font-jakarta-sans text-sm font-bold text-neutral-500 sm:px-20">
-            Page {currentPage} of {totalPages}
+      {filteredData && filteredData.length === 0 ? (
+        <div className="flex h-full flex-grow w-full flex-col items-center justify-center gap-5">
+          <img className="h-[200px] w-[200px]" src={notFound} alt="" />
+          <span className="mx-auto flex items-center text-[16px] font-medium">
+            Maaf, Hasil Pencarian Tidak Ditemukan!
           </span>
-          <Button
-            className={`rounded-lg bg-neutral-50 px-4 py-2 shadow-sm hover:text-neutral-50  ${currentPage === totalPages ? "text-neutral-400" : "text-primary-500"}`}
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-          >
-            &gt;
-          </Button>
         </div>
-      </section>
-      )
-      }
+      ) : (
+        <section className="flex flex-col gap-4">
+          <div className="overflow-hidden rounded-xl bg-neutral-50 shadow-md">
+            <Table className="w-full">
+              <TableHeader className="bg-primary-500 font-jakarta-sans text-sm font-semibold text-neutral-50 sm:w-full">
+                <TableRow className="text-neutral-50 sm:max-w-full">
+                  <TableHead className="w-fit text-neutral-50 sm:w-[459px] ">
+                    Username
+                  </TableHead>
+                  <TableHead className="w-fit text-neutral-50 sm:w-[459px] ">
+                    Tanggal Pembuatan
+                  </TableHead>
+                  <TableHead className="w-fit text-center text-neutral-50 sm:w-[200px] ">
+                    Aksi
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredData.map((item) => (
+                  <TableRow
+                    key={item.id}
+                    className="w-full font-jakarta-sans text-sm font-normal text-neutral-800"
+                  >
+                    <TableCell
+                      className="w-fit sm:w-[459px]"
+                      onClick={(e) => {
+                        if (
+                          !e.target.closest("AlertConfirm") &&
+                          !e.target.closest("Link")
+                        ) {
+                          handleDetail(item.id);
+                        }
+                      }}
+                    >
+                      {item.username}
+                    </TableCell>
+                    <TableCell className="w-fit sm:w-[459px]">
+                      {item.tanggal_pembuatan}
+                    </TableCell>
+                    <TableCell className="flex w-fit items-center justify-center gap-2 px-0 sm:w-full sm:gap-7">
+                      <div>
+                        <Link to={`/edit/${item.id}`}>
+                          <img src={IcEdit} sizes="24" alt="" />
+                        </Link>
+                      </div>
+                      <div>
+                        <AlertConfirm
+                          backround="outline-none bg-transparent border-none rounded-0 w-fit h-fit p-0 hover:bg-transparent"
+                          textBtn={<img src={IcDelete} sizes="24" alt="" />}
+                          img={IlusDelete}
+                          title="Hapus Admin?"
+                          desc="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
+                          textDialogCancel="Batal"
+                          textDialogSubmit="Hapus"
+                          bgBtn="True"
+                          successOpen={openSuccess}
+                          setSuccessOpen={setOpenSuccess}
+                          errorOpen={openError}
+                          setErrorOpen={setOpenError}
+                          onConfirm={(e) => handleDeletedById(item.id)}
+                        ></AlertConfirm>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          <div className="pagination my-3 flex items-center justify-center">
+            <Button
+              className={`rounded-lg bg-neutral-50 px-4 py-2 shadow-sm hover:text-neutral-50 ${currentPage === 1 ? "text-neutral-400" : "text-primary-500"}`}
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              &lt;
+            </Button>
+            <span className="px-8 py-2 font-jakarta-sans text-sm font-bold text-neutral-500 sm:px-20">
+              Page {currentPage} of {totalPages}
+            </span>
+            <Button
+              className={`rounded-lg bg-neutral-50 px-4 py-2 shadow-sm hover:text-neutral-50  ${currentPage === totalPages ? "text-neutral-400" : "text-primary-500"}`}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+            >
+              &gt;
+            </Button>
+          </div>
+        </section>
+      )}
     </section>
   );
 };

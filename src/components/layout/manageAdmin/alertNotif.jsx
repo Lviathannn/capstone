@@ -6,8 +6,18 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useEffect } from "react";
 
-export const AlertNotif = ({ open, onOpenChange, img, title, desc }) => {
+export const AlertNotif = ({ open, onOpenChange, img, title, desc, isLoading }) => {
+  useEffect(() => {
+    if (open && !isLoading) {
+      const timer = setTimeout(() => {
+        onOpenChange(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [open, onOpenChange]);
+
   return (
     <AlertDialog
       className="rounded bg-white"
@@ -15,8 +25,7 @@ export const AlertNotif = ({ open, onOpenChange, img, title, desc }) => {
       onOpenChange={onOpenChange}
     >
       {
-        open&&
-      
+        open &&
       <div
         className={`fixed inset-0 bg-black bg-opacity-50 ${open ? "block" : "hidden"}`}
       >
@@ -44,7 +53,7 @@ export const AlertNotif = ({ open, onOpenChange, img, title, desc }) => {
           </AlertDialogContent>
         </div>
       </div>
-}
+      }
     </AlertDialog>
   );
 };

@@ -19,6 +19,7 @@ export const AlertConfirm = ({
   img,
   title,
   desc,
+  isLoading,
   textDialogCancel,
   textDialogSubmit,
   bgBtn,
@@ -92,6 +93,7 @@ export const AlertConfirm = ({
         open={successOpen}
         onOpenChange={setSuccessOpen}
         img={Succes}
+        isLoading={isLoading}
         title="Sukses!"
         desc="Proses berhasil dilakukan."
         type="success"
@@ -99,6 +101,7 @@ export const AlertConfirm = ({
       <AlertNotif
         open={errorOpen}
         onOpenChange={setErrorOpen}
+        isLoading={isLoading}
         img={Error}
         title="Gagal"
         desc="Proses gagal dilakukan"
