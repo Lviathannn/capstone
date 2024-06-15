@@ -67,21 +67,21 @@ export const TableRoute = ({
               <TableCell>{route.estimasi_biaya}</TableCell>
               <TableCell className="text-center">
                 <AlertConfirm
+                backround="outline-none bg-transparent border-none rounded-0 w-fit h-fit p-0 hover:bg-transparent"
                   textBtn={
                     <img
                       src={IcDelete}
                       sizes="24"
                       alt=""
-                      className="border-none"
                     />
                   }
                   img={IlusDelete}
-                  title="Hapus Admin?"
-                  desc="Anda akan menghapus admin ini. Tindakan ini tidak dapat
+                  title="Hapus Data !"
+                  desc="Anda akan menghapus datat ini. Tindakan ini tidak dapat
         dibatalkan. Apakah Anda yakin ingin menghapus data ini?"
                   textDialogCancel="Batal"
                   textDialogSubmit="Hapus"
-                  bgBtn="True"
+                  bgBtn={true}
                   onConfirm={() => handleDeletedById(route.id)}
                   successOpen={openSuccess}
                   setSuccessOpen={setOpenSuccess}

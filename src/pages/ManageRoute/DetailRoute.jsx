@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getRouteById } from "@/services/ManageRoute/getRouteById";
 import { ReadOnlyField } from "@/components/ui/read-only-field";
 
-export default function RouteDetail() {
+export default function DetailRoute() {
   const id = useParams().id;
   const navigate = useNavigate();
   const useGetRouteById = (id) => {
@@ -93,9 +93,7 @@ export default function RouteDetail() {
                 </Label>
                 <ReadOnlyField
                   id="namaRute"
-                  placeholder="Nama Rute Perjalanan"
-                  readOnly
-                  value="Rute 1"
+                  children={detailRoute?.nama_rute}
                 />
               </div>
             </div>

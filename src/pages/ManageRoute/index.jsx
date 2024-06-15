@@ -62,6 +62,8 @@ export default function ManageRoute() {
     createDeletedMutation.mutate(id);
   };
 
+  console.log("Data route:", data);
+
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr]">
       <SideBar />
@@ -71,7 +73,7 @@ export default function ManageRoute() {
           <div className="flex w-full flex-col gap-6 bg-primary-50 px-10 py-6 font-sans">
             <div className="grid grid-cols-12 gap-4">
               <SearchRoute searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
-              <TotalRoute filteredData={filteredData} />
+              <TotalRoute filteredData={data?.pagination.total} />
             </div>
             <div className="overflow-hidden rounded-xl border border-neutral-200">
               <TableRoute

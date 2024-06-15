@@ -1,11 +1,10 @@
 import { axiosInstance } from "@/lib/axios";
 
-export const getUsers = async (token,page) => {
+export const getDashboard = async (token) => {
   try {
-    const res = await axiosInstance.get(`admin/admins?page=${page}`, {
+    const res = await axiosInstance.get(`admin/dashboard`, {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
       },
     });
     return res.data;

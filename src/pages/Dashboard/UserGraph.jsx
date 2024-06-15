@@ -1,6 +1,6 @@
 import AreaChartComponent from "@/components/AreaChart";
 
-export default function UserGraph() {
+export default function UserGraph({dataGraph}) {
   return (
     <div className="rounded-xl border border-primary-300 bg-neutral-50">
       <div className="flex items-center justify-between p-6">
@@ -22,7 +22,7 @@ export default function UserGraph() {
           </div>
         </div>
       </div>
-      <AreaChartComponent width="100%" height={250} />
+      <AreaChartComponent dataGraph={dataGraph} width="100%" height={250} />
     </div>
   );
 }
