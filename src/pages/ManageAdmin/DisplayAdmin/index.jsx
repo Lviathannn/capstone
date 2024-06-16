@@ -16,6 +16,9 @@ import IcAdmin from "@/components/icons/ic-admin.svg";
 import IcAdd from "@/components/icons/ic-add.svg";
 import { TableAdmin } from "@/pages/ManageAdmin/DisplayAdmin/tableAdmin";
 import HeaderAdmin from "@/components/layout/header";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export const DisplayAdmin = () => {
   return (

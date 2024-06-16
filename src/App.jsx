@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { DetailAdmin } from "@/pages/ManageAdmin/DetailAdmin/index";
 import { AddAdmin } from "@/pages/ManageAdmin/AddAdmin/index";
 import LandingPage from "@/pages/landing";
@@ -18,33 +18,48 @@ import EditContent from "@/pages/manageContent/editContent";
 import CreateContent from "@/pages/manageContent/createContent";
 import ManageRoute from "@/pages/ManageRoute/index";
 import DetailRoute from "@/pages/ManageRoute/DetailRoute";
+import UserEdit from "./pages/ManageUser/UserEdit";
+import { useEffect } from "react";
+
+import ProtectedRoute from "./hooks/protectedRoute";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
   return (
-      <BrowserRouter>
-        <Routes>
-          <Route path="/edit" element={<EditAdmin />} />
-          {/* Protected Routes */}
-          <Route
-            path="/detail/:id"
-            element={currentUser ? <DetailAdmin /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/add"
-            element={currentUser ? <AddAdmin /> : <Navigate to="/login" />}
-          />
+    <BrowserRouter>
+      <Routes>
+        <Route element={<ProtectedRoute requiredRole="super admin" />}>
           <Route
             path="/manage-admin"
             element={currentUser ? <DisplayAdmin /> : <Navigate to="/login" />}
           />
           <Route
-            path="/dashboard"
-            element={currentUser ? <DashboardPage /> : <Navigate to="/login" />}
+            path="/detail/:id"
+            element={currentUser ? <DetailAdmin /> : <Navigate to="/login" />}
           />
+          <Route
+            path="/edit/:id"
+            element={currentUser ? <EditAdmin /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/add"
+            element={currentUser ? <AddAdmin /> : <Navigate to="/login" />}
+          />
+
+        </Route>
+        {/* Protected Routes */}
+        
           <Route
             path="/manage-user"
             element={currentUser ? <ManageUser /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/manage-route"
+            element={currentUser ? <ManageRoute /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/manage-content"
+            element={currentUser ? <ManageContent /> : <Navigate to="/login" />}
           />
           <Route
             path="/manage-user/detail/:id"
@@ -58,13 +73,20 @@ function App() {
             path="/manage-user/edit/:id"
             element={currentUser ? <UserEdit /> : <Navigate to="/login" />}
           />
-          {/* Public Routes */}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-        </Routes>
-        <Toaster />
-      </BrowserRouter>
+      
+
+        <Route
+          path="/dashboard"
+          element={currentUser ? <DashboardPage /> : <Navigate to="/login" />}
+        />
+
+        {/* Public Routes */}
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+      </Routes>
+      <Toaster />
+    </BrowserRouter>
   );
 }
 
