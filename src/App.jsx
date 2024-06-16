@@ -19,6 +19,9 @@ import CreateContent from "@/pages/manageContent/createContent";
 import ManageRoute from "@/pages/ManageRoute/index";
 import DetailRoute from "@/pages/ManageRoute/DetailRoute";
 import { privateRoutes } from "./constant/routes";
+import DestinationPage from "./pages/destination";
+import CreateDestination from "./pages/destination/create";
+import DetailDestination from "./pages/destination/detail";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -104,6 +107,25 @@ function App() {
         <Route
           path={privateRoutes.USER}
           element={currentUser ? <ManageUser /> : <Navigate to="/login" />}
+        />
+
+        {/* Destination */}
+
+        <Route
+          path={privateRoutes.DESTINATION}
+          element={currentUser ? <DestinationPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path={privateRoutes.DESTINATION + "/create"}
+          element={
+            currentUser ? <CreateDestination /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path={privateRoutes.DESTINATION + "/detail/:id"}
+          element={
+            currentUser ? <DetailDestination /> : <Navigate to="/login" />
+          }
         />
 
         {/* Public Routes */}
