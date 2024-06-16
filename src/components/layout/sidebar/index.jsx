@@ -9,7 +9,7 @@ import {
   LogoutIcon,
   VideoIcon,
 } from "@/assets/icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { logout } from "@/services/auth/logout";
 import { useNavigate } from "react-router-dom";
@@ -20,6 +20,7 @@ import { resetUser } from "@/lib/slice/authSlice";
 export default function SideBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -31,10 +32,16 @@ export default function SideBar() {
     }
   };
 
+  const getLinkClasses = (path) => {
+    const baseClasses = "flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium transition-all";
+    const isActive = location.pathname === path;
+    return isActive ? `${baseClasses} bg-primary-600 text-neutral-50 transition-all hover:text-neutral-200` : `${baseClasses} bg-neutral-50 text-muted-foreground text-primary-400 transition-all hover:text-primary-600`;
+  };
+
   return (
-    <div className="hidden border-r bg-muted/40 md:block">
+    <div className="hidden border-none bg-muted/40 md:block">
       <div className="fixed flex h-full max-h-screen flex-col md:w-[220px] lg:w-[240px]">
-        <div className="flex h-14 items-center border-b px-4 lg:h-[60px]">
+        <div className="flex h-14 items-center px-4 lg:h-[60px]">
           <Link
             to="/"
             className="flex w-full items-center justify-center gap-2 font-semibold"
@@ -49,43 +56,43 @@ export default function SideBar() {
             </h1>
             <div className="mt-[15px] flex flex-col gap-1">
               <Link
-                to="#"
-                className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
+                to="/dashboard"
+                className={getLinkClasses('/dashboard')}
               >
                 <DashboardIcon />
                 Overview
               </Link>
               <Link
-                to="#"
-                className="flex items-center gap-[10px] rounded-lg bg-primary-600 px-6 py-3 font-medium text-muted-foreground text-neutral-50 transition-all hover:text-neutral-200"
+                to="/manage-user"
+                className={getLinkClasses('/manage-user')}
               >
                 <PersonIcon />
                 User
               </Link>
               <Link
-                to="#"
-                className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
+                to="/manage-route"
+                className={getLinkClasses('/manage-route')}
               >
                 <AltRouteIcon />
                 Rute
               </Link>
               <Link
-                to="#"
-                className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
+                to="/manage-content"
+                className={getLinkClasses('/manage-content')}
               >
                 <VideoIcon />
                 Konten
               </Link>
               <Link
                 to="#"
-                className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
+                className={getLinkClasses('#')}
               >
                 <DestinationIcon />
                 Destinasi
               </Link>
               <Link
                 to="/manage-admin"
-                className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
+                className={getLinkClasses('/manage-admin')}
               >
                 <PeopleAltIcon />
                 Admin

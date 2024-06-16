@@ -14,9 +14,9 @@ export const CardDetail = () => {
       <div className="w-full overflow-hidden rounded-[10px] border-none shadow-md">
         <Card
           x-chunk="dashboard-05-chunk-1"
-          className="flex justify-between items-end bg-neutral-50 px-2"
+          className="grid sm:flex justify-between items-end bg-neutral-50 px-2"
         >
-          <CardHeader className="flex flex-col gap-2">
+          <CardHeader className="flex flex-col sm:gap-2 gap-1">
             <CardTitle className="text-[26px] font-bold text-neutral-800">
               Detail Admin
             </CardTitle>
@@ -26,7 +26,7 @@ export const CardDetail = () => {
           </CardHeader>
           <CardContent>
             <Link to={"/manage-admin"}>
-            <Button className="bg-primary-500 hover:bg-primary-600 h-[48px] w-[135px] py-[13px] px-10 text-sm font-medium text-neutral-100 sm:rounded-[12px]">Kembali</Button>
+            <Button className="bg-primary-500 hover:bg-primary-600 sm:h-[48px] sm:w-[135px] h-fit w-fit py-[13px] px-10 text-sm font-medium text-neutral-100 sm:rounded-[12px]">Kembali</Button>
             </Link>
           </CardContent>
         </Card>

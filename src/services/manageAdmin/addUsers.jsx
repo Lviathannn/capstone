@@ -9,6 +9,7 @@ export const addUsers = async (token,formData) => {
       },
     });
     console.log("Fetching Data: ", res.data);
+    console.log("Fetching Data: ", res.data?.data);
     return res.data;
   } catch (error) {
     console.error("Error fetching users:", error); // Logging untuk debug

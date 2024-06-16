@@ -5,6 +5,7 @@ export const getUsers = async (token,page) => {
     const res = await axiosInstance.get(`admin/admins?page=${page}`, {
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
       },
     });
     return res.data;

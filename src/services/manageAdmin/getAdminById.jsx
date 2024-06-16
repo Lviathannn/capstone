@@ -6,6 +6,7 @@ export const getAdminById = async (token,id) => {
     const res = await axiosInstance.get(`admin/admins/${id}`,{
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
       },
     });
     console.log("Data yang terambil: ", res.data);
