@@ -37,7 +37,6 @@ export const FormAddAdmin = () => {
   const token = useSelector((state) => state.auth.user?.access_token);
   const [visible, setVisible] = useState(false);
   const [preview, setPreview] = useState(null);
-  const [showModal, setShowModal] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
 
@@ -55,12 +54,11 @@ export const FormAddAdmin = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin"] });
       toast.success("User added successfully");
-      console.log("success bro!");
       form.reset();
       navigate(privateRoutes.ADMIN);
       setOpenSuccess(true);
     },
-    onError: (error) => {
+    onError: () => {
       setOpenError(true);
     },
   });
@@ -84,6 +82,7 @@ export const FormAddAdmin = () => {
       createPostMutation.mutate(values);
     } catch (error) {
       toast.error("Tidak berhasil menambahkan Admin");
+      throw error("Error adding Admin");
     }
   }
   return (
@@ -206,7 +205,7 @@ export const FormAddAdmin = () => {
                   setSuccessOpen={setOpenSuccess}
                   errorOpen={openError}
                   setErrorOpen={setOpenError}
-                ></AlertConfirm>
+                />
               </div>
             </div>
           </form>

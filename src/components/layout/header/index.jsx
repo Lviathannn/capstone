@@ -22,13 +22,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { privateRoutes, publicRoutes } from "@/constant/routes";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
 
 export default function HeaderAdmin() {
   const pathname = useLocation().pathname.split("/").splice(1);
   const basePathname = pathname[0];
   const user = useSelector((state) => state.auth.user);
   return (
-    <div className="flex h-14 items-center gap-4 border-none bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+    <div className="fixed left-0 right-0 top-0 z-40 flex h-14 items-center justify-between gap-4 border-none bg-muted/40 bg-neutral-50 px-6 lg:h-[60px] lg:px-6">
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="outline" size="icon" className="shrink-0 md:hidden">
@@ -41,54 +42,66 @@ export default function HeaderAdmin() {
           className="flex h-full flex-col justify-between"
         >
           <nav className="grid gap-2 text-lg font-medium">
-            <Link
+            <NavLink
               to={publicRoutes.HOME}
               className="flex w-full items-center justify-center gap-2 font-semibold"
             >
               <img src={Logo} className="h-16 w-28" />
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to={privateRoutes.DASHBOARD}
-              className="flex items-center gap-[10px] rounded-lg bg-primary-600 px-6 py-3 font-medium text-muted-foreground text-neutral-50 transition-all hover:text-neutral-200"
+              className={({ isActive }) => {
+                return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
+              }}
             >
               <DashboardIcon />
               Overview
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to={privateRoutes.USER}
-              className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
+              className={({ isActive }) => {
+                return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
+              }}
             >
               <PersonIcon />
               User
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to={privateRoutes.ROUTE}
-              className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
+              className={({ isActive }) => {
+                return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
+              }}
             >
               <AltRouteIcon />
               Rute
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to={privateRoutes.CONTENT}
-              className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
+              className={({ isActive }) => {
+                return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
+              }}
             >
               <VideoIcon />
               Konten
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to={privateRoutes.DESTINATION}
-              className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
+              className={({ isActive }) => {
+                return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
+              }}
             >
               <DestinationIcon />
               Destinasi
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to={privateRoutes.ADMIN}
-              className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
+              className={({ isActive }) => {
+                return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
+              }}
             >
               <PeopleAltIcon />
               Admin
-            </Link>
+            </NavLink>
           </nav>
           <div className="flex flex-col px-2 lg:px-[10px]">
             <h1 className="font-bold text-primary-600 lg:px-[10px]">Lainnya</h1>
@@ -102,9 +115,9 @@ export default function HeaderAdmin() {
           </div>
         </SheetContent>
       </Sheet>
-      <div className="w-full flex-1">
+      <div className="w-full flex-1 pl-[250px]">
         <nav>
-          <div className="container mx-auto flex items-center justify-between px-4 py-5 lg:px-0">
+          <div className="container mx-auto flex items-center justify-between px-6 py-5 lg:px-0">
             <div className="flex items-center gap-5">
               <ul className={`hidden md:flex md:space-x-8`}>
                 <li>
@@ -113,7 +126,7 @@ export default function HeaderAdmin() {
                       {pathname.map((path, index) => {
                         return (
                           <>
-                            <BreadcrumbItem key={index}>
+                            <BreadcrumbItem key={path}>
                               <Link
                                 to={
                                   index === 0
@@ -139,11 +152,18 @@ export default function HeaderAdmin() {
           </div>
         </nav>
       </div>
-
-      <Avatar>
-        <AvatarImage src={user.profile_image} />
-        <AvatarFallback>{user.username.charAt(0).toUpperCase()}</AvatarFallback>
-      </Avatar>
+      <div className="flex items-center gap-2">
+        <Avatar>
+          <AvatarImage src={user.profile_image} />
+          <AvatarFallback>
+            {user.username.charAt(0).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+        <div className="hidden sm:block">
+          <p className="font-medium text-neutral-800">{user.username}</p>
+          <p className="text-sm font-medium text-neutral-500">{user.role}</p>
+        </div>
+      </div>
     </div>
   );
 }

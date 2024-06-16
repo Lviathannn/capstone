@@ -33,7 +33,7 @@ export const AlertConfirm = ({
 }) => {
   // function handleSubmit(e) {
   //   e.preventDefault();
-  //   e.stopPropagation(); 
+  //   e.stopPropagation();
   //   setSucces(true);
   //   if (onConfirm) {
   //     onConfirm();
@@ -41,8 +41,8 @@ export const AlertConfirm = ({
   // }
   const handleConfirm = async () => {
     try {
-        await onConfirm();
-        setSuccessOpen(true);
+      await onConfirm();
+      setSuccessOpen(true);
     } catch (err) {
       setErrorOpen(true);
       console.error("Error deleting data: ", err);
@@ -52,7 +52,12 @@ export const AlertConfirm = ({
     <div>
       <AlertDialog className={`rounded bg-white ${backround}`}>
         <AlertDialogTrigger asChild className={`sm:rounded ${backround}`}>
-          <Button variant="outline" className={`w-full  ${disabled ? 'bg-gray-400 hover:bg-gray-400 cursor-not-allowed' : 'bg-primary-500 hover:bg-primary-600'}${backround}`}>{textBtn}</Button>
+          <Button
+            variant="outline"
+            className={`w-full  ${disabled ? "cursor-not-allowed bg-gray-400 hover:bg-gray-400" : "bg-primary-500 hover:bg-primary-600"}${backround}`}
+          >
+            {textBtn}
+          </Button>
         </AlertDialogTrigger>
         <AlertDialogContent className="flex w-[464px] flex-col gap-6 bg-white sm:rounded-[16px] sm:p-6">
           <AlertDialogHeader className="flex flex-col gap-4">
