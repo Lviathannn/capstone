@@ -2,6 +2,8 @@ import { Link } from "react-scroll";
 import { useState, useEffect } from "react";
 import Logo from "@/assets/img/logo.png";
 import { Button } from "@/components/ui/button";
+import { publicRoutes } from "@/constant/routes";
+import { NavLink } from "react-router-dom";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -77,7 +79,7 @@ export default function Navbar() {
           </li>
           <li className="nav-item">
             <Button className="bg-secondary-500 hover:bg-secondary-700" asChild>
-              <a href="/login">Masuk</a>
+              <NavLink to={publicRoutes.LOGIN}>Masuk</NavLink>
             </Button>
           </li>
         </ul>

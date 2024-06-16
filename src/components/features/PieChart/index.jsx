@@ -1,5 +1,5 @@
 import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer } from "recharts";
-import tailwindConfig from "../../../tailwind.config.js";
+import tailwindConfig from "../../../../tailwind.config.js";
 
 export default function PieChartComponent({ width, height, dataVid }) {
   const total = dataVid?.total_content + dataVid?.total_destinasi;

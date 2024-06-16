@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AlertConfirm } from "@/components/layout/manageAdmin/alertConfirm";
+import { AlertConfirm } from "@/components/features/alert/alertConfirm";
 import IcDelete from "@/components/icons/ic-delete.svg";
 import IlusDelete from "@/assets/ImgModal/Ilustrasi-delete.svg";
 

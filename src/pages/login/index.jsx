@@ -2,12 +2,13 @@ import { useSelector } from "react-redux";
 import LoginForm from "./LoginForm";
 import Logo from "@/assets/img/logo-white.png";
 import { Navigate } from "react-router-dom";
+import { privateRoutes } from "@/constant/routes";
 
 export function LoginPage() {
   const user = useSelector((state) => state.auth.user);
 
   if (user) {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to={privateRoutes.DASHBOARD} />;
   }
   return (
     <div className="bg-image h-screen w-full bg-cover bg-center lg:grid lg:min-h-[600px] lg:grid-cols-2 ">
