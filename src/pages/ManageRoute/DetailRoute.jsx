@@ -45,10 +45,10 @@ export default function DetailRoute() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="font-jakarta-sans text-[26px] font-bold text-neutral-800">
-                  Detail User
+                  Detail Rute
                 </h1>
                 <p className="font-jakarta-sans text-base font-medium text-neutral-700">
-                  Lihat detail data pengguna
+                  Lihat detail rute pengguna
                 </p>
               </div>
               <Button

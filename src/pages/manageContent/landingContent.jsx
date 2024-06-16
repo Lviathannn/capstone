@@ -16,11 +16,52 @@ import {
 } from "@/components/ui/table";
 import SideBar from "@/components/layout/sidebar";
 import HeaderAdmin from "@/components/layout/header";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import AlertDelete from "@/assets/img/alert delete.png";
 
 export default function DataContent() {
   const navigate = useNavigate();
-
-  const users = [
+  const [users, setUsers] = useState([
+    {
+      namaDestinasi: 'Danau Toba',
+      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
+      linkTerkait: 'danau.toba@example.com',
+    },
+    {
+      namaDestinasi: 'Danau Toba',
+      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
+      linkTerkait: 'danau.toba@example.com',
+    },
+    {
+      namaDestinasi: 'Danau Toba',
+      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
+      linkTerkait: 'danau.toba@example.com',
+    },
+    {
+      namaDestinasi: 'Danau Toba',
+      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
+      linkTerkait: 'danau.toba@example.com',
+    },
+    {
+      namaDestinasi: 'Danau Toba',
+      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
+      linkTerkait: 'danau.toba@example.com',
+    },
+    {
+      namaDestinasi: 'Danau Toba',
+      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
+      linkTerkait: 'danau.toba@example.com',
+    },
     {
       namaDestinasi: 'Danau Toba',
       deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
@@ -46,18 +87,10 @@ export default function DataContent() {
       deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
       linkTerkait: 'danau.toba@example.com',
     }
-  ];
-
-  const truncateText = (text, maxWords) => {
-    const words = text.split(' ');
-    if (words.length > maxWords) {
-      return words.slice(0, maxWords).join(' ') + '...';
-    }
-    return text;
-  };
-
+  ]);
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 8;
+  const [userToDelete, setUserToDelete] = useState(null);
 
   // Calculate the total number of pages
   const totalPages = Math.ceil(users.length / usersPerPage);
@@ -77,7 +110,19 @@ export default function DataContent() {
   const handleEditClick = (event, user) => {
     event.stopPropagation();
     navigate(`/manage-content/edit`, { state: { user } });
-  };  
+  };
+
+  const handleDeleteUser = () => {
+    if (userToDelete) {
+      const updatedUsers = users.filter(user => user !== userToDelete);
+      setUsers(updatedUsers);
+      setUserToDelete(null); // Reset the user to delete
+    }
+  };
+
+  const handleOpenDeleteDialog = (user) => {
+    setUserToDelete(user);
+  };
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr]">
@@ -124,16 +169,35 @@ export default function DataContent() {
                 <TableBody className="bg-neutral-50 font-jakarta-sans">
                   {currentUsers.map((user, index) => (
                     <TableRow key={index} onClick={() => handleUserClick(user)} className="cursor-pointer">
-                      <TableCell>{user.namaDestinasi}</TableCell>
+                      <TableCell className="max-w-xs truncate overflow-hidden whitespace-nowrap">{user.namaDestinasi}</TableCell>
                       <TableCell className="max-w-xs truncate overflow-hidden whitespace-nowrap">{user.deskripsiKonten}</TableCell>
-                      <TableCell>{user.linkTerkait}</TableCell>
+                      <TableCell className="max-w-xs truncate overflow-hidden whitespace-nowrap">{user.linkTerkait}</TableCell>
                       <TableCell>
-                          <button className="mr-2" onClick={(e) => handleEditClick(e, user)}>
-                            <img src={edit} alt="Edit Icon" className="w-6 h-6" />
-                          </button>
-                          <button>
-                            <img src={deleteIcon} alt="Delete Icon" className="w-6 h-6" />
-                          </button>
+                        <button className="mr-2" onClick={(e) => handleEditClick(e, user)}>
+                          <img src={edit} alt="Edit Icon" className="w-6 h-6" />
+                        </button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <button onClick={() => handleOpenDeleteDialog(user)}>
+                              <img src={deleteIcon} alt="Delete Icon" className="w-6 h-6" />
+                            </button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader className="pb-6">
+                              <div className="flex justify-center pb-6">
+                                <img src={AlertDelete} alt="Alert Add" className="w-[240px] h-[100px]" />
+                              </div>
+                              <AlertDialogTitle className="text-lg font-bold text-neutral-900 font-jakarta-sans text-center pb-4">Hapus User?</AlertDialogTitle>
+                              <AlertDialogDescription className="text-sm font-medium text-neutral-600 font-jakarta-sans text-center">
+                                Anda akan menghapus data ini. Tindakan ini tidak dapat dibatalkan. Apakah Anda yakin ingin menghapus data ini?
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter className="flex justify-center w-full">
+                              <AlertDialogCancel className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-danger-500 hover:text-neutral-50 hover:border-none mx-2 w-full text-center">Batal</AlertDialogCancel>
+                              <AlertDialogAction className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-danger-500 hover:text-neutral-50 hover:border-none mx-2 w-full text-center" onClick={handleDeleteUser}>Hapus</AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </TableCell>
                     </TableRow>
                   ))}

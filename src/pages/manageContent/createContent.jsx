@@ -20,10 +20,10 @@ import {
   AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
 import AlertAdd from "@/assets/img/alert add.png";
-import { AspectRatio } from '@radix-ui/themes';
 
 export default function CreateContent() {
   const [visible, setVisible] = useState(false);
+  const textareaRef = useRef(null);
   const navigate = useNavigate();
   const [userContent, setUserContent] = useState({
     namaDestinasi: '',
@@ -32,14 +32,13 @@ export default function CreateContent() {
     video: null
   });
 
-  const textareaRef = useRef(null);
-
+  {/* setting auto-height Input Deskripsi */}
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
-  }, [userContent.deskripsiKonten]);
+  }, [userContent.deskripsiKonten]);  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -76,42 +75,16 @@ export default function CreateContent() {
               <p className="text-base font-medium text-neutral-700 font-jakarta-sans">Tambah konten video</p>
             </div>
           </div>
-          <div className="bg-neutral-50 px-6 py-8 shadow-md rounded-lg grid grid-cols-12 gap-4">
+          <div className="bg-neutral-50 px-6 py-8 shadow-md rounded-lg grid grid-cols-12 gap-10">
             <div className="col-span-2 flex justify-center items-start">
-              <label htmlFor="photo" className="cursor-pointer">
-                <div className="relative w-40 h-40 bg-neutral-100 rounded-full flex items-center justify-center overflow-hidden">
-                  <input
-                    type="file"
-                    id="video"
-                    name="video"
-                    className="hidden"
-                    onChange={handleVideoChange}
-                  />
-                  {userContent.video ? (
-                    <>
-                      <img
-                        src={URL.createObjectURL(userContent.video)}
-                        alt="Photo Preview"
-                        className="w-full h-full object-cover"
-                        style={{ filter: 'brightness(0.7)' }}
-                      />
-                      <img
-                        src={EditIcon}
-                        alt="Edit Icon"
-                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 cursor-pointer"
-                      />
-                    </>
-                  ) : (
-                    <img
-                      src={AddPhoto}
-                      alt="Add Photo"
-                      className="w-12 h-12 cursor-pointer"
-                    />
-                  )}
+              <div className='flex flex-col justify-center items-center gap-1'>
+                <p className="text-lg font-bold font-jakarta-sans">Preview</p>
+                <div>
+                  <img src={Preview} alt="Alert Add" className="" />
                 </div>
-              </label>
+              </div>
             </div>
-            <div className="col-span-10 grid grid-cols-12 gap-4">
+            <div className="col-span-10 gap-4">
               <div className="col-span-12 mb-3 relative">
                 <Label htmlFor="destinationName" className="text-sm font-bold font-jakarta-sans pb-2">Nama Destinasi</Label>
                 <Input type="text" id="destinationName" name="namaDestinasi" placeholder='Masukkan Nama Destinasi' value={userContent.namaDestinasi} onChange={handleInputChange} />
@@ -153,10 +126,10 @@ export default function CreateContent() {
                     <img src={AlertAdd} alt="Alert Add" className="w-[240px] h-[100px]" />
                   </div>
                   <AlertDialogTitle className="text-lg font-bold text-neutral-900 font-jakarta-sans text-center pb-4">
-                    Tambah Data?
+                    Tambah Data!
                   </AlertDialogTitle>
                   <AlertDialogDescription className="text-sm font-medium text-neutral-600 font-jakarta-sans text-center">
-                    Sebelum menambahkan data, pastikan informasi yang dimasukkan benar dan sesuai. Apakah Anda yakin ingin menambahkan data ini?
+                    Pastikan informasi benar dan sesuai sebelum menambahkan data. Yakin ingin menambahkan data ini?
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter className="flex justify-center w-full">
