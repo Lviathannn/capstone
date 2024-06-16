@@ -16,7 +16,7 @@ export const AlertNotif = ({ open, onOpenChange, img, title, desc, isLoading }) 
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [open, onOpenChange]);
+  }, [open, onOpenChange, isLoading]);
 
   return (
     <AlertDialog

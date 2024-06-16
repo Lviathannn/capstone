@@ -18,53 +18,101 @@ import EditContent from "@/pages/manageContent/editContent";
 import CreateContent from "@/pages/manageContent/createContent";
 import ManageRoute from "@/pages/ManageRoute/index";
 import DetailRoute from "@/pages/ManageRoute/DetailRoute";
+import { privateRoutes } from "./constant/routes";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
+
   return (
-      <BrowserRouter>
-        <Routes>
-          <Route path="/edit" element={<EditAdmin />} />
-          {/* Protected Routes */}
-          <Route
-            path="/detail/:id"
-            element={currentUser ? <DetailAdmin /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/add"
-            element={currentUser ? <AddAdmin /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/manage-admin"
-            element={currentUser ? <DisplayAdmin /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/dashboard"
-            element={currentUser ? <DashboardPage /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/manage-user"
-            element={currentUser ? <ManageUser /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/manage-user/detail/:id"
-            element={currentUser ? <UserDetail /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/manage-user/create"
-            element={currentUser ? <UserCreate /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/manage-user/edit/:id"
-            element={currentUser ? <UserEdit /> : <Navigate to="/login" />}
-          />
-          {/* Public Routes */}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-        </Routes>
-        <Toaster />
-      </BrowserRouter>
+    <BrowserRouter>
+      <Routes>
+        {/* Private Routes */}
+
+        {/* Admin */}
+        <Route
+          path={`${privateRoutes.ADMIN}/detail/:id`}
+          element={currentUser ? <DetailAdmin /> : <Navigate to="/login" />}
+        />
+        <Route
+          path={`${privateRoutes.ADMIN}/edit/:id`}
+          element={currentUser ? <EditAdmin /> : <Navigate to="/login" />}
+        />
+        <Route
+          path={`${privateRoutes.ADMIN}/create`}
+          element={currentUser ? <AddAdmin /> : <Navigate to="/login" />}
+        />
+        <Route
+          path={privateRoutes.ADMIN}
+          element={currentUser ? <DisplayAdmin /> : <Navigate to="/login" />}
+        />
+
+        {/* Dashboard */}
+
+        <Route
+          path={privateRoutes.DASHBOARD}
+          element={currentUser ? <DashboardPage /> : <Navigate to="/login" />}
+        />
+
+        {/* Content */}
+
+        <Route
+          path={privateRoutes.CONTENT}
+          element={currentUser ? <ManageContent /> : <Navigate to="/login" />}
+        />
+
+        <Route
+          path={`${privateRoutes.CONTENT}/create`}
+          element={currentUser ? <CreateContent /> : <Navigate to="/login" />}
+        />
+        <Route
+          path={`${privateRoutes.CONTENT}/detail`}
+          element={currentUser ? <DetailContent /> : <Navigate to="/login" />}
+        />
+        <Route
+          path={`${privateRoutes.CONTENT}/edit`}
+          element={currentUser ? <EditContent /> : <Navigate to="/login" />}
+        />
+
+        {/* User */}
+
+        <Route
+          path={privateRoutes.USER}
+          element={currentUser ? <ManageUser /> : <Navigate to="/login" />}
+        />
+        <Route
+          path={`${privateRoutes.USER}/detail`}
+          element={currentUser ? <UserDetail /> : <Navigate to="/login" />}
+        />
+        <Route
+          path={`${privateRoutes.USER}/create`}
+          element={currentUser ? <UserCreate /> : <Navigate to="/login" />}
+        />
+
+        {/* Route */}
+
+        <Route
+          path={privateRoutes.ROUTE}
+          element={currentUser ? <ManageRoute /> : <Navigate to="/login" />}
+        />
+        <Route
+          path={`${privateRoutes.ROUTE}/:id`}
+          element={currentUser ? <DetailRoute /> : <Navigate to="/login" />}
+        />
+
+        {/* User */}
+
+        <Route
+          path={privateRoutes.USER}
+          element={currentUser ? <ManageUser /> : <Navigate to="/login" />}
+        />
+
+        {/* Public Routes */}
+
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>
+      <Toaster />
+    </BrowserRouter>
   );
 }
 

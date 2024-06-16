@@ -1,4 +1,4 @@
-import AreaChartComponent from "@/components/AreaChart";
+import AreaChartComponent from "@/components/features/AreaChart";
 
 export default function UserGraph({dataGraph}) {
   return (

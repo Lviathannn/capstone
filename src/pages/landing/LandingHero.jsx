@@ -1,5 +1,5 @@
 import Hero from '@/assets/img/Hero section.png';
-import Navbar from '@/components/layouts/navbar';
+import Navbar from '@/components/layout/navbar';
 
 export default function LandingHero() {
     return (
