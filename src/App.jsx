@@ -19,7 +19,6 @@ import EditContent from "@/pages/manageContent/editContent";
 import CreateContent from "@/pages/manageContent/createContent";
 import ManageRoute from "@/pages/ManageRoute/index";
 import DetailRoute from "@/pages/ManageRoute/DetailRoute";
-import UserEdit from "./pages/ManageUser/UserEdit";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
