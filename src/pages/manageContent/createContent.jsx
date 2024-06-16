@@ -23,9 +23,9 @@ import AlertAdd from "@/assets/img/alert add.png";
 import { AspectRatio } from "@radix-ui/themes";
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
 import { privateRoutes } from "@/constant/routes";
-
 export default function CreateContent() {
   const [visible, setVisible] = useState(false);
+  const textareaRef = useRef(null);
   const navigate = useNavigate();
   const [userContent, setUserContent] = useState({
     namaDestinasi: "",
@@ -34,14 +34,13 @@ export default function CreateContent() {
     video: null,
   });
 
-  const textareaRef = useRef(null);
-
+  {/* setting auto-height Input Deskripsi */}
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
-  }, [userContent.deskripsiKonten]);
+  }, [userContent.deskripsiKonten]);  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
