@@ -22,49 +22,49 @@ import DetailRoute from "@/pages/ManageRoute/DetailRoute";
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
   return (
-    <BrowserRouter>
-      <Routes>
-        {/* Protected Routes */}
-        <Route
-          path="/detail/:id"
-          element={currentUser ? <DetailAdmin /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/edit/:id"
-          element={currentUser ? <EditAdmin /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/add"
-          element={currentUser ? <AddAdmin /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/manage-admin"
-          element={currentUser ? <DisplayAdmin /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/dashboard"
-          element={currentUser ? <DashboardPage /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/manage-content"
-          element={currentUser ? <ManageContent /> : <Navigate to="/login" />}
-        />
-        {/* Public Routes */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/manage-user" element={<ManageUser />} />
-        <Route path="/manage-user/detail" element={<UserDetail />} />
-        <Route path="/manage-user/create" element={<UserCreate />} />
-        <Route path="/manage-route" element={<ManageRoute />} />
-        <Route path="/manage-route/:id" element={<DetailRoute />} />
-        <Route path="/manage-content" element={<ManageContent />} />
-        <Route path="manage-content/create" element={<CreateContent />} />
-        <Route path="manage-content/detail" element={<DetailContent />} />
-        <Route path="manage-content/edit" element={<EditContent />}/>
-      </Routes>
-      <Toaster />
-    </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/edit" element={<EditAdmin />} />
+          {/* Protected Routes */}
+          <Route
+            path="/detail/:id"
+            element={currentUser ? <DetailAdmin /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/add"
+            element={currentUser ? <AddAdmin /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/manage-admin"
+            element={currentUser ? <DisplayAdmin /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/dashboard"
+            element={currentUser ? <DashboardPage /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/manage-user"
+            element={currentUser ? <ManageUser /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/manage-user/detail/:id"
+            element={currentUser ? <UserDetail /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/manage-user/create"
+            element={currentUser ? <UserCreate /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/manage-user/edit/:id"
+            element={currentUser ? <UserEdit /> : <Navigate to="/login" />}
+          />
+          {/* Public Routes */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
+        </Routes>
+        <Toaster />
+      </BrowserRouter>
   );
 }
 
