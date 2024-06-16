@@ -1,7 +1,6 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -12,7 +11,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -29,11 +27,12 @@ import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import IlusDelete from "@/assets/ImgModal/Ilustrasi-delete.svg";
-import { AlertConfirm } from "@/components/layout/manageAdmin/alertConfirm";
+import { AlertConfirm } from "@/components/features/alert/alertConfirm";
 import { deleteAdmins } from "@/services/manageAdmin/deleteAdmins";
 import { toast } from "sonner";
 import { Clear } from "@/components/icons/Clear";
 import notFound from "@/assets/icons/not-found.svg";
+import { privateRoutes } from "@/constant/routes";
 
 export const useGetAdmin = (page) => {
   const token = useSelector((state) => state.auth.user?.access_token); // Mengambil token dari Redux state
@@ -56,7 +55,7 @@ export const TableAdmin = () => {
   const totalPages = data?.pagination?.last_page;
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
-  const [deleted, setDeleted] = useState('');
+  const [deleted, setDeleted] = useState("");
   const inputRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
@@ -98,7 +97,7 @@ export const TableAdmin = () => {
   );
 
   const handleDetail = (id) => {
-    navigate(`/detail/${id}`);
+    navigate(`${privateRoutes.ADMIN}/detail/${id}`);
   };
 
   if (isLoading) {
@@ -151,7 +150,7 @@ export const TableAdmin = () => {
                   )}
                 </div>
                 <div>
-                  <Link to="/add">
+                  <Link to={`${privateRoutes.ADMIN}/create`}>
                     <Button className="flex w-full items-center gap-1 overflow-hidden rounded-[12px] border border-neutral-300 bg-transparent px-4 py-6 text-primary-500 shadow-sm hover:bg-neutral-100 sm:w-fit md:gap-4">
                       <img src={IcAdd} sizes="24" alt="" />
                       <span>Tambah Admin</span>
@@ -184,7 +183,7 @@ export const TableAdmin = () => {
         </div>
       </div>
       {filteredData && filteredData.length === 0 ? (
-        <div className="flex h-full flex-grow w-full flex-col items-center justify-center gap-5">
+        <div className="flex h-full w-full flex-grow flex-col items-center justify-center gap-5">
           <img className="h-[200px] w-[200px]" src={notFound} alt="" />
           <span className="mx-auto flex items-center text-[16px] font-medium">
             Maaf, Hasil Pencarian Tidak Ditemukan!
@@ -231,7 +230,7 @@ export const TableAdmin = () => {
                     </TableCell>
                     <TableCell className="flex w-fit items-center justify-center gap-2 px-0 sm:w-full sm:gap-7">
                       <div>
-                        <Link to={`/edit/${item.id}`}>
+                        <Link to={`${privateRoutes.ADMIN}/edit/${item.id}`}>
                           <img src={IcEdit} sizes="24" alt="" />
                         </Link>
                       </div>

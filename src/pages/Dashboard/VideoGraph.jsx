@@ -1,4 +1,4 @@
-import PieChartComponent from "@/components/PieChart";
+import PieChartComponent from "@/components/features/PieChart";
 import { data } from "autoprefixer";
 
 export default function VideoGraph({dataVid}) {
