@@ -1,7 +1,7 @@
 import React from 'react';
-import {useNavigate, useLocation } from "react-router-dom";
+import {useNavigate, useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import SideBar from "@/components/layout/sidebar";
 import HeaderAdmin from "@/components/layout/header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -14,7 +14,9 @@ const useGetUserId = (id) => {
   const token = useSelector((state) => state.auth.user?.access_token);
   console.log("Token: ", token);  // Log the token to ensure it is being retrieved correctly
   
-  const { data, error, isLoading } = useQuery(["user", id], () => getUserById(token, id), {
+  const { data, error, isLoading } = useQuery( {
+    queryKey: ["user",id],
+    queryFn: () => getUserById(token, id),
     enabled: !!token && !!id,
     onError: (error) => {
       console.error("Query error:", error);
@@ -26,7 +28,7 @@ const useGetUserId = (id) => {
 
 export default function UserDetail() {
   const loc = useLocation();
-  const {id} = loc.state || undefined
+  const {id} = useParams()
   console.log("User ID: ", id);  // Log the ID to ensure it is being retrieved correctly
   const navigate = useNavigate();
   const { data, error, isLoading } = useGetUserId(id);

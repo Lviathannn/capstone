@@ -46,7 +46,7 @@ function App() {
             element={currentUser ? <ManageUser /> : <Navigate to="/login" />}
           />
           <Route
-            path="/manage-user/detail"
+            path="/manage-user/detail/:id"
             element={currentUser ? <UserDetail /> : <Navigate to="/login" />}
           />
           <Route
@@ -54,7 +54,7 @@ function App() {
             element={currentUser ? <UserCreate /> : <Navigate to="/login" />}
           />
           <Route
-            path="/manage-user/edit"
+            path="/manage-user/edit/:id"
             element={currentUser ? <UserEdit /> : <Navigate to="/login" />}
           />
           {/* Public Routes */}

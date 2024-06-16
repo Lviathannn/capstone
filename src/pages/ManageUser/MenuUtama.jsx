@@ -13,7 +13,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import AlertDelete from "@/assets/img/alert delete.png";
 
 import { useSelector } from 'react-redux';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getUsers } from '@/services/manageUser/getUsers';
 import { deleteUsers } from '@/services/manageUser/deleteUsers';
 
@@ -82,12 +82,12 @@ export default function MenuUtama() {
 
   const handleUserDetailClick = (user) => {
     const {id} = user;
-    navigate(`/manage-user/detail`, { state: { id } });
+    navigate(`/manage-user/detail/${id}`);
   };
   
   const handleUserClick = (user) => {
     const {id} = user;
-    navigate(`/manage-user/edit`, { state: { id} });
+    navigate(`/manage-user/edit/${id}`);
   };
 
   const paginate = (pageNumber) => {
