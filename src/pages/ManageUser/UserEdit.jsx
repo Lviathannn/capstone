@@ -8,9 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Eye from "@/components/icons/Eye";
-import AddPhoto from "@/assets/icons/add photo.png";
+import DefaultPhoto from "@/assets/default-photo.svg";
 import EditPhoto from "@/assets/edit-photo.svg";
 import VisibilityOff from "@/components/icons/VisibilityOff";
+import Edit from "@/assets/ImgModal/Ilustrasi-edit.svg";
 import EditIcon from "@/assets/icons/edit photo.png";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import AlertEdit from "@/assets/img/alert edit.png";
@@ -28,6 +29,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { AlertConfirm } from "@/components/layout/manageAdmin/alertConfirm";
 
 const formSchema = zod.object({
   username: zod.string().min(2).max(50),
@@ -47,7 +49,7 @@ export const useGetUserId = (id) => {
   const [openError, setOpenError] = useState(false);
   const { data, isLoading, error } = useQuery({
     queryKey: ["user", id],
-    queryFn: () => getUserById(token,id),
+    queryFn: () => getUserById(token, id),
     enabled: !!token,
     onSuccess: () => setOpenSuccess(true),
     onError: (error) => {
@@ -69,6 +71,8 @@ export default function UserEdit() {
   const [preview, setPreview] = useState(null);
   const { id } = useParams();
   const { data, isLoading } = useGetUserId(id);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -130,7 +134,7 @@ export default function UserEdit() {
     }
   };
 
-  function onSubmit (values) {
+  function onSubmit(values) {
     const formData = new FormData();
     console.log(values);
     formData.append("username", values.username);
@@ -168,41 +172,41 @@ export default function UserEdit() {
               <div className="col-span-2 flex justify-center items-start">
                 <label htmlFor="photo" className="cursor-pointer">
                   <div className="relative w-40 h-40 bg-neutral-100 rounded-full flex items-center justify-center overflow-hidden">
-                  <FormField
-                  name="foto_profil"
-                  render={() => (
-                    <FormItem>
-                      <FormControl>
-                        <div className="relative sm:w-[212px] w-fit rounded-full bg-neutral-200 ">
-                          <div className=" mx-auto">
-                            <img
-                              className="h-[180px] w-[180px] sm:h-[212px] sm:w-[212px] rounded-full"
-                              src={preview || AddPhoto}
-                              alt="photo"
-                            />
-                          </div>
-                          <div className="absolute left-0 top-0 rounded-full">
-                            <Input
-                              type="file"
-                              ref={fileInputRef}
-                              onChange={handleFileChange}
-                              className="mx-auto hidden rounded-full border-none bg-transparent"
-                            ></Input>
-                          </div>
-                          <Button
-                            type="button"
-                            onClick={handleClick}
-                            className="absolute w-full h-full left-0 top-0 rounded-full border-none bg-transparent hover:bg-transparent "
-                          >
-                            {preview&&
-                              <div className="z-20 bg-transparent rounded-full hover:bg-[#D5D5D580] hover:bg-opacity-30 absolute w-full h-full left-0 top-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"><img className="" sizes="60" src={EditPhoto}></img></div>
-                            } 
-                          </Button>
-                        </div>
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+                    <FormField
+                      name="foto_profil"
+                      render={() => (
+                        <FormItem>
+                          <FormControl>
+                            <div className="relative sm:w-[212px] w-fit rounded-full bg-neutral-200 ">
+                              <div className=" mx-auto">
+                                <img
+                                  className="h-[180px] w-[180px] sm:h-[212px] sm:w-[212px] rounded-full"
+                                  src={preview || DefaultPhoto}
+                                  alt="photo"
+                                />
+                              </div>
+                              <div className="absolute left-0 top-0 rounded-full">
+                                <Input
+                                  type="file"
+                                  ref={fileInputRef}
+                                  onChange={handleFileChange}
+                                  className="mx-auto hidden rounded-full border-none bg-transparent"
+                                ></Input>
+                              </div>
+                              <Button
+                                type="button"
+                                onClick={handleClick}
+                                className="absolute w-full h-full left-0 top-0 rounded-full border-none bg-transparent hover:bg-transparent "
+                              >
+                                {preview&&
+                                  <div className="z-20 bg-transparent rounded-full hover:bg-[#D5D5D580] hover:bg-opacity-30 absolute w-full h-full left-0 top-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"><img className="" sizes="60" src={EditPhoto}></img></div>
+                                } 
+                              </Button>
+                            </div>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
                   </div>
                 </label>
               </div>
@@ -232,9 +236,9 @@ export default function UserEdit() {
                       <div className="relative">
                         <Input {...field} type={visible ? "text" : "password"} className="pr-10" />
                         <button className="absolute inset-y-0 right-0 flex items-center px-2" type="button" onClick={() => setVisible(!visible)}>
-                        { 
-                              visible ? <VisibilityOff /> : <Eye /> 
-                            }
+                          {
+                            visible ? <VisibilityOff /> : <Eye />
+                          }
                         </button>
                       </div>
                     )}
@@ -294,13 +298,25 @@ export default function UserEdit() {
               </div>
             </div>
             <div className="flex justify-end mt-4">
-            <Button variant="outlined" color="primary" className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-primary-500 hover:text-neutral-50 mr-6" onClick={() => navigate('/manage-user')}>Kembali</Button>
-            {/* <Button variant="outlined" color="primary" className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-primary-500 hover:text-neutral-50 mr-6" >Edit</Button> */}
-            
-              <Button type="submit" className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-primary-500 hover:text-neutral-50 mx-2 w-full text-center">
-                Simpan</Button>
-        
-          </div>
+              <Button variant="outlined" color="primary" className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-primary-500 hover:text-neutral-50 mr-6" onClick={() => navigate('/manage-user')}>Kembali</Button>
+              
+              <AlertConfirm
+                textBtn="Edit"
+                img={Edit}
+                title="Simpan Perubahan !"
+                desc="Pastikan perubahan Anda benar. Yakin ingin mengubah dan menyimpan data ini?"
+                textDialogCancel="Periksa Kembali"
+                textDialogSubmit="Simpan"
+                onConfirm={form.handleSubmit(onSubmit)}
+                disabled={!form.watch('username')}
+                successOpen={openSuccess}
+                setSuccessOpen={setOpenSuccess}
+                errorOpen={openError}
+                isLoading={isLoading}
+                setErrorOpen={setOpenError}
+                backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
+              />
+            </div>
           </form>
         </Form>
       </div>

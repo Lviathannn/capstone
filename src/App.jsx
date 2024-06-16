@@ -12,6 +12,7 @@ import DashboardPage from "@/pages/Dashboard";
 import ManageUser from "@/pages/ManageUser/index";
 import UserDetail from "@/pages/ManageUser/UserDetail";
 import UserCreate from "@/pages/ManageUser/UserCreate";
+import UserEdit from "@/pages/ManageUser/UserEdit";
 import ManageContent from "@/pages/manageContent/index";
 import DetailContent from "@/pages/manageContent/detailContent";
 import EditContent from "@/pages/manageContent/editContent";
@@ -62,6 +63,12 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/manage-route" element={<ManageRoute />} />
+          <Route path="/manage-route/:id" element={<DetailRoute />} />
+          <Route path="/manage-content" element={<ManageContent />} />
+          <Route path="manage-content/create" element={<CreateContent />} />
+          <Route path="manage-content/detail" element={<DetailContent />} />
+          <Route path="manage-content/edit" element={<EditContent />}/>
         </Routes>
         <Toaster />
       </BrowserRouter>
