@@ -19,13 +19,36 @@ import { privateRoutes } from "@/constant/routes";
 
 export default function DataContent() {
   const navigate = useNavigate();
-
-  const users = [
+  const [users, setUsers] = useState([
     {
-      namaDestinasi: "Danau Toba",
-      deskripsiKonten:
-        "Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.",
-      linkTerkait: "danau.toba@example.com",
+      namaDestinasi: 'Danau Toba',
+      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
+      linkTerkait: 'danau.toba@example.com',
+    },
+    {
+      namaDestinasi: 'Danau Toba',
+      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
+      linkTerkait: 'danau.toba@example.com',
+    },
+    {
+      namaDestinasi: 'Danau Toba',
+      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
+      linkTerkait: 'danau.toba@example.com',
+    },
+    {
+      namaDestinasi: 'Danau Toba',
+      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
+      linkTerkait: 'danau.toba@example.com',
+    },
+    {
+      namaDestinasi: 'Danau Toba',
+      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
+      linkTerkait: 'danau.toba@example.com',
+    },
+    {
+      namaDestinasi: 'Danau Toba',
+      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
+      linkTerkait: 'danau.toba@example.com',
     },
     {
       namaDestinasi: "Danau Toba",
@@ -51,10 +74,15 @@ export default function DataContent() {
         "Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.",
       linkTerkait: "danau.toba@example.com",
     },
-  ];
-
+    {
+      namaDestinasi: 'Danau Toba',
+      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
+      linkTerkait: 'danau.toba@example.com',
+    }
+  ]);
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 8;
+  const [userToDelete, setUserToDelete] = useState(null);
 
   // Calculate the total number of pages
   const totalPages = Math.ceil(users.length / usersPerPage);
@@ -74,6 +102,18 @@ export default function DataContent() {
   const handleEditClick = (event, user) => {
     event.stopPropagation();
     navigate(`${privateRoutes.CONTENT}/edit`, { state: { user } });
+  };
+
+  const handleDeleteUser = () => {
+    if (userToDelete) {
+      const updatedUsers = users.filter(user => user !== userToDelete);
+      setUsers(updatedUsers);
+      setUserToDelete(null); // Reset the user to delete
+    }
+  };
+
+  const handleOpenDeleteDialog = (user) => {
+    setUserToDelete(user);
   };
 
   return (
