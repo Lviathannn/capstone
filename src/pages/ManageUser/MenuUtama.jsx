@@ -11,14 +11,14 @@ import SideBar from "@/components/layout/sidebar";
 import HeaderAdmin from "@/components/layout/header";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import AlertDelete from "@/assets/img/alert delete.png";
-
+import { AlertConfirm } from "@/components/layout/manageAdmin/alertConfirm";
 import { useSelector } from 'react-redux';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getUsers } from '@/services/manageUser/getUsers';
 import { deleteUsers } from '@/services/manageUser/deleteUsers';
 
 export const useGetUser = (page) => {
-  const token = useSelector((state) => state.auth.user?.access_token); // Mengambil token dari Redux state
+  const token = useSelector((state) => state.auth.user?.access_token); 
   const { data, error, isLoading } = useQuery({
     queryKey: ["user", page],
     queryFn: () => getUsers(token, page),
@@ -36,6 +36,8 @@ export default function MenuUtama() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const { data, error, isLoading } = useGetUser(currentPage);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
 
   // Menambahkan token ke dalam variabel lokal
   const token = useSelector((state) => state.auth.user?.access_token);
@@ -155,29 +157,26 @@ export default function MenuUtama() {
                       <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.kota}</TableCell>
                       <TableCell onClick={() => handleUserDetailClick(user)} style={{ cursor: 'pointer' }}>{user.provinsi}</TableCell>
                       <TableCell>
-                        <button className="mr-2" onClick={() => handleUserClick(user)}>
-                          <img src={edit} alt="Edit Icon" className="w-6 h-6" />
-                        </button>
-                        <AlertDialog>
-                          <AlertDialogTrigger>
-                            <img src={deleteIcon} alt="Delete Icon" className="w-6 h-6" />
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader className="pb-6">
-                              <div className="flex justify-center pb-6">
-                                <img src={AlertDelete} alt="Alert Add" className="w-[240px] h-[100px]" />
-                              </div>
-                              <AlertDialogTitle className="text-lg font-bold text-neutral-900 font-jakarta-sans text-center pb-4">Hapus User?</AlertDialogTitle>
-                              <AlertDialogDescription className="text-sm font-medium text-neutral-600 font-jakarta-sans text-center">
-                                Anda akan menghapus data ini. Tindakan ini tidak dapat dibatalkan. Apakah Anda yakin ingin menghapus data ini?
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter className="flex justify-center w-full">
-                              <AlertDialogCancel className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-danger-500 hover:text-neutral-50 hover:border-none mx-2 w-full text-center">Batal</AlertDialogCancel>
-                              <AlertDialogAction className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-danger-500 hover:text-neutral-50 hover:border-none mx-2 w-full text-center" onClick={() => handleDeleteUser(user)}>Hapus</AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                        <div className="flex items-center">
+                          <button className="mr-2" onClick={() => handleUserClick(user)}>
+                            <img src={edit} alt="Edit Icon" className="w-6 h-6" />
+                          </button>
+                          <AlertConfirm
+                            backround="outline-none bg-transparent border-none rounded-0 w-fit h-fit p-0 hover:bg-transparent"
+                            textBtn={<img src={deleteIcon} className="w-6 h-6" alt="" />}
+                            img={AlertDelete}
+                            title="Hapus Data !"
+                            desc="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
+                            textDialogCancel="Batal"
+                            textDialogSubmit="Hapus"
+                            bgBtn="True"
+                            successOpen={openSuccess}
+                            setSuccessOpen={setOpenSuccess}
+                            errorOpen={openError}
+                            setErrorOpen={setOpenError}
+                            onConfirm={(e) => handleDeleteUser(user)}
+                          ></AlertConfirm>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
