@@ -17,11 +17,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getUsers } from '@/services/manageUser/getUsers';
 import { deleteUsers } from '@/services/manageUser/deleteUsers';
 
-export const useGetUser = (page) => {
-  const token = useSelector((state) => state.auth.user?.access_token); 
+export const useGetUser = (page, searchQuery) => {
+  const token = useSelector((state) => state.auth.user?.access_token);
   const { data, error, isLoading } = useQuery({
-    queryKey: ["user", page],
-    queryFn: () => getUsers(token, page),
+    queryKey: ["user", page, searchQuery],
+    queryFn: () => getUsers(token, page, searchQuery),
     enabled: !!token,
     onError: (error) => {
       console.error("Query error:", error);
@@ -112,13 +112,21 @@ export default function MenuUtama() {
                 <div className="flex justify-between mt-4">
                   <div className="flex items-center border rounded-lg px-4 py-3 w-1/2">
                     <img src={search} alt="Search Icon" className="w-4 h-4 mr-4" />
-                    <input 
-                      type="text" 
-                      placeholder="Cari ..." 
-                      className="w-full border-none outline-none bg-transparent font-jakarta-sans text-neutral-800" 
+                    <input
+                      type="text"
+                      placeholder="Cari berdasarkan username ..."
+                      className="w-full h-full border-none outline-none bg-transparent font-jakarta-sans text-neutral-800"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery('')}
+                        className="absolute right-3 top-3 w-4 h-4 text-neutral-800"
+                      >
+                        &times;
+                      </button>
+                    )}
                   </div>
                   <Link to="/manage-user/create" className="flex items-center border px-4 py-3 text-primary-500 rounded-lg font-jakarta-sans">
                     <img src={plus} alt="Plus Icon" className="w-6 h-6 mr-4" />

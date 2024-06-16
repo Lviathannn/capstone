@@ -161,7 +161,7 @@ export default function UserEdit() {
       <div className="flex flex-col">
         <HeaderAdmin />
         <Form {...form}>
-          <form className="flex flex-col px-4 py-4 bg-primary-50 h-full" onSubmit={form.handleSubmit(onSubmit)}>
+          <form className="flex flex-col px-10 py-6 bg-primary-50 h-full" onSubmit={form.handleSubmit(onSubmit)}>
             <div className="bg-neutral-50 shadow-md p-4 rounded-lg mb-4">
               <div>
                 <h1 className="text-[22px] font-bold text-neutral-800 font-jakarta-sans">Edit User</h1>
@@ -177,10 +177,10 @@ export default function UserEdit() {
                       render={() => (
                         <FormItem>
                           <FormControl>
-                            <div className="relative sm:w-[212px] w-fit rounded-full bg-neutral-200 ">
-                              <div className=" mx-auto">
+                          <div className="relative sm:w-[212px] w-fit rounded-full bg-neutral-200 ">
+                              <div className="mx-auto">
                                 <img
-                                  className="h-[180px] w-[180px] sm:h-[212px] sm:w-[212px] rounded-full"
+                                  className="h-[180px] w-[180px] sm:h-[212px] sm:w-[212px] rounded-full object-cover"
                                   src={preview || DefaultPhoto}
                                   alt="photo"
                                 />
@@ -198,9 +198,11 @@ export default function UserEdit() {
                                 onClick={handleClick}
                                 className="absolute w-full h-full left-0 top-0 rounded-full border-none bg-transparent hover:bg-transparent "
                               >
-                                {preview&&
-                                  <div className="z-20 bg-transparent rounded-full hover:bg-[#D5D5D580] hover:bg-opacity-30 absolute w-full h-full left-0 top-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"><img className="" sizes="60" src={EditPhoto}></img></div>
-                                } 
+                                {preview && (
+                                  <div className="z-20 bg-transparent rounded-full hover:bg-[#D5D5D580] hover:bg-opacity-30 absolute w-full h-full left-0 top-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                                    <img className="w-10 h-10" src={EditPhoto} alt="Edit" />
+                                  </div>
+                                )}
                               </Button>
                             </div>
                           </FormControl>
@@ -271,10 +273,10 @@ export default function UserEdit() {
                         defaultValue={field.value}
                         className="flex items-center gap-4"
                       >
-                        <RadioGroupItem value="Laki-Laki" id="Laki-Laki" />
-                        <Label htmlFor="Laki-Laki">Laki-Laki</Label>
-                        <RadioGroupItem value="Perempuan" id="Perempuan" />
-                        <Label htmlFor="Perempuan">Perempuan</Label>
+                        <RadioGroupItem value="Pria" id="Pria" />
+                        <Label htmlFor="Pria">Pria</Label>
+                        <RadioGroupItem value="Wanita" id="Wanita" />
+                        <Label htmlFor="Wanita">Wanita</Label>
                       </RadioGroup>
                     )}
                   />
