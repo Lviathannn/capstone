@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { DetailAdmin } from "@/pages/ManageAdmin/DetailAdmin/index";
 import { AddAdmin } from "@/pages/ManageAdmin/AddAdmin/index";
 import LandingPage from "@/pages/landing";
@@ -18,10 +18,13 @@ import EditContent from "@/pages/manageContent/editContent";
 import CreateContent from "@/pages/manageContent/createContent";
 import ManageRoute from "@/pages/ManageRoute/index";
 import DetailRoute from "@/pages/ManageRoute/DetailRoute";
+import UserEdit from "./pages/ManageUser/UserEdit";
+import ProtectedRoute from "./hooks/protectedRoute";
 import { privateRoutes } from "./constant/routes";
 import DestinationPage from "./pages/destination";
 import CreateDestination from "./pages/destination/create";
 import DetailDestination from "./pages/destination/detail";
+
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -32,23 +35,24 @@ function App() {
         {/* Private Routes */}
 
         {/* Admin */}
-        <Route
-          path={`${privateRoutes.ADMIN}/detail/:id`}
-          element={currentUser ? <DetailAdmin /> : <Navigate to="/login" />}
-        />
-        <Route
-          path={`${privateRoutes.ADMIN}/edit/:id`}
-          element={currentUser ? <EditAdmin /> : <Navigate to="/login" />}
-        />
-        <Route
-          path={`${privateRoutes.ADMIN}/create`}
-          element={currentUser ? <AddAdmin /> : <Navigate to="/login" />}
-        />
-        <Route
-          path={privateRoutes.ADMIN}
-          element={currentUser ? <DisplayAdmin /> : <Navigate to="/login" />}
-        />
-
+        <Route element={<ProtectedRoute requiredRole="super admin" />}>
+          <Route
+            path={`${privateRoutes.ADMIN}/detail/:id`}
+            element={currentUser ? <DetailAdmin /> : <Navigate to="/login" />}
+          />
+          <Route
+            path={`${privateRoutes.ADMIN}/edit/:id`}
+            element={currentUser ? <EditAdmin /> : <Navigate to="/login" />}
+          />
+          <Route
+            path={`${privateRoutes.ADMIN}/create`}
+            element={currentUser ? <AddAdmin /> : <Navigate to="/login" />}
+          />
+          <Route
+            path={privateRoutes.ADMIN}
+            element={currentUser ? <DisplayAdmin /> : <Navigate to="/login" />}
+          />
+        </Route>
         {/* Dashboard */}
 
         <Route
@@ -83,12 +87,16 @@ function App() {
           element={currentUser ? <ManageUser /> : <Navigate to="/login" />}
         />
         <Route
-          path={`${privateRoutes.USER}/detail`}
+          path={`${privateRoutes.USER}/detail/:id`}
           element={currentUser ? <UserDetail /> : <Navigate to="/login" />}
         />
         <Route
           path={`${privateRoutes.USER}/create`}
           element={currentUser ? <UserCreate /> : <Navigate to="/login" />}
+        />
+        <Route
+          path={`${privateRoutes.USER}/edit/:id`}
+          element={currentUser ? <UserEdit /> : <Navigate to="/login" />}
         />
 
         {/* Route */}
