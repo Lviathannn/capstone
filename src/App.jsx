@@ -117,11 +117,24 @@ function App() {
         {/* Public Routes */}
    
         <Route path="/login" element={<LoginPage />} />
+<<<<<<< HEAD
         <Route path="/" element={<Navigate to="/dashboard" />} />
         <Route path="/login" element={<LoginPage />} />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
+=======
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/manage-user" element={<ManageUser />} />
+        <Route path="/manage-user/detail" element={<UserDetail />} />
+        <Route path="/manage-user/create" element={<UserCreate />} />
+        <Route path="/manage-route" element={<ManageRoute />} />
+        <Route path="/manage-route/:id" element={<DetailRoute />} />
+        <Route path="/manage-content" element={<ManageContent />} />
+        <Route path="manage-content/create" element={<CreateContent />} />
+        <Route path="manage-content/detail/:id" element={<DetailContent />} />
+        <Route path="manage-content/edit" element={<EditContent />}/>
+>>>>>>> af21de2 (feat: Implement GET API, Read, and Delete)
       </Routes>
       <Toaster />
     </>

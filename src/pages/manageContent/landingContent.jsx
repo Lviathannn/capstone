@@ -17,7 +17,20 @@ import {
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
 import { privateRoutes } from "@/constant/routes";
 
-export default function DataContent() {
+export const useGetContent = (page, searchQuery) => {
+  const token = useSelector((state) => state.auth.user?.access_token);
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["user", page, searchQuery],
+    queryFn: () => getContent(token, page, searchQuery),
+    enabled: !!token,
+    onError: (error) => {
+      console.error("Query error:", error);
+    },
+  });
+  return { data, error, isLoading };
+};
+
+export default function LandingContent() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([
     {
@@ -81,16 +94,25 @@ export default function DataContent() {
     }
   ]);
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 8;
-  const [userToDelete, setUserToDelete] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const { data, error, isLoading } = useGetContent(currentPage);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
 
-  // Calculate the total number of pages
-  const totalPages = Math.ceil(users.length / usersPerPage);
+  // Menambahkan token ke dalam variabel lokal
+  const token = useSelector((state) => state.auth.user?.access_token);
 
-  // Get current users for the page
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+  const createDeletedMutation = useMutation({
+    // Mengakses token di dalam fungsi createDeletedMutation
+    mutationFn: (id) => deleteContent(token, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["content", currentPage]);
+      console.log("Content deleted successfully");
+    },
+    onError: (error) => {
+      console.error("Delete error:", error);
+    },
+  });
 
   // Handle pagination click
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -102,18 +124,6 @@ export default function DataContent() {
   const handleEditClick = (event, user) => {
     event.stopPropagation();
     navigate(`${privateRoutes.CONTENT}/edit`, { state: { user } });
-  };
-
-  const handleDeleteUser = () => {
-    if (userToDelete) {
-      const updatedUsers = users.filter(user => user !== userToDelete);
-      setUsers(updatedUsers);
-      setUserToDelete(null); // Reset the user to delete
-    }
-  };
-
-  const handleOpenDeleteDialog = (user) => {
-    setUserToDelete(user);
   };
 
   return (
