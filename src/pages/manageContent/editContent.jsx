@@ -93,7 +93,7 @@ export default function EditContent() {
                   value={userContent.deskripsiKonten}
                   onChange={handleInputChange}
                   ref={textareaRef}
-                  className="w-full h-auto resize-none border border-gray-300 rounded-md p-2 overflow-hidden"
+                  className="w-full h-auto resize-none rounded-[10px] p-2 overflow-hidden flex border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
                 />
               </div>
               <div className="col-span-12 mb-3 relative">
