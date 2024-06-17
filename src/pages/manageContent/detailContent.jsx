@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLocation, useNavigate } from "react-router-dom";
 import Preview from "@/assets/img/preview-video.png"
+import ReactPlayer from "react-player";
 
 export default function DetailContent() {
   const navigate = useNavigate();
@@ -35,9 +36,21 @@ export default function DetailContent() {
           </div>
           <div className="bg-neutral-50 px-6 py-8 shadow-md rounded-lg grid grid-cols-12 gap-10">
             <div className="col-span-2 flex justify-center items-start">
-              <div>
-                <img src={Preview} alt="Alert Add" className="w-auto h-auto" />
-              </div>
+              {content?.url ? (
+                content.url.endsWith('.jpg') || content.url.endsWith('.jpeg') || content.url.endsWith('.png') ? (
+                  <img src={content.url} alt="Preview" className="w-auto h-auto object-cover" />
+                ) : (
+                  <ReactPlayer
+                    url={content.url}
+                    width="100%"
+                    height="100%"
+                    controls={true}
+                    className="react-player"
+                  />
+                )
+              ) : (
+                <img src={Preview} alt="Alert Add" className="w-auto h-auto object-cover" style={{ aspectRatio: '16/9' }} />
+              )}
             </div>
             <div className="col-span-10 gap-4">
               <div className="col-span-12 mb-3 relative">
@@ -54,7 +67,7 @@ export default function DetailContent() {
                   id="description"
                   value={content?.title || ""}
                   ref={textareaRef}
-                  className="w-full h-auto resize-none border border-gray-300 rounded-md p-2 overflow-hidden"
+                  className="w-full h-auto resize-none rounded-[10px] p-2 overflow-hidden flex border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
                   readOnly
                 />
               </div>
