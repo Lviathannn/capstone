@@ -1,13 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import SideBar from "@/components/layout/sidebar";
 import HeaderAdmin from "@/components/layout/header";
-import AddPhoto from "@/assets/icons/add photo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
-import EditIcon from "@/assets/icons/edit photo.png";
-import Preview from "@/assets/img/preview-video.png"
+import Preview from "@/assets/img/preview-video.png";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -45,21 +43,6 @@ export default function CreateContent() {
     setUserContent(prevState => ({
       ...prevState,
       [name]: value
-    }));
-  };
-
-  const handleSelectChange = (name, value) => {
-    setUserContent(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-
-  const handleVideoChange = (e) => {
-    const file = e.target.files[0];
-    setUserContent(prevState => ({
-      ...prevState,
-      video: file
     }));
   };
 

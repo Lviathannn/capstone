@@ -60,7 +60,7 @@ function App() {
         <Route path="/manage-route/:id" element={<DetailRoute />} />
         <Route path="/manage-content" element={<ManageContent />} />
         <Route path="manage-content/create" element={<CreateContent />} />
-        <Route path="manage-content/detail" element={<DetailContent />} />
+        <Route path="manage-content/detail/:id" element={<DetailContent />} />
         <Route path="manage-content/edit" element={<EditContent />}/>
       </Routes>
       <Toaster />
