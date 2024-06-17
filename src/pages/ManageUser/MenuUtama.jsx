@@ -14,140 +14,96 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import AlertDelete from "@/assets/img/alert delete.png";
+import { useSelector } from "react-redux";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getUsers } from "@/services/manageUser/getUsers";
+import { deleteUsers } from "@/services/manageUser/deleteUsers";
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
+import { AlertConfirm } from "@/components/features/alert/alertConfirm";
 import { privateRoutes } from "@/constant/routes";
+
+export const useGetUser = (page, searchQuery) => {
+  const token = useSelector((state) => state.auth.user?.access_token);
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["user", page, searchQuery],
+    queryFn: () => getUsers(token, page, searchQuery),
+    enabled: !!token,
+    onError: (error) => {
+      console.error("Query error:", error);
+    },
+  });
+  return { data, error, isLoading };
+};
 
 export default function MenuUtama() {
   const navigate = useNavigate();
-
-  const usersData = [
-    {
-      namaPengguna: "john_doe",
-      namaLengkap: "John Doe",
-      email: "john.doe@example.com",
-      noTelpon: "081234567890",
-      jenisKelamin: "Laki-laki",
-      kota: "Jakarta",
-      provinsi: "DKI Jakarta",
-    },
-    {
-      namaPengguna: "jane_smith",
-      namaLengkap: "Jane Smith",
-      email: "jane.smith@example.com",
-      noTelpon: "082345678901",
-      jenisKelamin: "Perempuan",
-      kota: "Bandung",
-      provinsi: "Jawa Barat",
-    },
-    {
-      namaPengguna: "budi_santoso",
-      namaLengkap: "Budi Santoso",
-      email: "budi.santoso@example.com",
-      noTelpon: "083456789012",
-      jenisKelamin: "Laki-laki",
-      kota: "Surabaya",
-      provinsi: "Jawa Timur",
-    },
-    {
-      namaPengguna: "susan_tan",
-      namaLengkap: "Susan Tan",
-      email: "susan.tan@example.com",
-      noTelpon: "084567890123",
-      jenisKelamin: "Perempuan",
-      kota: "Medan",
-      provinsi: "Sumatera Utara",
-    },
-    {
-      namaPengguna: "david_lee",
-      namaLengkap: "David Lee",
-      email: "david.lee@example.com",
-      noTelpon: "085678901234",
-      jenisKelamin: "Laki-laki",
-      kota: "Makassar",
-      provinsi: "Sulawesi Selatan",
-    },
-    {
-      namaPengguna: "lisa_black",
-      namaLengkap: "Lisa Black",
-      email: "lisa.black@example.com",
-      noTelpon: "086789012345",
-      jenisKelamin: "Perempuan",
-      kota: "Yogyakarta",
-      provinsi: "DI Yogyakarta",
-    },
-    {
-      namaPengguna: "michael_jordan",
-      namaLengkap: "Michael Jordan",
-      email: "michael.jordan@example.com",
-      noTelpon: "087890123456",
-      jenisKelamin: "Laki-laki",
-      kota: "Semarang",
-      provinsi: "Jawa Tengah",
-    },
-    {
-      namaPengguna: "angela_white",
-      namaLengkap: "Angela White",
-      email: "angela.white@example.com",
-      noTelpon: "088901234567",
-      jenisKelamin: "Perempuan",
-      kota: "Palembang",
-      provinsi: "Sumatera Selatan",
-    },
-    {
-      namaPengguna: "robert_brown",
-      namaLengkap: "Robert Brown",
-      email: "robert.brown@example.com",
-      noTelpon: "089012345678",
-      jenisKelamin: "Laki-laki",
-      kota: "Balikpapan",
-      provinsi: "Kalimantan Timur",
-    },
-    {
-      namaPengguna: "samantha_green",
-      namaLengkap: "Samantha Green",
-      email: "samantha.green@example.com",
-      noTelpon: "080123456789",
-      jenisKelamin: "Perempuan",
-      kota: "Denpasar",
-      provinsi: "Bali",
-    },
-  ];
-
-  const [users, setUsers] = useState(usersData);
+  const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 5;
+  const [searchQuery, setSearchQuery] = useState("");
+  const { data, error, isLoading } = useGetUser(currentPage);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
 
-  const totalPages = Math.ceil(users.length / usersPerPage);
+  // Menambahkan token ke dalam variabel lokal
+  const token = useSelector((state) => state.auth.user?.access_token);
 
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+  const createDeletedMutation = useMutation({
+    // Mengakses token di dalam fungsi createDeletedMutation
+    mutationFn: (id) => deleteUsers(token, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["user", currentPage]);
+      console.log("User deleted successfully");
+    },
+    onError: (error) => {
+      console.error("Delete error:", error);
+    },
+  });
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const handleDeleteUser = (user) => {
+    const userId = user.id;
+    createDeletedMutation.mutate(userId);
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  const users = data?.data || [];
+  const totalUsers = data?.pagination?.total || 0;
+  const totalPages = data?.pagination?.last_page || 1;
+
+  const filteredUsers = users.filter(
+    (user) =>
+      user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.nama_lengkap.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.no_telepon.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.jenis_kelamin.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.kota.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.provinsi.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   const handleUserDetailClick = (user) => {
-    navigate(`${privateRoutes.USER}/detail`, { state: { user } });
+    const { id } = user;
+    // navigate(`/manage-user/detail/${id}`);
+    navigate(privateRoutes.USER+`/detail/${id}`);
   };
 
   const handleUserClick = (user) => {
-    navigate(`${privateRoutes.USER}/edit`, { state: { user } });
+    const { id } = user;
+    // navigate(`/manage-user/edit/${id}`);
+    navigate(privateRoutes.USER+ `/edit/${id}`);
   };
 
-  const handleDeleteUser = (userToDelete) => {
-    const updatedUsers = users.filter((user) => user !== userToDelete);
-    setUsers(updatedUsers);
+  const paginate = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
   };
 
   return (
@@ -166,12 +122,23 @@ export default function MenuUtama() {
                 <img src={search} alt="Search Icon" className="mr-4 h-4 w-4" />
                 <input
                   type="text"
-                  placeholder="Cari ..."
-                  className="w-full border-none bg-transparent font-jakarta-sans text-neutral-800 outline-none"
+                  placeholder="Cari berdasarkan username ..."
+                  className="h-full w-full border-none bg-transparent font-jakarta-sans text-neutral-800 outline-none"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-3 top-3 h-4 w-4 text-neutral-800"
+                  >
+                    &times;
+                  </button>
+                )}
               </div>
               <Link
-                to={`${privateRoutes.USER}/create`}
+                // to="/manage-user/create"
+                to={privateRoutes.USER+"/create"}
                 className="flex items-center rounded-lg border px-4 py-3 font-jakarta-sans text-primary-500"
               >
                 <img src={plus} alt="Plus Icon" className="mr-4 h-6 w-6" />
@@ -182,7 +149,7 @@ export default function MenuUtama() {
           <div className="items-left col-span-2 flex flex-col justify-center rounded-lg bg-neutral-50 p-4">
             <img src={person} alt="Person Icon" className="mb-4 h-6 w-6" />
             <p className="font-jakarta-sans text-[26px] font-[700] text-neutral-800">
-              {users.length}
+              {totalUsers}
             </p>
             <p className="font-jakarta-sans text-[16px] font-[400] text-neutral-800">
               Total User
@@ -220,19 +187,19 @@ export default function MenuUtama() {
               </TableRow>
             </TableHeader>
             <TableBody className="bg-neutral-50 font-jakarta-sans">
-              {currentUsers.map((user, index) => (
-                <TableRow key={index}>
+              {filteredUsers.map((user) => (
+                <TableRow key={user.id}>
                   <TableCell
                     onClick={() => handleUserDetailClick(user)}
                     style={{ cursor: "pointer" }}
                   >
-                    {user.namaPengguna}
+                    {user.username}
                   </TableCell>
                   <TableCell
                     onClick={() => handleUserDetailClick(user)}
                     style={{ cursor: "pointer" }}
                   >
-                    {user.namaLengkap}
+                    {user.nama_lengkap}
                   </TableCell>
                   <TableCell
                     onClick={() => handleUserDetailClick(user)}
@@ -244,13 +211,13 @@ export default function MenuUtama() {
                     onClick={() => handleUserDetailClick(user)}
                     style={{ cursor: "pointer" }}
                   >
-                    {user.noTelpon}
+                    {user.no_telepon}
                   </TableCell>
                   <TableCell
                     onClick={() => handleUserDetailClick(user)}
                     style={{ cursor: "pointer" }}
                   >
-                    {user.jenisKelamin}
+                    {user.jenis_kelamin}
                   </TableCell>
                   <TableCell
                     onClick={() => handleUserDetailClick(user)}
@@ -265,51 +232,31 @@ export default function MenuUtama() {
                     {user.provinsi}
                   </TableCell>
                   <TableCell>
-                    <button
-                      className="mr-2"
-                      onClick={() => handleUserClick(user)}
-                    >
-                      <img src={edit} alt="Edit Icon" className="h-6 w-6" />
-                    </button>
-                    <AlertDialog>
-                      <AlertDialogTrigger>
-                        <img
-                          src={deleteIcon}
-                          alt="Delete Icon"
-                          className="h-6 w-6"
-                        />
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader className="pb-6">
-                          <div className="flex justify-center pb-6">
-                            <img
-                              src={AlertDelete}
-                              alt="Alert Add"
-                              className="h-[100px] w-[240px]"
-                            />
-                          </div>
-                          <AlertDialogTitle className="pb-4 text-center font-jakarta-sans text-lg font-bold text-neutral-900">
-                            Hapus User?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription className="text-center font-jakarta-sans text-sm font-medium text-neutral-600">
-                            Anda akan menghapus data ini. Tindakan ini tidak
-                            dapat dibatalkan. Apakah Anda yakin ingin menghapus
-                            data ini?
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter className="flex w-full justify-center">
-                          <AlertDialogCancel className="mx-2 w-full rounded-lg border border-primary-500 bg-neutral-50 px-7 py-2 text-center text-primary-500 hover:border-none hover:bg-danger-500 hover:text-neutral-50">
-                            Batal
-                          </AlertDialogCancel>
-                          <AlertDialogAction
-                            className="mx-2 w-full rounded-lg border border-primary-500 bg-neutral-50 px-7 py-2 text-center text-primary-500 hover:border-none hover:bg-danger-500 hover:text-neutral-50"
-                            onClick={() => handleDeleteUser(user)}
-                          >
-                            Hapus
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                    <div className="flex items-center">
+                      <button
+                        className="mr-2"
+                        onClick={() => handleUserClick(user)}
+                      >
+                        <img src={edit} alt="Edit Icon" className="h-6 w-6" />
+                      </button>
+                      <AlertConfirm
+                        backround="outline-none bg-transparent border-none rounded-0 w-fit h-fit p-0 hover:bg-transparent"
+                        textBtn={
+                          <img src={deleteIcon} className="h-6 w-6" alt="" />
+                        }
+                        img={AlertDelete}
+                        title="Hapus Data !"
+                        desc="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
+                        textDialogCancel="Batal"
+                        textDialogSubmit="Hapus"
+                        bgBtn="True"
+                        successOpen={openSuccess}
+                        setSuccessOpen={setOpenSuccess}
+                        errorOpen={openError}
+                        setErrorOpen={setOpenError}
+                        onConfirm={() => handleDeleteUser(user)}
+                      ></AlertConfirm>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
