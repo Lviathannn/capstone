@@ -31,6 +31,7 @@ import { createUsers } from "@/services/manageUser/createUsers";
 import Add from "@/assets/ImgModal/Ilustrasi-add.svg";
 import { AlertConfirm } from "@/components/features/alert/alertConfirm";
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
+import { privateRoutes } from "@/constant/routes";
 
 const formSchema = zod.object({
   username: zod.string().min(2).max(50),
@@ -75,7 +76,8 @@ export default function UserCreate() {
       queryClient.invalidateQueries(["user"]); // Invalidasi query setelah mutasi berhasil
       toast.success("User added successfully");
       form.reset(); // Reset form setelah berhasil
-      navigate("/manage-user");
+      // navigate("/manage-user");
+      navigate(privateRoutes.USER);
     },
     onError: (error) => {
       console.error(error);

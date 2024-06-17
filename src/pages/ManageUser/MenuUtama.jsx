@@ -21,6 +21,7 @@ import { getUsers } from "@/services/manageUser/getUsers";
 import { deleteUsers } from "@/services/manageUser/deleteUsers";
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
 import { AlertConfirm } from "@/components/features/alert/alertConfirm";
+import { privateRoutes } from "@/constant/routes";
 
 export const useGetUser = (page, searchQuery) => {
   const token = useSelector((state) => state.auth.user?.access_token);
@@ -89,12 +90,14 @@ export default function MenuUtama() {
 
   const handleUserDetailClick = (user) => {
     const { id } = user;
-    navigate(`/manage-user/detail/${id}`);
+    // navigate(`/manage-user/detail/${id}`);
+    navigate(privateRoutes.USER+`/detail/${id}`);
   };
 
   const handleUserClick = (user) => {
     const { id } = user;
-    navigate(`/manage-user/edit/${id}`);
+    // navigate(`/manage-user/edit/${id}`);
+    navigate(privateRoutes.USER+ `/edit/${id}`);
   };
 
   const paginate = (pageNumber) => {
@@ -134,7 +137,8 @@ export default function MenuUtama() {
                 )}
               </div>
               <Link
-                to="/manage-user/create"
+                // to="/manage-user/create"
+                to={privateRoutes.USER+"/create"}
                 className="flex items-center rounded-lg border px-4 py-3 font-jakarta-sans text-primary-500"
               >
                 <img src={plus} alt="Plus Icon" className="mr-4 h-6 w-6" />

@@ -41,6 +41,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { AlertConfirm } from "@/components/features/alert/alertConfirm";
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
+import { privateRoutes } from "@/constant/routes";
 
 const formSchema = zod.object({
   username: zod.string().min(2).max(50),
@@ -124,7 +125,8 @@ export default function UserEdit() {
     onSuccess: () => {
       queryClient.invalidateQueries(["user", id]);
       toast.success("Data pengguna berhasil diubah");
-      navigate("/manage-user");
+      // navigate("/manage-user");
+      navigate(privateRoutes.USER);
     },
     onError: () => {
       toast.error("Update data gagal dilakukan");
@@ -345,7 +347,7 @@ export default function UserEdit() {
               variant="outlined"
               color="primary"
               className="mr-6 rounded-lg border border-primary-500 bg-neutral-50 px-7 py-2 text-primary-500 hover:bg-primary-500 hover:text-neutral-50"
-              onClick={() => navigate("/manage-user")}
+              onClick={() => navigate(privateRoutes.USER)}
             >
               Kembali
             </Button>
