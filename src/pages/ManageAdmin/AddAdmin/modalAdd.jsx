@@ -1,6 +1,6 @@
 
 import Add from "@/assets/ImgModal/Ilustrasi-add.svg";
-import { AlertConfirm } from "@/components/layout/manageAdmin/alertConfirm";
+import { AlertConfirm } from "@/components/features/alert/alertConfirm";
 
 export const ModalAdd = () => {
   return (

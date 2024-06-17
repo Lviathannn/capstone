@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AlertConfirm } from "@/components/layout/manageAdmin/alertConfirm";
+import { AlertConfirm } from "@/components/features/alert/alertConfirm";
 import IcDelete from "@/components/icons/ic-delete.svg";
 import IlusDelete from "@/assets/ImgModal/Ilustrasi-delete.svg";
 
@@ -67,14 +67,8 @@ export const TableRoute = ({
               <TableCell>{route.estimasi_biaya}</TableCell>
               <TableCell className="text-center">
                 <AlertConfirm
-                backround="outline-none bg-transparent border-none rounded-0 w-fit h-fit p-0 hover:bg-transparent"
-                  textBtn={
-                    <img
-                      src={IcDelete}
-                      sizes="24"
-                      alt=""
-                    />
-                  }
+                  backround="outline-none bg-transparent border-none rounded-0 w-fit h-fit p-0 hover:bg-transparent"
+                  textBtn={<img src={IcDelete} sizes="24" alt="" />}
                   img={IlusDelete}
                   title="Hapus Data !"
                   desc="Anda akan menghapus datat ini. Tindakan ini tidak dapat

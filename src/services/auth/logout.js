@@ -6,6 +6,6 @@ export const logout = async () => {
       withCredentials: true,
     });
   } catch (error) {
-    console.log(error);
+    // throw new Error(error.response.data.message);
   }
 };

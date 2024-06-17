@@ -11,7 +11,7 @@ import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import Add from "@/assets/ImgModal/Ilustrasi-add.svg";
-import { AlertConfirm } from "@/components/layout/manageAdmin/alertConfirm";
+import { AlertConfirm } from "@/components/features/alert/alertConfirm";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/form";
 import { z as zod } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { privateRoutes } from "@/constant/routes";
 
 const formSchema = zod.object({
   username: zod.string().min(6).max(16),
@@ -36,7 +37,6 @@ export const FormAddAdmin = () => {
   const token = useSelector((state) => state.auth.user?.access_token);
   const [visible, setVisible] = useState(false);
   const [preview, setPreview] = useState(null);
-  const [showModal, setShowModal] = useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
 
@@ -54,13 +54,11 @@ export const FormAddAdmin = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin"] });
       toast.success("User added successfully");
-      console.log("success bro!");
       form.reset();
-      navigate("/manage-admin");
+      navigate(privateRoutes.ADMIN);
       setOpenSuccess(true);
-      
     },
-    onError: (error) => {
+    onError: () => {
       setOpenError(true);
     },
   });
@@ -84,6 +82,7 @@ export const FormAddAdmin = () => {
       createPostMutation.mutate(values);
     } catch (error) {
       toast.error("Tidak berhasil menambahkan Admin");
+      throw error("Error adding Admin");
     }
   }
   return (
@@ -91,17 +90,17 @@ export const FormAddAdmin = () => {
       <div>
         <Form {...form}>
           <form className="grid gap-10" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="sm:flex grid h-[476px] w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 shadow-md">
-              <div className="sm:block flex justify-center">
+            <div className="grid h-[476px] w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 shadow-md sm:flex">
+              <div className="flex justify-center sm:block">
                 <FormField
                   name="foto_profil"
                   render={() => (
                     <FormItem>
                       <FormControl>
-                        <div className="relative sm:w-[212px] w-fit sm:mt-0 mt-5 sm:mb-0 mb-8 rounded-full bg-neutral-200 ">
+                        <div className="relative mb-8 mt-5 w-fit rounded-full bg-neutral-200 sm:mb-0 sm:mt-0 sm:w-[212px] ">
                           <div className=" mx-auto">
                             <img
-                              className="sm:h-[212px] sm:w-[212px] h-[180px] w-[180px] rounded-full"
+                              className="h-[180px] w-[180px] rounded-full sm:h-[212px] sm:w-[212px]"
                               src={preview || DefaultPhoto}
                               alt="photo"
                             />
@@ -117,11 +116,17 @@ export const FormAddAdmin = () => {
                           <Button
                             type="button"
                             onClick={handleClick}
-                            className="z-10 absolute w-full h-full left-0 top-0 rounded-full bg-transparent border-none hover:bg-transparent"
+                            className="absolute left-0 top-0 z-10 h-full w-full rounded-full border-none bg-transparent hover:bg-transparent"
                           >
-                            {preview&&
-                              <div className="z-20 bg-transparent rounded-full hover:bg-[#D5D5D580] hover:bg-opacity-30 absolute w-full h-full left-0 top-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"><img className="" sizes="60" src={EditPhoto}></img></div>
-                            } 
+                            {preview && (
+                              <div className="absolute left-0 top-0 z-20 flex h-full w-full items-center justify-center rounded-full bg-transparent opacity-0 transition-opacity hover:bg-[#D5D5D580] hover:bg-opacity-30 hover:opacity-100">
+                                <img
+                                  className=""
+                                  sizes="60"
+                                  src={EditPhoto}
+                                ></img>
+                              </div>
+                            )}
                           </Button>
                         </div>
                       </FormControl>
@@ -141,7 +146,7 @@ export const FormAddAdmin = () => {
                       <FormControl>
                         <Input
                           type="text"
-                          className={`border-solid-1 font-jakarta-sans rounded-[10px] bg-transparent bg-white px-[12px] py-5 text-sm font-normal text-neutral-700 ${form.formState.errors.username && "border-danger-400 focus-visible:ring-0"}`}
+                          className={`border-solid-1 rounded-[10px] bg-transparent bg-white px-[12px] py-5 font-jakarta-sans text-sm font-normal text-neutral-700 ${form.formState.errors.username && "border-danger-400 focus-visible:ring-0"}`}
                           placeholder="Masukan nama admin"
                           {...field}
                         />
@@ -160,7 +165,7 @@ export const FormAddAdmin = () => {
                       <FormControl>
                         <div className="relative w-full rounded-[12px] ">
                           <Input
-                            className={`border-solid-1 font-jakarta-sans rounded-[10px] bg-transparent bg-white px-[12px] py-5 text-sm font-normal text-neutral-700 ${form.formState.errors.password && "border-danger-400 focus-visible:ring-0"}`}
+                            className={`border-solid-1 rounded-[10px] bg-transparent bg-white px-[12px] py-5 font-jakarta-sans text-sm font-normal text-neutral-700 ${form.formState.errors.password && "border-danger-400 focus-visible:ring-0"}`}
                             type={visible ? "text" : "password"}
                             placeholder="Masukan password admin"
                             {...field}
@@ -170,9 +175,7 @@ export const FormAddAdmin = () => {
                             type="button"
                             onClick={() => setVisible(!visible)}
                           >
-                            { 
-                              visible ? <VisibilityOff /> : <Eye /> 
-                            }
+                            {visible ? <VisibilityOff /> : <Eye />}
                           </button>
                         </div>
                       </FormControl>
@@ -181,13 +184,13 @@ export const FormAddAdmin = () => {
                 />
               </div>
             </div>
-            <div className="flex items-center sm:justify-end justify-between gap-6">
-              <Link to="/manage-admin">
-                <Button className="border-primary-500 text-primary-500 hover:text-primary-500 hover:bg-primary-50 h-[42px] sm:w-[180px] w-[150px] border bg-white text-sm font-medium sm:rounded-[12px]">
+            <div className="flex items-center justify-between gap-6 sm:justify-end">
+              <Link to={privateRoutes.ADMIN}>
+                <Button className="h-[42px] w-[150px] border border-primary-500 bg-white text-sm font-medium text-primary-500 hover:bg-primary-50 hover:text-primary-500 sm:w-[180px] sm:rounded-[12px]">
                   Kembali
                 </Button>
               </Link>
-              <div className="sm:w-[180px] w-[150px]">
+              <div className="w-[150px] sm:w-[180px]">
                 <AlertConfirm
                   textBtn="Tambah"
                   img={Add}
@@ -196,13 +199,13 @@ export const FormAddAdmin = () => {
                   textDialogCancel="Batal"
                   textDialogSubmit="Tambah"
                   onConfirm={form.handleSubmit(onSubmit)}
-                  disabled={!form.watch('username') || !form.watch('password')}
+                  disabled={!form.watch("username") || !form.watch("password")}
                   backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
                   successOpen={openSuccess}
                   setSuccessOpen={setOpenSuccess}
                   errorOpen={openError}
                   setErrorOpen={setOpenError}
-                ></AlertConfirm>
+                />
               </div>
             </div>
           </form>

@@ -13,7 +13,17 @@ import EditPhoto from "@/assets/edit-photo.svg";
 import VisibilityOff from "@/components/icons/VisibilityOff";
 import Edit from "@/assets/ImgModal/Ilustrasi-edit.svg";
 import EditIcon from "@/assets/icons/edit photo.png";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import AlertEdit from "@/assets/img/alert edit.png";
 import { updateUsers } from "@/services/manageUser/updateUsers";
 import { getUserById } from "@/services/manageUser/getUserById";
@@ -29,7 +39,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { AlertConfirm } from "@/components/layout/manageAdmin/alertConfirm";
+import { AlertConfirm } from "@/components/features/alert/alertConfirm";
+import ProtectedLayout from "@/components/layout/ProtectedLayout";
 
 const formSchema = zod.object({
   username: zod.string().min(2).max(50),
@@ -153,175 +164,211 @@ export default function UserEdit() {
     formData.append("provinsi", values.provinsi);
     formData.append("kota", values.kota);
     createUpdateMutation.mutate(formData);
-  };
+  }
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr]">
-      <SideBar />
-      <div className="flex flex-col">
-        <HeaderAdmin />
-        <Form {...form}>
-          <form className="flex flex-col px-10 py-6 bg-primary-50 h-full" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="bg-neutral-50 shadow-md p-4 rounded-lg mb-4">
-              <div>
-                <h1 className="text-[22px] font-bold text-neutral-800 font-jakarta-sans">Edit User</h1>
-                <p className="text-base font-medium text-neutral-700 font-jakarta-sans">Mengedit data pengguna</p>
-              </div>
+    <ProtectedLayout>
+      <Form {...form}>
+        <form
+          className="flex h-full flex-col bg-primary-50 px-10 py-6"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
+          <div className="mb-4 rounded-lg bg-neutral-50 p-4 shadow-md">
+            <div>
+              <h1 className="font-jakarta-sans text-[22px] font-bold text-neutral-800">
+                Edit User
+              </h1>
+              <p className="font-jakarta-sans text-base font-medium text-neutral-700">
+                Mengedit data pengguna
+              </p>
             </div>
-            <div className="bg-neutral-50 px-6 py-8 shadow-md rounded-lg grid grid-cols-12 gap-4">
-              <div className="col-span-2 flex justify-center items-start">
-                <label htmlFor="photo" className="cursor-pointer">
-                  <div className="relative w-40 h-40 bg-neutral-100 rounded-full flex items-center justify-center overflow-hidden">
-                    <FormField
-                      name="foto_profil"
-                      render={() => (
-                        <FormItem>
-                          <FormControl>
-                          <div className="relative sm:w-[212px] w-fit rounded-full bg-neutral-200 ">
-                              <div className="mx-auto">
-                                <img
-                                  className="h-[180px] w-[180px] sm:h-[212px] sm:w-[212px] rounded-full object-cover"
-                                  src={preview || DefaultPhoto}
-                                  alt="photo"
-                                />
-                              </div>
-                              <div className="absolute left-0 top-0 rounded-full">
-                                <Input
-                                  type="file"
-                                  ref={fileInputRef}
-                                  onChange={handleFileChange}
-                                  className="mx-auto hidden rounded-full border-none bg-transparent"
-                                ></Input>
-                              </div>
-                              <Button
-                                type="button"
-                                onClick={handleClick}
-                                className="absolute w-full h-full left-0 top-0 rounded-full border-none bg-transparent hover:bg-transparent "
-                              >
-                                {preview && (
-                                  <div className="z-20 bg-transparent rounded-full hover:bg-[#D5D5D580] hover:bg-opacity-30 absolute w-full h-full left-0 top-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                                    <img className="w-10 h-10" src={EditPhoto} alt="Edit" />
-                                  </div>
-                                )}
-                              </Button>
+          </div>
+          <div className="grid grid-cols-12 gap-4 rounded-lg bg-neutral-50 px-6 py-8 shadow-md">
+            <div className="col-span-2 flex items-start justify-center">
+              <label htmlFor="photo" className="cursor-pointer">
+                <div className="relative flex h-40 w-40 items-center justify-center overflow-hidden rounded-full bg-neutral-100">
+                  <FormField
+                    name="foto_profil"
+                    render={() => (
+                      <FormItem>
+                        <FormControl>
+                          <div className="relative w-fit rounded-full bg-neutral-200 sm:w-[212px] ">
+                            <div className="mx-auto">
+                              <img
+                                className="h-[180px] w-[180px] rounded-full object-cover sm:h-[212px] sm:w-[212px]"
+                                src={preview || DefaultPhoto}
+                                alt="photo"
+                              />
                             </div>
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </label>
-              </div>
-              <div className="col-span-10 grid grid-cols-12 gap-4">
-                <FormItem className="col-span-6 mb-3">
-                  <FormLabel className="text-sm font-bold font-jakarta-sans pb-2">Nama Pengguna</FormLabel>
-                  <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => <Input {...field} />}
-                  />
-                </FormItem>
-                <FormItem className="col-span-6 mb-3">
-                  <FormLabel className="text-sm font-bold font-jakarta-sans pb-2">Nama Lengkap</FormLabel>
-                  <FormField
-                    control={form.control}
-                    name="nama_lengkap"
-                    render={({ field }) => <Input {...field} />}
-                  />
-                </FormItem>
-                <FormItem className="col-span-12 mb-3 relative">
-                  <FormLabel className="text-sm font-bold font-jakarta-sans pb-2">Password</FormLabel>
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <div className="relative">
-                        <Input {...field} type={visible ? "text" : "password"} className="pr-10" />
-                        <button className="absolute inset-y-0 right-0 flex items-center px-2" type="button" onClick={() => setVisible(!visible)}>
-                          {
-                            visible ? <VisibilityOff /> : <Eye />
-                          }
-                        </button>
-                      </div>
+                            <div className="absolute left-0 top-0 rounded-full">
+                              <Input
+                                type="file"
+                                ref={fileInputRef}
+                                onChange={handleFileChange}
+                                className="mx-auto hidden rounded-full border-none bg-transparent"
+                              ></Input>
+                            </div>
+                            <Button
+                              type="button"
+                              onClick={handleClick}
+                              className="absolute left-0 top-0 h-full w-full rounded-full border-none bg-transparent hover:bg-transparent "
+                            >
+                              {preview && (
+                                <div className="absolute left-0 top-0 z-20 flex h-full w-full items-center justify-center rounded-full bg-transparent opacity-0 transition-opacity hover:bg-[#D5D5D580] hover:bg-opacity-30 hover:opacity-100">
+                                  <img
+                                    className="h-10 w-10"
+                                    src={EditPhoto}
+                                    alt="Edit"
+                                  />
+                                </div>
+                              )}
+                            </Button>
+                          </div>
+                        </FormControl>
+                      </FormItem>
                     )}
                   />
-                </FormItem>
-                <FormItem className="col-span-6 mb-3">
-                  <FormLabel className="text-sm font-bold font-jakarta-sans pb-2">Email</FormLabel>
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => <Input type="email" {...field} />}
-                  />
-                </FormItem>
-                <FormItem className="col-span-6 mb-3">
-                  <FormLabel className="text-sm font-bold font-jakarta-sans pb-2">Nomor Telepon</FormLabel>
-                  <FormField
-                    control={form.control}
-                    name="no_telepon"
-                    render={({ field }) => <Input {...field} />}
-                  />
-                </FormItem>
-                <FormItem className="col-span-12 mb-3">
-                  <FormLabel className="text-sm font-bold font-jakarta-sans pb-2">Jenis Kelamin</FormLabel>
-                  <FormField
-                    control={form.control}
-                    name="jenis_kelamin"
-                    render={({ field }) => (
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex items-center gap-4"
+                </div>
+              </label>
+            </div>
+            <div className="col-span-10 grid grid-cols-12 gap-4">
+              <FormItem className="col-span-6 mb-3">
+                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                  Nama Pengguna
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => <Input {...field} />}
+                />
+              </FormItem>
+              <FormItem className="col-span-6 mb-3">
+                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                  Nama Lengkap
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="nama_lengkap"
+                  render={({ field }) => <Input {...field} />}
+                />
+              </FormItem>
+              <FormItem className="relative col-span-12 mb-3">
+                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                  Password
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        type={visible ? "text" : "password"}
+                        className="pr-10"
+                      />
+                      <button
+                        className="absolute inset-y-0 right-0 flex items-center px-2"
+                        type="button"
+                        onClick={() => setVisible(!visible)}
                       >
-                        <RadioGroupItem value="Pria" id="Pria" />
-                        <Label htmlFor="Pria">Pria</Label>
-                        <RadioGroupItem value="Wanita" id="Wanita" />
-                        <Label htmlFor="Wanita">Wanita</Label>
-                      </RadioGroup>
-                    )}
-                  />
-                </FormItem>
-                <FormItem className="col-span-6 mb-3">
-                  <FormLabel className="text-sm font-bold font-jakarta-sans pb-2">Provinsi</FormLabel>
-                  <FormField
-                    control={form.control}
-                    name="provinsi"
-                    render={({ field }) => <Input {...field} />}
-                  />
-                </FormItem>
-                <FormItem className="col-span-6 mb-3">
-                  <FormLabel className="text-sm font-bold font-jakarta-sans pb-2">Kota</FormLabel>
-                  <FormField
-                    control={form.control}
-                    name="kota"
-                    render={({ field }) => <Input {...field} />}
-                  />
-                </FormItem>
-              </div>
+                        {visible ? <VisibilityOff /> : <Eye />}
+                      </button>
+                    </div>
+                  )}
+                />
+              </FormItem>
+              <FormItem className="col-span-6 mb-3">
+                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                  Email
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => <Input type="email" {...field} />}
+                />
+              </FormItem>
+              <FormItem className="col-span-6 mb-3">
+                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                  Nomor Telepon
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="no_telepon"
+                  render={({ field }) => <Input {...field} />}
+                />
+              </FormItem>
+              <FormItem className="col-span-12 mb-3">
+                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                  Jenis Kelamin
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="jenis_kelamin"
+                  render={({ field }) => (
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex items-center gap-4"
+                    >
+                      <RadioGroupItem value="Pria" id="Pria" />
+                      <Label htmlFor="Pria">Pria</Label>
+                      <RadioGroupItem value="Wanita" id="Wanita" />
+                      <Label htmlFor="Wanita">Wanita</Label>
+                    </RadioGroup>
+                  )}
+                />
+              </FormItem>
+              <FormItem className="col-span-6 mb-3">
+                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                  Provinsi
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="provinsi"
+                  render={({ field }) => <Input {...field} />}
+                />
+              </FormItem>
+              <FormItem className="col-span-6 mb-3">
+                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                  Kota
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="kota"
+                  render={({ field }) => <Input {...field} />}
+                />
+              </FormItem>
             </div>
-            <div className="flex justify-end mt-4">
-              <Button variant="outlined" color="primary" className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-primary-500 hover:text-neutral-50 mr-6" onClick={() => navigate('/manage-user')}>Kembali</Button>
-              
-              <AlertConfirm
-                textBtn="Edit"
-                img={Edit}
-                title="Simpan Perubahan !"
-                desc="Pastikan perubahan Anda benar. Yakin ingin mengubah dan menyimpan data ini?"
-                textDialogCancel="Periksa Kembali"
-                textDialogSubmit="Simpan"
-                onConfirm={form.handleSubmit(onSubmit)}
-                disabled={!form.watch('username')}
-                successOpen={openSuccess}
-                setSuccessOpen={setOpenSuccess}
-                errorOpen={openError}
-                isLoading={isLoading}
-                setErrorOpen={setOpenError}
-                backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
-              />
-            </div>
-          </form>
-        </Form>
-      </div>
-    </div>
+          </div>
+          <div className="mt-4 flex justify-end">
+            <Button
+              variant="outlined"
+              color="primary"
+              className="mr-6 rounded-lg border border-primary-500 bg-neutral-50 px-7 py-2 text-primary-500 hover:bg-primary-500 hover:text-neutral-50"
+              onClick={() => navigate("/manage-user")}
+            >
+              Kembali
+            </Button>
+
+            <AlertConfirm
+              textBtn="Edit"
+              img={Edit}
+              title="Simpan Perubahan !"
+              desc="Pastikan perubahan Anda benar. Yakin ingin mengubah dan menyimpan data ini?"
+              textDialogCancel="Periksa Kembali"
+              textDialogSubmit="Simpan"
+              onConfirm={form.handleSubmit(onSubmit)}
+              disabled={!form.watch("username")}
+              successOpen={openSuccess}
+              setSuccessOpen={setOpenSuccess}
+              errorOpen={openError}
+              isLoading={isLoading}
+              setErrorOpen={setOpenError}
+              backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
+            />
+          </div>
+        </form>
+      </Form>
+    </ProtectedLayout>
   );
 }

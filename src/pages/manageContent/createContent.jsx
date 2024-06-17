@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from "react";
 import SideBar from "@/components/layout/sidebar";
 import HeaderAdmin from "@/components/layout/header";
 import AddPhoto from "@/assets/icons/add photo.png";
@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 import EditIcon from "@/assets/icons/edit photo.png";
-import Preview from "@/assets/img/preview-video.png"
+import Preview from "@/assets/img/preview-video.png";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,161 +17,195 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import AlertAdd from "@/assets/img/alert add.png";
-import { AspectRatio } from '@radix-ui/themes';
+import { AspectRatio } from "@radix-ui/themes";
+import ProtectedLayout from "@/components/layout/ProtectedLayout";
+import { privateRoutes } from "@/constant/routes";
 
 export default function CreateContent() {
   const [visible, setVisible] = useState(false);
   const navigate = useNavigate();
   const [userContent, setUserContent] = useState({
-    namaDestinasi: '',
-    deskripsiKonten: '',
-    linkTerkait: '',
-    video: null
+    namaDestinasi: "",
+    deskripsiKonten: "",
+    linkTerkait: "",
+    video: null,
   });
 
   const textareaRef = useRef(null);
 
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [userContent.deskripsiKonten]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUserContent(prevState => ({
+    setUserContent((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleSelectChange = (name, value) => {
-    setUserContent(prevState => ({
+    setUserContent((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleVideoChange = (e) => {
     const file = e.target.files[0];
-    setUserContent(prevState => ({
+    setUserContent((prevState) => ({
       ...prevState,
-      video: file
+      video: file,
     }));
   };
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr]">
-      <SideBar />
-      <div className="flex flex-col">
-        <HeaderAdmin />
-        <main className="flex flex-col px-10 py-6 bg-primary-50 h-full">
-          <div className="bg-neutral-50 shadow-md p-4 rounded-lg mb-4">
-            <div>
-              <h1 className="text-[22px] font-bold text-neutral-800 font-jakarta-sans">Tambah Konten</h1>
-              <p className="text-base font-medium text-neutral-700 font-jakarta-sans">Tambah konten video</p>
-            </div>
-          </div>
-          <div className="bg-neutral-50 px-6 py-8 shadow-md rounded-lg grid grid-cols-12 gap-4">
-            <div className="col-span-2 flex justify-center items-start">
-              <label htmlFor="photo" className="cursor-pointer">
-                <div className="relative w-40 h-40 bg-neutral-100 rounded-full flex items-center justify-center overflow-hidden">
-                  <input
-                    type="file"
-                    id="video"
-                    name="video"
-                    className="hidden"
-                    onChange={handleVideoChange}
+    <ProtectedLayout>
+      <div className="mb-4 rounded-lg bg-neutral-50 p-4 shadow-md">
+        <div>
+          <h1 className="font-jakarta-sans text-[22px] font-bold text-neutral-800">
+            Tambah Konten
+          </h1>
+          <p className="font-jakarta-sans text-base font-medium text-neutral-700">
+            Tambah konten video
+          </p>
+        </div>
+      </div>
+      <div className="grid grid-cols-12 gap-4 rounded-lg bg-neutral-50 px-6 py-8 shadow-md">
+        <div className="col-span-2 flex items-start justify-center">
+          <label htmlFor="photo" className="cursor-pointer">
+            <div className="relative flex h-40 w-40 items-center justify-center overflow-hidden rounded-full bg-neutral-100">
+              <input
+                type="file"
+                id="video"
+                name="video"
+                className="hidden"
+                onChange={handleVideoChange}
+              />
+              {userContent.video ? (
+                <>
+                  <img
+                    src={URL.createObjectURL(userContent.video)}
+                    alt="Photo Preview"
+                    className="h-full w-full object-cover"
+                    style={{ filter: "brightness(0.7)" }}
                   />
-                  {userContent.video ? (
-                    <>
-                      <img
-                        src={URL.createObjectURL(userContent.video)}
-                        alt="Photo Preview"
-                        className="w-full h-full object-cover"
-                        style={{ filter: 'brightness(0.7)' }}
-                      />
-                      <img
-                        src={EditIcon}
-                        alt="Edit Icon"
-                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 cursor-pointer"
-                      />
-                    </>
-                  ) : (
-                    <img
-                      src={AddPhoto}
-                      alt="Add Photo"
-                      className="w-12 h-12 cursor-pointer"
-                    />
-                  )}
-                </div>
-              </label>
+                  <img
+                    src={EditIcon}
+                    alt="Edit Icon"
+                    className="absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 transform cursor-pointer"
+                  />
+                </>
+              ) : (
+                <img
+                  src={AddPhoto}
+                  alt="Add Photo"
+                  className="h-12 w-12 cursor-pointer"
+                />
+              )}
             </div>
-            <div className="col-span-10 grid grid-cols-12 gap-4">
-              <div className="col-span-12 mb-3 relative">
-                <Label htmlFor="destinationName" className="text-sm font-bold font-jakarta-sans pb-2">Nama Destinasi</Label>
-                <Input type="text" id="destinationName" name="namaDestinasi" placeholder='Masukkan Nama Destinasi' value={userContent.namaDestinasi} onChange={handleInputChange} />
-              </div>
-              <div className="col-span-12 mb-3 relative">
-                <Label htmlFor="description" className="text-sm font-bold font-jakarta-sans pb-2">Deskripsi Konten</Label>
-                <textarea
-                  id="description"
-                  name="deskripsiKonten"
-                  placeholder='Masukkan Deskripsi Konten'
-                  value={userContent.deskripsiKonten}
-                  onChange={handleInputChange}
-                  ref={textareaRef}
-                  className="w-full h-auto resize-none border border-gray-300 rounded-md p-2 overflow-hidden"
+          </label>
+        </div>
+        <div className="col-span-10 grid grid-cols-12 gap-4">
+          <div className="relative col-span-12 mb-3">
+            <Label
+              htmlFor="destinationName"
+              className="pb-2 font-jakarta-sans text-sm font-bold"
+            >
+              Nama Destinasi
+            </Label>
+            <Input
+              type="text"
+              id="destinationName"
+              name="namaDestinasi"
+              placeholder="Masukkan Nama Destinasi"
+              value={userContent.namaDestinasi}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="relative col-span-12 mb-3">
+            <Label
+              htmlFor="description"
+              className="pb-2 font-jakarta-sans text-sm font-bold"
+            >
+              Deskripsi Konten
+            </Label>
+            <textarea
+              id="description"
+              name="deskripsiKonten"
+              placeholder="Masukkan Deskripsi Konten"
+              value={userContent.deskripsiKonten}
+              onChange={handleInputChange}
+              ref={textareaRef}
+              className="h-auto w-full resize-none overflow-hidden rounded-md border border-gray-300 p-2"
+            />
+          </div>
+          <div className="relative col-span-12 mb-3">
+            <Label
+              htmlFor="link"
+              className="pb-2 font-jakarta-sans text-sm font-bold"
+            >
+              Link Terkait
+            </Label>
+            <Input
+              type="text"
+              id="link"
+              name="linkTerkait"
+              placeholder="Masukkan Link Video"
+              value={userContent.linkTerkait}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="mt-4 flex justify-end">
+        <Button
+          variant="outlined"
+          color="primary"
+          className="mr-6 rounded-lg border border-primary-500 bg-neutral-50 px-7 py-2 text-primary-500 hover:bg-primary-500 hover:text-neutral-50"
+          onClick={() => navigate(privateRoutes.CONTENT)}
+        >
+          Kembali
+        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger className="rounded-lg border border-primary-500 bg-neutral-50 px-7 py-1 text-center text-primary-500 hover:bg-primary-500 hover:text-neutral-50">
+            Tambah
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader className="pb-6">
+              <div className="flex justify-center pb-6">
+                <img
+                  src={AlertAdd}
+                  alt="Alert Add"
+                  className="h-[100px] w-[240px]"
                 />
               </div>
-              <div className="col-span-12 mb-3 relative">
-                <Label htmlFor="link" className="text-sm font-bold font-jakarta-sans pb-2">Link Terkait</Label>
-                <Input type="text" id="link" name="linkTerkait" placeholder='Masukkan Link Video' value={userContent.linkTerkait} onChange={handleInputChange} />
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-end mt-4">
-            <Button
-              variant="outlined"
-              color="primary"
-              className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-primary-500 hover:text-neutral-50 mr-6"
-              onClick={() => navigate('/manage-content')}
-            >
-              Kembali
-            </Button>
-            <AlertDialog>
-              <AlertDialogTrigger className="border-primary-500 border px-7 py-1 rounded-lg bg-neutral-50 text-primary-500 hover:bg-primary-500 hover:text-neutral-50 text-center">
+              <AlertDialogTitle className="pb-4 text-center font-jakarta-sans text-lg font-bold text-neutral-900">
+                Tambah Data?
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-center font-jakarta-sans text-sm font-medium text-neutral-600">
+                Sebelum menambahkan data, pastikan informasi yang dimasukkan
+                benar dan sesuai. Apakah Anda yakin ingin menambahkan data ini?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="flex w-full justify-center">
+              <AlertDialogCancel className="mx-2 w-full rounded-lg border border-primary-500 bg-neutral-50 px-7 py-2 text-center text-primary-500 hover:bg-primary-500 hover:text-neutral-50">
+                Batal
+              </AlertDialogCancel>
+              <AlertDialogAction className="mx-2 w-full rounded-lg border border-primary-500 bg-neutral-50 px-7 py-2 text-center text-primary-500 hover:bg-primary-500 hover:text-neutral-50">
                 Tambah
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader className="pb-6">
-                  <div className="flex justify-center pb-6">
-                    <img src={AlertAdd} alt="Alert Add" className="w-[240px] h-[100px]" />
-                  </div>
-                  <AlertDialogTitle className="text-lg font-bold text-neutral-900 font-jakarta-sans text-center pb-4">
-                    Tambah Data?
-                  </AlertDialogTitle>
-                  <AlertDialogDescription className="text-sm font-medium text-neutral-600 font-jakarta-sans text-center">
-                    Sebelum menambahkan data, pastikan informasi yang dimasukkan benar dan sesuai. Apakah Anda yakin ingin menambahkan data ini?
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter className="flex justify-center w-full">
-                  <AlertDialogCancel className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-primary-500 hover:text-neutral-50 mx-2 w-full text-center">
-                    Batal
-                  </AlertDialogCancel>
-                  <AlertDialogAction className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-primary-500 hover:text-neutral-50 mx-2 w-full text-center">
-                    Tambah
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
-        </main>
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
-    </div>
+    </ProtectedLayout>
   );
 }

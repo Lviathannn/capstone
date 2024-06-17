@@ -1,19 +1,5 @@
-import {
-  CircleUser,
-  Menu,
-  Search,
-  Slash,
-} from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Link } from "react-router-dom";
 import Logo from "@/assets/logo.svg";
@@ -26,25 +12,24 @@ import {
   VideoIcon,
   LogoutIcon,
 } from "@/assets/icons";
-import { useState, useEffect } from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { privateRoutes, publicRoutes } from "@/constant/routes";
+import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
 
 export default function HeaderAdmin() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
-
+  const pathname = useLocation().pathname.split("/").splice(1);
+  const basePathname = pathname[0];
+  const user = useSelector((state) => state.auth.user);
   return (
-    <div className="flex h-14 items-center gap-4 border-none bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+    <div className="fixed left-0 right-0 top-0 z-40 flex h-14 items-center justify-between gap-4 border-none bg-muted/40 bg-neutral-50 px-6 lg:h-[60px] lg:px-6">
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="outline" size="icon" className="shrink-0 md:hidden">
@@ -52,61 +37,76 @@ export default function HeaderAdmin() {
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="flex flex-col h-full justify-between">
+        <SheetContent
+          side="left"
+          className="flex h-full flex-col justify-between"
+        >
           <nav className="grid gap-2 text-lg font-medium">
-            <Link
-              to="/"
+            <NavLink
+              to={publicRoutes.HOME}
               className="flex w-full items-center justify-center gap-2 font-semibold"
             >
               <img src={Logo} className="h-16 w-28" />
-            </Link>
-            <Link
-              to="#"
-              className="flex items-center gap-[10px] rounded-lg bg-primary-600 px-6 py-3 font-medium text-muted-foreground text-neutral-50 transition-all hover:text-neutral-200"
+            </NavLink>
+            <NavLink
+              to={privateRoutes.DASHBOARD}
+              className={({ isActive }) => {
+                return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
+              }}
             >
               <DashboardIcon />
               Overview
-            </Link>
-            <Link
-              to="#"
-              className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
+            </NavLink>
+            <NavLink
+              to={privateRoutes.USER}
+              className={({ isActive }) => {
+                return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
+              }}
             >
               <PersonIcon />
               User
-            </Link>
-            <Link
-              to="#"
-              className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
+            </NavLink>
+            <NavLink
+              to={privateRoutes.ROUTE}
+              className={({ isActive }) => {
+                return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
+              }}
             >
               <AltRouteIcon />
               Rute
-            </Link>
-            <Link
-              to="#"
-              className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
+            </NavLink>
+            <NavLink
+              to={privateRoutes.CONTENT}
+              className={({ isActive }) => {
+                return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
+              }}
             >
               <VideoIcon />
               Konten
-            </Link>
-            <Link
-              to="#"
-              className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
+            </NavLink>
+            <NavLink
+              to={privateRoutes.DESTINATION}
+              className={({ isActive }) => {
+                return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
+              }}
             >
               <DestinationIcon />
               Destinasi
-            </Link>
-            <Link
-              to="#"
-              className="flex items-center gap-[10px] rounded-lg bg-neutral-50 px-6 py-3 font-medium text-muted-foreground text-primary-400 transition-all hover:text-primary-600"
+            </NavLink>
+            <NavLink
+              to={privateRoutes.ADMIN}
+              className={({ isActive }) => {
+                return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
+              }}
             >
               <PeopleAltIcon />
               Admin
-            </Link>
+            </NavLink>
           </nav>
           <div className="flex flex-col px-2 lg:px-[10px]">
             <h1 className="font-bold text-primary-600 lg:px-[10px]">Lainnya</h1>
             <Link
-              to="/"
+              to={publicRoutes.LOGIN}
               className="flex gap-[10px] px-3 py-6 font-medium text-danger-500"
             >
               <LogoutIcon />
@@ -115,93 +115,55 @@ export default function HeaderAdmin() {
           </div>
         </SheetContent>
       </Sheet>
-      <div className="w-full flex-1">
+      <div className="w-full flex-1 pl-[250px]">
         <nav>
-          <div className="container mx-auto flex items-center justify-between px-4 py-5 lg:px-0">
+          <div className="container mx-auto flex items-center justify-between px-6 py-5 lg:px-0">
             <div className="flex items-center gap-5">
               <ul className={`hidden md:flex md:space-x-8`}>
                 <li>
                   <Breadcrumb>
                     <BreadcrumbList>
-                      <BreadcrumbItem>
-                        <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
-                      </BreadcrumbItem>
-                      <BreadcrumbSeparator>
-                        <Slash />
-                      </BreadcrumbSeparator>
-                      <BreadcrumbItem>
-                        <BreadcrumbLink className="text-primary-500" href="/manage-user">
-                          User
-                        </BreadcrumbLink>
-                      </BreadcrumbItem>
+                      {pathname.map((path, index) => {
+                        return (
+                          <>
+                            <BreadcrumbItem key={path}>
+                              <Link
+                                to={
+                                  index === 0
+                                    ? `/${basePathname}`
+                                    : `/${basePathname}/${path}`
+                                }
+                                className="capitalize"
+                              >
+                                {path}
+                              </Link>
+                            </BreadcrumbItem>
+                            {index !== pathname.length - 1 && (
+                              <BreadcrumbSeparator>/</BreadcrumbSeparator>
+                            )}
+                          </>
+                        );
+                      })}
                     </BreadcrumbList>
                   </Breadcrumb>
                 </li>
               </ul>
-              <div className="md:hidden">
-                <button
-                  onClick={toggleMenu}
-                  className="text-white hover:text-[#0A6847] focus:outline-none"
-                >
-                  <svg
-                    className="h-6 w-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M4 6h16M4 12h16m-7 6h7"
-                    ></path>
-                  </svg>
-                </button>
-                {isOpen && (
-                  <ul className="absolute left-0 top-16 w-full bg-white px-4 py-2 shadow-md">
-                    <li>
-                      <Breadcrumb>
-                        <BreadcrumbList>
-                          <BreadcrumbItem>
-                            <BreadcrumbLink href="/">Home</BreadcrumbLink>
-                          </BreadcrumbItem>
-                          <BreadcrumbSeparator>
-                            <Slash />
-                          </BreadcrumbSeparator>
-                          <BreadcrumbItem>
-                            <BreadcrumbLink href="/components">
-                              Components
-                            </BreadcrumbLink>
-                          </BreadcrumbItem>
-                        </BreadcrumbList>
-                      </Breadcrumb>
-                    </li>
-                  </ul>
-                )}
-              </div>
             </div>
           </div>
         </nav>
       </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="secondary" size="icon" className="rounded-full">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>Support</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Logout</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex items-center gap-2">
+        <Avatar>
+          <AvatarImage src={user.profile_image} />
+          <AvatarFallback>
+            {user.username.charAt(0).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+        <div className="hidden sm:block">
+          <p className="font-medium text-neutral-800">{user.username}</p>
+          <p className="text-sm font-medium text-neutral-500">{user.role}</p>
+        </div>
+      </div>
     </div>
   );
 }

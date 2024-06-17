@@ -11,70 +11,8 @@ import {
 import tailwindConfig from "../../../../tailwind.config.js";
 const colors = tailwindConfig.theme.extend.colors;
 
-const data = [
-  {
-    name: "Jan",
-    Total: 600,
-    Baru: 0,
-  },
-  {
-    name: "Feb",
-    Total: 380,
-    Baru: 220,
-  },
-  {
-    name: "Mar",
-    Total: 400,
-    Baru: 150,
-  },
-  {
-    name: "Apr",
-    Total: 600,
-    Baru: 220,
-  },
-  {
-    name: "Mei",
-    Total: 320,
-    Baru: 100,
-  },
-  {
-    name: "Jun",
-    Total: 180,
-    Baru: 180,
-  },
-  {
-    name: "Jul",
-    Total: 300,
-    Baru: 250,
-  },
-  {
-    name: "Agu",
-    Total: 700,
-    Baru: 100,
-  },
-  {
-    name: "Sep",
-    Total: 950,
-    Baru: 400,
-  },
-  {
-    name: "Okt",
-    Total: 320,
-    Baru: 420,
-  },
-  {
-    name: "Nov",
-    Total: 800,
-    Baru: 250,
-  },
-  {
-    name: "Des",
-    Total: 800,
-    Baru: 250,
-  },
-];
 
-export default function AreaChartComponent({ width, height }) {
+export default function AreaChartComponent({ width, height, dataGraph }) {
   const error = console.error;
   console.error = (...args) => {
     if (/defaultProps/.test(args[0])) return;
@@ -85,7 +23,7 @@ export default function AreaChartComponent({ width, height }) {
       <AreaChart
         width={width}
         height={height}
-        data={data}
+        data={dataGraph}
         margin={{ top: 10, right: 40, left: 0, bottom: 30 }}
       >
         <defs>
@@ -103,7 +41,7 @@ export default function AreaChartComponent({ width, height }) {
           </linearGradient>
         </defs>
         <XAxis
-          dataKey="name"
+          dataKey="bulan"
           tick={{ fill: colors.neutral[800], fontSize: 14, fontWeight: 500 }}
           tickLine={0}
           axisLine={false}
@@ -118,7 +56,7 @@ export default function AreaChartComponent({ width, height }) {
         <Tooltip />
         <Area
           type="monotone"
-          dataKey="Total"
+          dataKey="total_pengguna"
           stroke={colors.primary[400]}
           strokeWidth={2}
           fillOpacity={1}
@@ -126,7 +64,7 @@ export default function AreaChartComponent({ width, height }) {
         />
         <Area
           type="monotone"
-          dataKey="Baru"
+          dataKey="pengguna_baru"
           stroke={colors.secondary[200]}
           strokeWidth={2}
           fillOpacity={1}

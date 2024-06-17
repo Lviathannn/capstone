@@ -1,6 +1,6 @@
 
 import Delete from "@/assets/ImgModal/Ilustrasi-delete.svg";
-import { AlertConfirm } from "@/components/layout/manageAdmin/alertConfirm";
+import { AlertConfirm } from "@/components/features/alert/alertConfirm";
 
 export const ModalDelete = () => {
   return (

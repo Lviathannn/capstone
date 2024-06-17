@@ -9,35 +9,31 @@ import {
   Cell,
 } from "recharts";
 
-const data = [
-  { name: "Alam", value: 100 },
-  { name: "Seni Budaya", value: 30 },
-  { name: "Sejarah", value: 30 },
-];
-
 const colors = tailwindConfig.theme.extend.colors;
 const COLORS = {
   Alam: colors.primary[800],
-  "Seni Budaya": colors.primary[400],
+  "Seni dan Budaya": colors.primary[400],
   Sejarah: colors.primary[200],
 };
 
-const HorizontalBarChart = ({ width, height }) => {
-  const totalValue = data.reduce((acc, { value }) => acc + value, 0);
-  const dataWithPercentage = data.map(({ name, value }) => ({
-    name,
-    value,
-    percentage:
-      totalValue === 0 ? 0 : ((value / totalValue) * 100).toFixed(0) + "%",
-    remainder: totalValue - value,
+const HorizontalBarChart = ({ width, height, dataDestinasi }) => {
+  const totalValue = dataDestinasi?.reduce((acc, { total }) => acc + total, 0);
+  const dataWithPercentage = dataDestinasi?.map(({ nama_kategori, total }) => ({
+    nama_kategori,
+    total,
+    percentage: totalValue === 0 ? 0 : ((total / totalValue) * 100).toFixed(0) + "%",
+    remainder: totalValue - total,
   }));
 
-  const BarChartLabel = ({ y, value, name }) => (
-    <text y={y - 5} fill="#666" textAnchor="start" fontSize={14}>
-      <tspan fontWeight="bold">{value}</tspan>
-      <tspan>{` ${name}`}</tspan>
-    </text>
-  );
+  const BarChartLabel = ({ y, value, index }) => {
+    const { nama_kategori } = dataDestinasi[index];
+    return (
+      <text y={y-5} fill="#666" textAnchor="start" fontSize={14}>
+        <tspan fontWeight="bold">{value}</tspan>
+        <tspan>{` ${nama_kategori}`}</tspan>
+      </text>
+    );
+  };
 
   return (
     <ResponsiveContainer width={width} height={height}>
@@ -46,19 +42,24 @@ const HorizontalBarChart = ({ width, height }) => {
         layout="vertical"
         margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
       >
-        <XAxis type="number" axisLine={false} hide />
-        <YAxis type="category" axisLine={false} hide />
+        <XAxis
+          type="number"
+          domain={[0, totalValue]}
+          axisLine={false}
+          hide
+        />
+        <YAxis type="category" dataKey="nama_kategori" axisLine={false} hide />
         <Bar
-          dataKey="value"
-          fill={(data) => COLORS[data.name]}
+          dataKey="total"
+          fill={(data) => COLORS[data.nama_kategori]}
           barSize={10}
           stackId="a"
           radius={[5, 0, 0, 5]}
         >
-          {data.map((entry, index) => (
+          {dataDestinasi?.map((entry, index) => (
             <Cell
               key={`cell-${index}`}
-              fill={COLORS[entry.name]}
+              fill={COLORS[entry.nama_kategori]}
               className="outline-none"
             />
           ))}
