@@ -58,14 +58,11 @@ export const TableAdmin = () => {
   const inputRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  console.log(token);
 
   const createDeletedMutation = useMutation({
     mutationFn: (id) => deleteAdmins(token, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", currentPage] });
-      //setOpenSuccess(true);
-      setOpenNotif({ isSuccess: true });
       toast.success("Berhasil menghapus data admin")
       
     },
