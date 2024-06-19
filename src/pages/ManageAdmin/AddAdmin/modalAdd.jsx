@@ -1,6 +1,6 @@
 
 import Add from "@/assets/ImgModal/Ilustrasi-add.svg";
-import { AlertConfirm } from "@/components/features/alert/alertConfirm";
+import { AlertConfirm } from "@/components/layout/manageAdmin/alertConfirm";
 
 export const ModalAdd = () => {
   return (
@@ -13,6 +13,7 @@ export const ModalAdd = () => {
         benar dan sesuai. Apakah Anda yakin ingin menambahkan data ini?"
         textDialogCancel="Batal"
         textDialogSubmit="Tambah"
+        onConfirm={handleSubmit}
       ></AlertConfirm>
     </div>
   );
