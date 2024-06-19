@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import SideBar from "@/components/layout/sidebar";
-import HeaderAdmin from "@/components/layout/header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -111,8 +109,6 @@ export default function UserEdit() {
     mutationFn: (values) => updateUsers(token, id, values),
     onSuccess: () => {
       queryClient.invalidateQueries(["user", id]);
-      toast.success("Data pengguna berhasil diubah");
-      // navigate("/manage-user");
       navigate(privateRoutes.USER);
     },
     onError: () => {
