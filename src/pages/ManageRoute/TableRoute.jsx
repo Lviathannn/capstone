@@ -14,10 +14,7 @@ export const TableRoute = ({
   filteredData,
   handleRouteClick,
   handleDeletedById,
-  openSuccess,
-  setOpenSuccess,
-  openError,
-  setOpenError,
+  openNotif,
 }) => {
   return (
     <Table>
@@ -77,10 +74,7 @@ export const TableRoute = ({
                   textDialogSubmit="Hapus"
                   bgBtn={true}
                   onConfirm={() => handleDeletedById(route.id)}
-                  successOpen={openSuccess}
-                  setSuccessOpen={setOpenSuccess}
-                  errorOpen={openError}
-                  setErrorOpen={setOpenError}
+                  openNotif={openNotif}
                 />
               </TableCell>
             </TableRow>

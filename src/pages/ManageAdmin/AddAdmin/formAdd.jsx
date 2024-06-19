@@ -37,8 +37,6 @@ export const FormAddAdmin = () => {
   const token = useSelector((state) => state.auth.user?.access_token);
   const [visible, setVisible] = useState(false);
   const [preview, setPreview] = useState(null);
-  const [openSuccess, setOpenSuccess] = useState(false);
-  const [openError, setOpenError] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -56,10 +54,9 @@ export const FormAddAdmin = () => {
       toast.success("User added successfully");
       form.reset();
       navigate(privateRoutes.ADMIN);
-      setOpenSuccess(true);
     },
     onError: () => {
-      setOpenError(true);
+      toast.error("Failed to add user");
     },
   });
 
@@ -201,10 +198,7 @@ export const FormAddAdmin = () => {
                   onConfirm={form.handleSubmit(onSubmit)}
                   disabled={!form.watch("username") || !form.watch("password")}
                   backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
-                  successOpen={openSuccess}
-                  setSuccessOpen={setOpenSuccess}
-                  errorOpen={openError}
-                  setErrorOpen={setOpenError}
+                  openNotif={createPostMutation}
                 />
               </div>
             </div>

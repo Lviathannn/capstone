@@ -65,19 +65,13 @@ export const TableAdmin = () => {
     mutationFn: (id) => deleteAdmins(token, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", currentPage] });
-      setTimeout(() => {
-        window.location.reload();
-      }, 0);
-      setOpenSuccess(true);
     },
     onError: (error) => {
-      setOpenError(true);
       toast.error("Gagal melakukan hapus admin");
     },
   });
 
   const handleDeletedById = (id) => {
-    setDeleted(id);
     createDeletedMutation.mutate(id);
   };
 
@@ -243,13 +237,10 @@ export const TableAdmin = () => {
                           desc="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
                           textDialogCancel="Batal"
                           textDialogSubmit="Hapus"
-                          bgBtn="True"
-                          successOpen={openSuccess}
-                          setSuccessOpen={setOpenSuccess}
-                          errorOpen={openError}
-                          setErrorOpen={setOpenError}
-                          onConfirm={(e) => handleDeletedById(item.id)}
-                        ></AlertConfirm>
+                          bgBtn={true}
+                          openNotif={createDeletedMutation}
+                          onConfirm={() => handleDeletedById(item.id)}
+                        />
                       </div>
                     </TableCell>
                   </TableRow>
