@@ -12,19 +12,6 @@ import DefaultPhoto from "@/assets/default-photo.svg";
 import EditPhoto from "@/assets/edit-photo.svg";
 import VisibilityOff from "@/components/icons/VisibilityOff";
 import Edit from "@/assets/ImgModal/Ilustrasi-edit.svg";
-import EditIcon from "@/assets/icons/edit photo.png";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import AlertEdit from "@/assets/img/alert edit.png";
 import { updateUsers } from "@/services/manageUser/updateUsers";
 import { getUserById } from "@/services/manageUser/getUserById";
 import {
@@ -194,10 +181,10 @@ export default function UserEdit() {
                     render={() => (
                       <FormItem>
                         <FormControl>
-                          <div className="relative w-fit rounded-full bg-neutral-200 sm:w-[212px] ">
+                          <div className="relative w-fit rounded-full bg-neutral-200">
                             <div className="mx-auto">
                               <img
-                                className="h-[180px] w-[180px] rounded-full object-cover sm:h-[212px] sm:w-[212px]"
+                                className="h-40 w-40 rounded-full object-cover"
                                 src={preview || DefaultPhoto}
                                 alt="photo"
                               />
@@ -269,7 +256,7 @@ export default function UserEdit() {
                         className="pr-10"
                       />
                       <button
-                        className="absolute inset-y-0 right-0 flex items-center px-2"
+                        className="absolute inset-y-0 right-0 flex items-center px-3"
                         type="button"
                         onClick={() => setVisible(!visible)}
                       >
