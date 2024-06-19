@@ -34,18 +34,14 @@ const formSchema = zod.object({
 
 export const useGetAdminId = (id) => {
   const token = useSelector((state) => state.auth.user?.access_token); // Mengambil token dari Redux state
-  const [openSuccess, setOpenSuccess] = useState(false);
-  const [openError, setOpenError] = useState(false);
   const { data, error, isLoading } = useQuery({
     queryKey: ["admin"],
     queryFn: () => getAdminById(token, id),
     enabled: !!token,
     onSuccess: () => {
-      setOpenSuccess(true);
     },
 
     onError: (error) => {
-      setOpenError(true);
       console.error("Query error:", error);
     },
   });
@@ -62,8 +58,6 @@ export const FormEditAdmin = () => {
   const [visible, setVisible] = useState(false);
   const [preview, setPreview] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [openSuccess, setOpenSuccess] = useState(false);
-  const [openError, setOpenError] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -80,10 +74,8 @@ export const FormEditAdmin = () => {
       queryClient.invalidateQueries({ queryKey: ["admin"] });
       toast.success("User update successfully");
       navigate(privateRoutes.ADMIN);
-      setOpenSuccess(true);
     },
     onError: (error) => {
-      setOpenError(true);
       toast.error("Update data gagal dilakukan");
     },
   });
@@ -269,11 +261,8 @@ export const FormEditAdmin = () => {
                   textDialogSubmit="Simpan"
                   onConfirm={form.handleSubmit(onSubmit)}
                   disabled={!form.watch("username")}
-                  successOpen={openSuccess}
-                  setSuccessOpen={setOpenSuccess}
-                  errorOpen={openError}
+                  openNotif={createUpdateMutation}
                   isLoading={isLoading}
-                  setErrorOpen={setOpenError}
                   //onClick={() => {handleConfirmClick}}
                   backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
                 ></AlertConfirm>
