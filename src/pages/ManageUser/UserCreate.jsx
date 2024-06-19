@@ -15,18 +15,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Eye from "@/components/icons/Eye";
 import AddPhoto from "@/assets/icons/add photo.png";
 import EditIcon from "@/assets/icons/edit photo.png";
-import AlertAdd from "@/assets/img/alert add.png";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import VisibilityOff from "@/components/icons/VisibilityOff";
 import { createUsers } from "@/services/manageUser/createUsers";
 import Add from "@/assets/ImgModal/Ilustrasi-add.svg";
 import { AlertConfirm } from "@/components/features/alert/alertConfirm";
@@ -47,7 +36,7 @@ const formSchema = zod.object({
 
 export default function UserCreate() {
   const navigate = useNavigate();
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false)
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null);
   const queryClient = useQueryClient();
@@ -101,7 +90,7 @@ export default function UserCreate() {
 
   function onSubmit(values) {
     try {
-      createPostMutation.mutate(values); // Memanggil mutasi saat formulir disubmit
+      createPostMutation.mutate(values); 
     } catch (error) {
       console.error(error);
       toast.error("Failed to add user");
@@ -124,7 +113,6 @@ export default function UserCreate() {
           className="col-span-12 grid gap-10"
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          {/* <div className="flex h-[476px] w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 shadow-md"> */}
           <div className="grid grid-cols-12 gap-10 rounded-lg bg-neutral-50 px-6 py-8 shadow-md">
             <div className="col-span-2 flex items-start justify-center">
               <label htmlFor="foto_profil" className="cursor-pointer">
@@ -190,17 +178,16 @@ export default function UserCreate() {
                   Password
                 </Label>
                 <Input
+                  {...form}
                   type={visible ? "text" : "password"}
-                  id="password"
-                  {...form.register("password")}
                   className="pr-10"
                 />
                 <button
-                  className="absolute right-3 top-8 cursor-pointer"
+                  className="absolute inset-y-0 right-0 flex items-center pt-6 px-2"
                   type="button"
                   onClick={() => setVisible(!visible)}
                 >
-                  <Eye />
+                  {visible ? <VisibilityOff /> : <Eye />}
                 </button>
               </div>
               <div className="col-span-6 mb-3">
@@ -275,7 +262,7 @@ export default function UserCreate() {
               variant="outlined"
               color="primary"
               className="mr-6 rounded-lg border border-primary-500 bg-neutral-50 px-7 py-2 text-primary-500 hover:bg-primary-500 hover:text-neutral-50"
-              onClick={() => navigate("/manage-user")}
+              onClick={() => navigate(privateRoutes.USER)}
             >
               Kembali
             </Button>
@@ -295,7 +282,6 @@ export default function UserCreate() {
             />
           </div>
         </form>
-        {/* </div> */}
       </main>
     </ProtectedLayout>
   );
