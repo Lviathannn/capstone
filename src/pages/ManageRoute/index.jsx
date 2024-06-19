@@ -31,8 +31,6 @@ export default function ManageRoute() {
   const { data } = useGetAdmin(currentPage);
   const totalPages = data?.pagination?.last_page;
   const [searchTerm, setSearchTerm] = useState("");
-  const [openSuccess, setOpenSuccess] = useState(false);
-  const [openError, setOpenError] = useState(false);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -44,10 +42,8 @@ export default function ManageRoute() {
     mutationFn: (id) => deleteRoutes(token, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", currentPage] });
-      setOpenSuccess(true);
     },
     onError: (error) => {
-      setOpenError(true);
       console.error("Delete error:", error);
     },
   });
@@ -79,10 +75,7 @@ export default function ManageRoute() {
             filteredData={filteredData}
             handleRouteClick={handleRouteClick}
             handleDeletedById={handleDeletedById}
-            openSuccess={openSuccess}
-            setOpenSuccess={setOpenSuccess}
-            openError={openError}
-            setOpenError={setOpenError}
+            openNotif={createDeletedMutation}
           />
         </div>
         <div className="my-3 flex justify-center">
