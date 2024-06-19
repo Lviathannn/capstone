@@ -16,23 +16,12 @@ export const AlertNotif = ({
   desc,
   isLoading,
 }) => {
-  useEffect(() => {
-    if (open && !isLoading) {
-      const timer = setTimeout(() => {
-        onOpenChange(false);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [open, onOpenChange, isLoading]);
-
   return (
     <AlertDialog
       className="rounded bg-white"
       open={open}
       onOpenChange={onOpenChange}
     >
-      
-        
           <AlertDialogTrigger asChild>
             <button style={{ display: "none" }}></button>
           </AlertDialogTrigger>

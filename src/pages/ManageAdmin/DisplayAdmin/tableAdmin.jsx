@@ -22,7 +22,6 @@ import IcEdit from "@/components/icons/ic-edit.svg";
 import IcDelete from "@/components/icons/ic-delete.svg";
 import { useSelector } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getUsers } from "@/services/manageAdmin/getUsers";
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -33,12 +32,13 @@ import { toast } from "sonner";
 import { Clear } from "@/components/icons/Clear";
 import notFound from "@/assets/icons/not-found.svg";
 import { privateRoutes } from "@/constant/routes";
+import { getAllAdmins } from "@/services/manageAdmin/getAllAdmins";
 
 export const useGetAdmin = (page) => {
   const token = useSelector((state) => state.auth.user?.access_token); // Mengambil token dari Redux state
   const { data, error, isLoading } = useQuery({
     queryKey: ["admin", page],
-    queryFn: () => getUsers(token, page),
+    queryFn: () => getAllAdmins(token, page),
     enabled: !!token,
     onError: (error) => {
       console.error("Query error:", error);
@@ -53,7 +53,7 @@ export const TableAdmin = () => {
   const queryClient = useQueryClient();
   const { data, error, isLoading } = useGetAdmin(currentPage);
   const totalPages = data?.pagination?.last_page;
- 
+  const [openNotif, setOpenNotif] = useState({ isSuccess: undefined });
   const [deleted, setDeleted] = useState("");
   const inputRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -65,17 +65,25 @@ export const TableAdmin = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", currentPage] });
       //setOpenSuccess(true);
+      setOpenNotif({ isSuccess: true });
       toast.success("Berhasil menghapus data admin")
       
     },
     onError: (error) => {
       //setOpenError(true);
+      setOpenNotif({ isSuccess: true });
       toast.error("Gagal melakukan hapus admin");
     },
   });
 
-  const handleDeletedById = (id) => {
-    createDeletedMutation.mutate(id);
+  const handleDeletedById = async (id) => {
+    try {
+     await createDeletedMutation.mutate(id);
+  
+    } catch (error) {
+      toast.error("Gagal melakukan hapus admin");
+    }
+    
   };
 
   const handleSearchChange = (e) => {

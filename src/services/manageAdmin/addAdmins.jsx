@@ -1,6 +1,6 @@
 import { axiosInstance } from "@/lib/axios";
 
-export const addUsers = async (token, formData) => {
+export const addAdmins = async (token, formData) => {
   try {
     const res = await axiosInstance.post(`admin/admins`, formData, {
       headers: {

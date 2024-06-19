@@ -6,7 +6,7 @@ import VisibilityOff from "@/components/icons/VisibilityOff";
 import { Button } from "@/components/ui/button";
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addUsers } from "@/services/manageAdmin/addUsers";
+import { addAdmins } from "@/services/manageAdmin/addAdmins";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -38,7 +38,7 @@ export const FormAddAdmin = () => {
   const [visible, setVisible] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [preview, setPreview] = useState(null);
-
+  const [openNotif, setOpenNotif] = useState({ isSuccess: undefined });
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,14 +49,16 @@ export const FormAddAdmin = () => {
   });
 
   const createPostMutation = useMutation({
-    mutationFn: (values) => addUsers(token, values),
+    mutationFn: (values) => addAdmins(token, values),
     onSuccess: () => {
       navigate(privateRoutes.ADMIN);
       queryClient.invalidateQueries({ queryKey: ["admin"] });
       toast.success("User added successfully");
-      //navigate(privateRoutes.ADMIN);
+      navigate(privateRoutes.ADMIN);
+      setOpenNotif({isSuccess:true});
     },
     onError: () => {
+      setOpenNotif({isSuccess:true});
       toast.error("Tidak berhasil menambahkan Admin");
     },
   });
@@ -77,9 +79,9 @@ export const FormAddAdmin = () => {
 
   
 
-  function onSubmit(values) {
+  async function onSubmit(values) {
     try {
-      createPostMutation.mutate(values);
+      await createPostMutation.mutate(values);
     } catch (error) {
       toast.error("Tidak berhasil menambahkan Admin");
       throw error("Error adding Admin");

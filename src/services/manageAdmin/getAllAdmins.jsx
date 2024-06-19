@@ -1,6 +1,6 @@
 import { axiosInstance } from "@/lib/axios";
 
-export const getUsers = async (token,page) => {
+export const getAllAdmins = async (token,page) => {
   try {
     const res = await axiosInstance.get(`admin/admins?page=${page}`, {
       headers: {

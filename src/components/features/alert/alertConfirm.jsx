@@ -13,7 +13,7 @@ import { AlertNotif } from "./alertNotif";
 import Succes from "@/assets/ImgModal/Ilustrasi-succes.svg";
 import Error from "@/assets/ImgModal/Ilustrasi-failed.svg";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const AlertConfirm = ({
   textBtn,
@@ -28,22 +28,26 @@ export const AlertConfirm = ({
   backround,
   disabled,
   openNotif,
-  setOpenNotif,
-  successOpen,
-  setSuccessOpen,
-  errorOpen,
-  setErrorOpen,
+
 }) => {
-
-  const [open, setOpen] = useState(false);
-  const handleConfirm = (e) => {
-    e.stopPropagation();
-    onConfirm();
-    setTimeout(() => {
-      setOpen(true);
-    }, 1000);
-
+  const [showModal, setShowModal] = useState(false);
+  const handleConfirm = async () => {
+    try {
+      console.log("confirm jalan");
+      console.log(onConfirm);
+      await onConfirm();
+      setTimeout(()=>{
+        setShowModal(true)
+      }, 3000)
+    } catch (error) {
+      setShowModal(true);
+    }
   };
+  useEffect(() => {
+    console.log("showModal updated:", showModal);
+    console.log(openNotif.isSuccess);
+  }, [showModal, openNotif]);
+
   return (
     <div>
       <AlertDialog className={`rounded bg-white ${backround}`}>
@@ -90,15 +94,16 @@ export const AlertConfirm = ({
         </AlertDialogContent>
       </AlertDialog>
       <AlertNotif
-        open={open}
-        onOpenChange={setOpen}
-        img={openNotif.isSuccess ? Succes : Error}
-        title={openNotif.isSuccess ? "Sukses!" : "Gagal"}
+        open={showModal}
+        onOpenChange={setShowModal}
+        img={openNotif.isSuccess? Succes : Error}
+        title={openNotif.isSuccess? "Sukses!" : "Gagal"}
         desc={
-          openNotif.isSuccess ? "Proses berhasil dilakukan" : "Proses gagal dilakukan"
+          openNotif.isSuccess
+            ? "Proses berhasil dilakukan"
+            : "Proses gagal dilakukan"
         }
       />
-      
     </div>
   );
 };
