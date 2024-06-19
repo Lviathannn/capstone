@@ -53,8 +53,7 @@ export const TableAdmin = () => {
   const queryClient = useQueryClient();
   const { data, error, isLoading } = useGetAdmin(currentPage);
   const totalPages = data?.pagination?.last_page;
-  const [openSuccess, setOpenSuccess] = useState(false);
-  const [openError, setOpenError] = useState(false);
+ 
   const [deleted, setDeleted] = useState("");
   const inputRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -65,19 +64,17 @@ export const TableAdmin = () => {
     mutationFn: (id) => deleteAdmins(token, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", currentPage] });
-      setTimeout(() => {
-        window.location.reload();
-      }, 0);
-      setOpenSuccess(true);
+      //setOpenSuccess(true);
+      toast.success("Berhasil menghapus data admin")
+      
     },
     onError: (error) => {
-      setOpenError(true);
+      //setOpenError(true);
       toast.error("Gagal melakukan hapus admin");
     },
   });
 
   const handleDeletedById = (id) => {
-    setDeleted(id);
     createDeletedMutation.mutate(id);
   };
 
@@ -114,13 +111,13 @@ export const TableAdmin = () => {
 
   return (
     <section className="container mx-auto flex h-full flex-col gap-6 py-6">
-      <div className="grid items-center justify-between gap-4 sm:flex">
-        <div className="h-full w-fit overflow-hidden rounded-[10px] border-none shadow-md sm:w-full ">
+      <div className="grid w-full items-center justify-between gap-4 sm:flex">
+        <div className="h-full overflow-hidden rounded-[10px] border-none shadow-md sm:w-full ">
           <Card
             x-chunk="dashboard-05-chunk-1"
-            className="flex flex-col gap-4 bg-neutral-50 px-4"
+            className="flex w-full flex-col gap-4 bg-neutral-50 px-4"
           >
-            <CardHeader className="pb-2">
+            <CardHeader className="pb-2 w-full">
               <CardTitle className="text-[26px] font-bold text-neutral-800">
                 Kelola Admin
               </CardTitle>
@@ -129,7 +126,7 @@ export const TableAdmin = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-3 sm:flex sm:items-center sm:gap-3 md:justify-between">
+              <div className="grid w-full gap-3 sm:flex sm:items-center sm:gap-3 md:justify-between">
                 <div className="relative h-[48px] w-full bg-neutral-50 sm:w-full md:w-[400px]">
                   <Search className="absolute left-3 top-3" />
                   <Input
@@ -164,9 +161,9 @@ export const TableAdmin = () => {
         <div className="h-full w-full overflow-hidden rounded-[10px] border-none shadow-md sm:w-[218px] ">
           <Card
             x-chunk="dashboard-05-chunk-1"
-            className="flex h-full w-full flex-col gap-4 bg-neutral-50 px-4 py-4"
+            className="flex h-full w-full flex-col bg-neutral-50 px-4 py-4"
           >
-            <CardHeader className="pb-2">
+            <CardHeader >
               <CardDescription>
                 <img src={IcAdmin} sizes="24" alt="" />
               </CardDescription>
@@ -175,7 +172,7 @@ export const TableAdmin = () => {
               <CardTitle className="text-2xl font-semibold text-neutral-900">
                 {data?.pagination?.total}
               </CardTitle>
-              <div className="font-normal text-muted-foreground text-neutral-900 sm:text-[14px] md:text-[16px]">
+              <div className="font-normal text-muted-foreground text-neutral-900 text-[16px] sm:text-[14px] lg:text-[16px]">
                 Total Admin
               </div>
             </CardContent>
@@ -215,12 +212,9 @@ export const TableAdmin = () => {
                     <TableCell
                       className="w-fit sm:w-[459px]"
                       onClick={(e) => {
-                        if (
-                          !e.target.closest("AlertConfirm") &&
-                          !e.target.closest("Link")
-                        ) {
+                        
                           handleDetail(item.id);
-                        }
+                        
                       }}
                     >
                       {item.username}
@@ -243,12 +237,9 @@ export const TableAdmin = () => {
                           desc="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
                           textDialogCancel="Batal"
                           textDialogSubmit="Hapus"
-                          bgBtn="True"
-                          successOpen={openSuccess}
-                          setSuccessOpen={setOpenSuccess}
-                          errorOpen={openError}
-                          setErrorOpen={setOpenError}
-                          onConfirm={(e) => handleDeletedById(item.id)}
+                          bgBtn={true}
+                          openNotif={createDeletedMutation}
+                          onConfirm={() => handleDeletedById(item.id)}
                         ></AlertConfirm>
                       </div>
                     </TableCell>

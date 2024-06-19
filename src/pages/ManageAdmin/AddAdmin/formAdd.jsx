@@ -36,9 +36,8 @@ export const FormAddAdmin = () => {
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.user?.access_token);
   const [visible, setVisible] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [preview, setPreview] = useState(null);
-  const [openSuccess, setOpenSuccess] = useState(false);
-  const [openError, setOpenError] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -52,14 +51,13 @@ export const FormAddAdmin = () => {
   const createPostMutation = useMutation({
     mutationFn: (values) => addUsers(token, values),
     onSuccess: () => {
+      navigate(privateRoutes.ADMIN);
       queryClient.invalidateQueries({ queryKey: ["admin"] });
       toast.success("User added successfully");
-      form.reset();
-      navigate(privateRoutes.ADMIN);
-      setOpenSuccess(true);
+      //navigate(privateRoutes.ADMIN);
     },
     onError: () => {
-      setOpenError(true);
+      toast.error("Tidak berhasil menambahkan Admin");
     },
   });
 
@@ -77,6 +75,8 @@ export const FormAddAdmin = () => {
     }
   };
 
+  
+
   function onSubmit(values) {
     try {
       createPostMutation.mutate(values);
@@ -90,14 +90,14 @@ export const FormAddAdmin = () => {
       <div>
         <Form {...form}>
           <form className="grid gap-10" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid h-[476px] w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 shadow-md sm:flex">
+            <div className="grid sm:flex h-[476px] w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 shadow-md sm:py-0 py-5">
               <div className="flex justify-center sm:block">
                 <FormField
                   name="foto_profil"
                   render={() => (
                     <FormItem>
                       <FormControl>
-                        <div className="relative mb-8 mt-5 w-fit rounded-full bg-neutral-200 sm:mb-0 sm:mt-0 sm:w-[212px] ">
+                        <div className="relative w-fit rounded-full bg-neutral-200 sm:w-[212px] ">
                           <div className=" mx-auto">
                             <img
                               className="h-[180px] w-[180px] rounded-full sm:h-[212px] sm:w-[212px]"
@@ -184,13 +184,13 @@ export const FormAddAdmin = () => {
                 />
               </div>
             </div>
-            <div className="flex items-center justify-between gap-6 sm:justify-end">
-              <Link to={privateRoutes.ADMIN}>
-                <Button className="h-[42px] w-[150px] border border-primary-500 bg-white text-sm font-medium text-primary-500 hover:bg-primary-50 hover:text-primary-500 sm:w-[180px] sm:rounded-[12px]">
+            <div className="flex items-center sm:justify-end justify-between gap-6">
+              <Link to={privateRoutes.ADMIN} className="w-full sm:w-fit">
+                <Button className="h-[42px] w-full border border-primary-500 bg-white text-sm font-medium text-primary-500 hover:bg-primary-50 hover:text-primary-500 sm:w-[180px] sm:rounded-[12px]">
                   Kembali
                 </Button>
               </Link>
-              <div className="w-[150px] sm:w-[180px]">
+              <div className="w-full sm:w-[180px]">
                 <AlertConfirm
                   textBtn="Tambah"
                   img={Add}
@@ -200,11 +200,9 @@ export const FormAddAdmin = () => {
                   textDialogSubmit="Tambah"
                   onConfirm={form.handleSubmit(onSubmit)}
                   disabled={!form.watch("username") || !form.watch("password")}
+                  openNotif={createPostMutation}
                   backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
-                  successOpen={openSuccess}
-                  setSuccessOpen={setOpenSuccess}
-                  errorOpen={openError}
-                  setErrorOpen={setOpenError}
+                  
                 />
               </div>
             </div>

@@ -20,7 +20,7 @@ export const AlertNotif = ({
     if (open && !isLoading) {
       const timer = setTimeout(() => {
         onOpenChange(false);
-      }, 3000);
+      }, 1000);
       return () => clearTimeout(timer);
     }
   }, [open, onOpenChange, isLoading]);
@@ -31,8 +31,8 @@ export const AlertNotif = ({
       open={open}
       onOpenChange={onOpenChange}
     >
-      {open && (
-        <div className={`fixed inset-0 bg-black bg-opacity-50 `}>
+      
+        
           <AlertDialogTrigger asChild>
             <button style={{ display: "none" }}></button>
           </AlertDialogTrigger>
@@ -56,8 +56,6 @@ export const AlertNotif = ({
               </AlertDialogHeader>
             </AlertDialogContent>
           </div>
-        </div>
-      )}
     </AlertDialog>
   );
 };

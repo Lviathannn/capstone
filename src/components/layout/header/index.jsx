@@ -115,10 +115,18 @@ export default function HeaderAdmin() {
           </div>
         </SheetContent>
       </Sheet>
-      <div className="w-full flex-1 pl-[250px]">
+      <div className="w-full ">
         <nav>
-          <div className="container mx-auto flex items-center justify-between px-6 py-5 lg:px-0">
-            <div className="flex items-center gap-5">
+          <div className="container mx-auto flex items-center px-6 py-5 lg:px-0">
+            <div className="hidden sm:flex h-14 items-center px-4 lg:h-[60px]">
+              <Link
+                to={publicRoutes.HOME}
+                className="flex w-full items-center justify-center gap-2 font-semibold"
+              >
+                <img src={Logo} className="h-32 w-32" />
+              </Link>
+            </div>
+            <div className="flex items-center gap-5 pl-20">
               <ul className={`hidden md:flex md:space-x-8`}>
                 <li>
                   <Breadcrumb>
