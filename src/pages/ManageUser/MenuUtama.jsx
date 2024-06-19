@@ -45,11 +45,9 @@ export default function MenuUtama() {
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
 
-  // Menambahkan token ke dalam variabel lokal
   const token = useSelector((state) => state.auth.user?.access_token);
 
   const createDeletedMutation = useMutation({
-    // Mengakses token di dalam fungsi createDeletedMutation
     mutationFn: (id) => deleteUsers(token, id),
     onSuccess: () => {
       queryClient.invalidateQueries(["user", currentPage]);
