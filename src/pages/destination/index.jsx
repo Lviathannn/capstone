@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 import Pen from "@/components/icons/Pen";
 import TrashCan from "@/components/icons/TrachCan";
 import { useSelector } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllDestination } from "@/services/destination/getAllDestination";
 import { useSearchParams } from "react-router-dom";
 import Pagination from "@/components/features/Pagination";
@@ -26,14 +26,20 @@ import { useDebounce } from "use-debounce";
 import { useEffect } from "react";
 import notFoundImg from "@/assets/icons/not-found.svg";
 import { useNavigate } from "react-router-dom";
+import { deleteDestination } from "@/services/destination/deleteDestionation";
+import Dialog from "@/components/features/alert/Dialog";
+import Notification from "@/components/features/alert/Notification";
 
 export default function DestinationPage() {
   const token = useSelector((state) => state.auth.user.access_token);
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 1000);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
   const page = searchParams.get("page") || 1;
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { data: destination, isLoading } = useQuery({
     queryKey: ["destination", page, searchQuery],
@@ -51,6 +57,38 @@ export default function DestinationPage() {
       setSearchParams({ page });
     }
   }, [page, searchQuery, setSearchParams]);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const destinationMutation = useMutation({
+    mutationFn: async (id) => {
+      try {
+        const res = await deleteDestination(token, id);
+        if (res?.status === 200) {
+          return res.data;
+        } else {
+          throw new Error("Gagal menghapus data");
+        }
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    onSuccess: () => {
+      setIsSuccess(true);
+    },
+    onError: () => {
+      setIsError(true);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(["destination", page, searchQuery]);
+      setTimeout(() => {
+        setIsSuccess(false);
+        setIsError(false);
+      }, 2000);
+    },
+  });
+  const handleDelete = (id) => {
+    destinationMutation.mutate(id);
+  };
 
   return (
     <ProtectedLayout>
@@ -169,13 +207,23 @@ export default function DestinationPage() {
                       <TableCell>{data?.harga_masuk}</TableCell>
                       <TableCell>{data?.visit_count}</TableCell>
 
-                      <TableCell className="flex items-center justify-center gap-7">
+                      <TableCell
+                        className="flex items-center justify-center gap-7"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <button onClick={(e) => e.stopPropagation()}>
                           <Pen />
                         </button>
-                        <button onClick={(e) => e.stopPropagation()}>
-                          <TrashCan />
-                        </button>
+                        <Dialog
+                          action={() => handleDelete(data?.id)}
+                          type="delete"
+                          title="Hapus Data !"
+                          description="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
+                        >
+                          <button>
+                            <TrashCan />
+                          </button>
+                        </Dialog>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -190,6 +238,14 @@ export default function DestinationPage() {
           )}
         </div>
       </section>
+      <Notification
+        title={isSuccess ? "Sukses !" : "Gagal !"}
+        description={
+          isSuccess ? "Proses berhasil dilakukan" : "Proses gagal dilakukan"
+        }
+        open={isSuccess || isError}
+        type={isSuccess ? "success" : "error"}
+      />
     </ProtectedLayout>
   );
 }

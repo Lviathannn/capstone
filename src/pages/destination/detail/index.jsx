@@ -26,6 +26,7 @@ export default function DetailDestination() {
     queryKey: ["destination", id],
     queryFn: () => getDestination(token, id),
   });
+
   return (
     <ProtectedLayout>
       <section

@@ -27,7 +27,6 @@ const getShownMessage = (error) => {
 
 axiosInstance.interceptors.response.use(
   (res) => res,
-
   async (error) => {
     if (
       error?.response?.status === 500 ||
