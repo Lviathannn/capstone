@@ -25,6 +25,7 @@ import { useState } from "react";
 import { useDebounce } from "use-debounce";
 import { useEffect } from "react";
 import notFoundImg from "@/assets/icons/not-found.svg";
+import { useNavigate } from "react-router-dom";
 
 export default function DestinationPage() {
   const token = useSelector((state) => state.auth.user.access_token);
@@ -32,6 +33,7 @@ export default function DestinationPage() {
   const [searchQuery] = useDebounce(search, 1000);
   const [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get("page") || 1;
+  const navigate = useNavigate();
 
   const { data: destination, isLoading } = useQuery({
     queryKey: ["destination", page, searchQuery],
@@ -86,7 +88,9 @@ export default function DestinationPage() {
           </div>
           <div className="flex w-full flex-col justify-center space-y-4 rounded-xl bg-white p-4 shadow-md lg:col-start-5 lg:col-end-6">
             <Map />
-            <p className="text-xl font-bold text-neutral-800">10</p>
+            <p className="text-xl font-bold text-neutral-800">
+              {destination?.data?.pagination?.total}
+            </p>
             <p className="text-neutral-800">Total destinasi</p>
           </div>
         </div>
@@ -139,7 +143,15 @@ export default function DestinationPage() {
                     ))}
 
                   {destination?.data?.data?.map((data) => (
-                    <TableRow key={data?.id}>
+                    <TableRow
+                      key={data?.id}
+                      className="cursor-pointer"
+                      onClick={() => {
+                        navigate(
+                          privateRoutes.DESTINATION + "/detail/" + data?.id,
+                        );
+                      }}
+                    >
                       <TableCell className="text-nowrap">
                         {data?.nama}
                       </TableCell>
@@ -156,11 +168,12 @@ export default function DestinationPage() {
                       </TableCell>
                       <TableCell>{data?.harga_masuk}</TableCell>
                       <TableCell>{data?.visit_count}</TableCell>
+
                       <TableCell className="flex items-center justify-center gap-7">
-                        <button>
+                        <button onClick={(e) => e.stopPropagation()}>
                           <Pen />
                         </button>
-                        <button>
+                        <button onClick={(e) => e.stopPropagation()}>
                           <TrashCan />
                         </button>
                       </TableCell>

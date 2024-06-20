@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DetailAdmin } from "@/pages/ManageAdmin/DetailAdmin/index";
 import { AddAdmin } from "@/pages/ManageAdmin/AddAdmin/index";
-import LandingPage from "@/pages/landing";
 import { LoginPage } from "@/pages/login";
 import { DisplayAdmin } from "@/pages/ManageAdmin/DisplayAdmin/index";
 import { EditAdmin } from "@/pages/ManageAdmin/EditAdmin/index";
@@ -32,7 +31,6 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* Private Routes */}
-
         {/* Admin */}
         <Route element={<ProtectedRoute requiredRole="super admin" />}>
           <Route
@@ -137,7 +135,7 @@ function App() {
 
         {/* Public Routes */}
 
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<Navigate to="/dashboard" />} />
         <Route path="/login" element={<LoginPage />} />
       </Routes>
       <Toaster />
