@@ -1,8 +1,4 @@
 import { TableAdmin } from "@/pages/ManageAdmin/DisplayAdmin/tableAdmin";
-import HeaderAdmin from "@/components/layout/header";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
 
 export const DisplayAdmin = () => {
