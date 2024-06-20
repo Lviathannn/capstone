@@ -20,19 +20,35 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllDestination } from "@/services/destination/getAllDestination";
 import { useSearchParams } from "react-router-dom";
 import Pagination from "@/components/features/Pagination";
+import TableSkeleton from "@/components/features/skeleton/TableSkeleton";
+import { useState } from "react";
+import { useDebounce } from "use-debounce";
+import { useEffect } from "react";
+import notFoundImg from "@/assets/icons/not-found.svg";
 
 export default function DestinationPage() {
   const token = useSelector((state) => state.auth.user.access_token);
-  const [searchParams] = useSearchParams();
-
+  const [search, setSearch] = useState("");
+  const [searchQuery] = useDebounce(search, 1000);
+  const [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get("page") || 1;
 
   const { data: destination, isLoading } = useQuery({
-    queryKey: ["destination", page],
-    queryFn: () => getAllDestination(token, page),
+    queryKey: ["destination", page, searchQuery],
+    queryFn: () => getAllDestination(token, page, searchQuery),
   });
 
-  console.log(destination?.data?.pagination?.current_page);
+  useEffect(() => {
+    setSearchParams({ page: 1 });
+  }, [search, setSearchParams]);
+
+  useEffect(() => {
+    if (searchQuery !== "") {
+      setSearchParams({ page, search: searchQuery });
+    } else {
+      setSearchParams({ page });
+    }
+  }, [page, searchQuery, setSearchParams]);
 
   return (
     <ProtectedLayout>
@@ -54,6 +70,7 @@ export default function DestinationPage() {
               <Input
                 placeholder="Cari destinasi"
                 className="md:max-w-[400px]"
+                onChange={(e) => setSearch(e.target.value)}
               />
               <Link to={privateRoutes.DESTINATION + "/create"}>
                 <Button
@@ -74,79 +91,91 @@ export default function DestinationPage() {
           </div>
         </div>
         <div className="max-w-screen overflow-hidden rounded-xl">
-          <Table className="rounded-lg">
-            <TableHeader className="rounded-lg bg-primary-500">
-              <TableRow>
-                <TableHead className="min-w-[300px] text-nowrap">
-                  Nama
-                </TableHead>
-                <TableHead className="min-w-[200px] text-nowrap">
-                  Kategori
-                </TableHead>
-                <TableHead className="min-w-[200px] text-nowrap">
-                  Provinsi
-                </TableHead>
-                <TableHead className="min-w-[200px] text-nowrap">
-                  Kota / Kabupaten
-                </TableHead>
-                <TableHead className="min-w-[300px] text-nowrap">
-                  Alamat
-                </TableHead>
-                <TableHead className="min-w-[200px] text-nowrap">
-                  Jam Operasional
-                </TableHead>
-                <TableHead className="min-w-[200px] text-nowrap">
-                  Biaya
-                </TableHead>
-                <TableHead className="min-w-[100px] text-nowrap">
-                  Total Konten
-                </TableHead>
-                <TableHead className="min-w-[200px] text-nowrap text-center">
-                  Aksi
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody className="overflow-hidden bg-white">
-              {isLoading && (
-                <TableRow>
-                  <TableCell colSpan={9} className="text-center">
-                    Loading...
-                  </TableCell>
-                </TableRow>
-              )}
+          {destination?.data?.data?.length === 0 ? (
+            <div className="flex h-full w-full flex-grow flex-col items-center justify-center gap-5">
+              <img className="h-[200px] w-[200px]" src={notFoundImg} alt="" />
+              <span className="mx-auto flex items-center text-[16px] font-medium">
+                Maaf, Hasil Pencarian Tidak Ditemukan!
+              </span>
+            </div>
+          ) : (
+            <>
+              <Table className="rounded-lg">
+                <TableHeader className="rounded-lg bg-primary-500">
+                  <TableRow>
+                    <TableHead className="min-w-[300px] text-nowrap">
+                      Nama
+                    </TableHead>
+                    <TableHead className="min-w-[200px] text-nowrap">
+                      Kategori
+                    </TableHead>
+                    <TableHead className="min-w-[200px] text-nowrap">
+                      Provinsi
+                    </TableHead>
+                    <TableHead className="min-w-[200px] text-nowrap">
+                      Kota / Kabupaten
+                    </TableHead>
+                    <TableHead className="min-w-[300px] text-nowrap">
+                      Alamat
+                    </TableHead>
+                    <TableHead className="min-w-[200px] text-nowrap">
+                      Jam Operasional
+                    </TableHead>
+                    <TableHead className="min-w-[200px] text-nowrap">
+                      Biaya
+                    </TableHead>
+                    <TableHead className="min-w-[100px] text-nowrap">
+                      Total Konten
+                    </TableHead>
+                    <TableHead className="min-w-[200px] text-nowrap text-center">
+                      Aksi
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody className="overflow-hidden bg-white">
+                  {isLoading &&
+                    Array.from({ length: 8 }).map((_, index) => (
+                      <TableSkeleton key={index} />
+                    ))}
 
-              {destination?.data?.data?.map((data) => (
-                <TableRow key={data?.id}>
-                  <TableCell className="text-nowrap">{data?.nama}</TableCell>
-                  <TableCell>{data?.kategori?.nama}</TableCell>
-                  <TableCell>{data?.alamat?.provinsi}</TableCell>
-                  <TableCell>{data?.alamat?.kota}</TableCell>
-                  <TableCell>
-                    {data?.alamat?.nama_jalan + " " + data?.alamat?.kecamatan}
-                  </TableCell>
-                  <TableCell>
-                    {data?.jam_buka + " - " + data?.jam_tutup}
-                  </TableCell>
-                  <TableCell>{data?.harga_masuk}</TableCell>
-                  <TableCell>{data?.visit_count}</TableCell>
-                  <TableCell className="flex items-center justify-center gap-7">
-                    <button>
-                      <Pen />
-                    </button>
-                    <button>
-                      <TrashCan />
-                    </button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                  {destination?.data?.data?.map((data) => (
+                    <TableRow key={data?.id}>
+                      <TableCell className="text-nowrap">
+                        {data?.nama}
+                      </TableCell>
+                      <TableCell>{data?.kategori?.nama}</TableCell>
+                      <TableCell>{data?.alamat?.provinsi}</TableCell>
+                      <TableCell>{data?.alamat?.kota}</TableCell>
+                      <TableCell>
+                        {data?.alamat?.nama_jalan +
+                          " " +
+                          data?.alamat?.kecamatan}
+                      </TableCell>
+                      <TableCell>
+                        {data?.jam_buka + " - " + data?.jam_tutup}
+                      </TableCell>
+                      <TableCell>{data?.harga_masuk}</TableCell>
+                      <TableCell>{data?.visit_count}</TableCell>
+                      <TableCell className="flex items-center justify-center gap-7">
+                        <button>
+                          <Pen />
+                        </button>
+                        <button>
+                          <TrashCan />
+                        </button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+
+              <Pagination
+                currentPage={destination?.data?.pagination?.current_page}
+                lastPage={destination?.data?.pagination?.last_page}
+              />
+            </>
+          )}
         </div>
-
-        <Pagination
-          currentPage={destination?.data?.pagination.current_page}
-          lastPage={destination?.data?.pagination?.last_page}
-        />
       </section>
     </ProtectedLayout>
   );
