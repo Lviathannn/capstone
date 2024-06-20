@@ -131,7 +131,7 @@ function App() {
         <Route path="/manage-route" element={<ManageRoute />} />
         <Route path="/manage-route/:id" element={<DetailRoute />} />
         <Route path="/manage-content" element={<ManageContent />} />
-        <Route path="manage-content/create/:id" element={<CreateContent />} />
+        <Route path="manage-content/create" element={<CreateContent />} />
         <Route path="manage-content/detail/:id" element={<DetailContent />} />
         <Route path="manage-content/edit" element={<EditContent />}/>
 >>>>>>> af21de2 (feat: Implement GET API, Read, and Delete)
