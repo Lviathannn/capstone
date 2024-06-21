@@ -9,9 +9,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import deleteImage from "@/assets/ImgModal/Ilustrasi-delete.svg";
 
-export default function Dialog({ children, title, description, action, type }) {
+export default function Dialog({
+  children,
+  title,
+  description,
+  action,
+  type,
+  img,
+  actionTitle,
+}) {
   const handleConfirm = () => {
     action();
   };
@@ -21,7 +28,7 @@ export default function Dialog({ children, title, description, action, type }) {
       <AlertDialogTrigger>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <img
-          src={deleteImage}
+          src={img}
           alt="alert"
           className="mx-auto mb-8"
           width={242}
@@ -36,15 +43,15 @@ export default function Dialog({ children, title, description, action, type }) {
             {description}
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter className="flex">
-          <AlertDialogCancel className="flex-1 hover:bg-neutral-100 hover:text-neutral-800">
+        <AlertDialogFooter>
+          <AlertDialogCancel className="hover:bg-neutral-100 hover:text-neutral-800">
             Batal
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
-            className={`flex-1 ${type == "delete" ? "bg-danger-400 hover:bg-danger-500" : "bg-primary-500 hover:bg-primary-600"}`}
+            className={`${type == "danger" ? "bg-danger-400 hover:bg-danger-500" : "bg-primary-500 hover:bg-primary-600"}`}
           >
-            Hapus
+            {actionTitle}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
