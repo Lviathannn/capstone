@@ -1,16 +1,19 @@
 import { axiosInstance } from "@/lib/axios";
 
-export const getContentById = async (token,id) => {
+export const getContentById = async (token, id) => {
   try {
-    console.log(`mendapatkan ID: ${id}, menggunakan token: ${token}`);
-    const res = await axiosInstance.get(`/admin/destination-media/${id}`,{
+    const res = await axiosInstance.get(`/admin/destination-media/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data',
       },
     });
-    console.log("Data yang terambil: ", res.data);
-    return res.data;
+
+    if (res && res.data) {
+      return res.data;
+    } else {
+      throw new Error("Response tidak mengandung data");
+    }
   } catch (error) {
     console.error("Error data admins:", error); // Logging untuk debug
     throw new Error("Failed to get data admins by ID");

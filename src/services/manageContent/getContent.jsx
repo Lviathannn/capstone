@@ -5,7 +5,6 @@ export const getContent = async (token,page) => {
     const res = await axiosInstance.get(`/admin/destination-media?page=${page}`, {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
       },
     });
     return res.data;
