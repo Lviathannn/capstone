@@ -45,9 +45,6 @@ export const AlertConfirm = ({
       setOpen(true);
     }, 1000);
   };
-
-  console.log(open)
-  console.log(openNotif.isSuccess);
   return (
     <div>
       <AlertDialog className={`rounded bg-white ${backround}`}>

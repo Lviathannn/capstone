@@ -9,7 +9,7 @@ export const getRoutes = async (token,page) => {
     });
     return res.data;
   } catch (error) {
-    console.error("Error fetching users:", error); // Logging untuk debug
-    throw new Error("Failed to fetch users");
+    console.error("Error fetching routes:", error); // Logging untuk debug
+    throw new Error("Failed to fetch routes");
   }
 };
