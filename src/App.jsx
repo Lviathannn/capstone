@@ -71,12 +71,21 @@ function App() {
           element={<CreateContent />}
         />
         <Route
+<<<<<<< HEAD
           path={`${privateRoutes.CONTENT}/detail`}
           element={<DetailContent />}
         />
         <Route
           path={`${privateRoutes.CONTENT}/edit`}
           element={<EditContent />}
+=======
+          path={`${privateRoutes.CONTENT}/detail/:id`}
+          element={currentUser ? <DetailContent /> : <Navigate to="/login" />}
+        />
+        <Route
+          path={`${privateRoutes.CONTENT}/edit/:id`}
+          element={currentUser ? <EditContent /> : <Navigate to="/login" />}
+>>>>>>> 582f697 (fix: Fix Bug Conflict)
         />
 
         {/* User */}
