@@ -31,71 +31,75 @@ export const useGetContent = (page, searchQuery) => {
 
 export default function LandingContent() {
   const navigate = useNavigate();
-
-  const users = [
-    {
-      namaDestinasi: 'Danau Toba',
-      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
-      linkTerkait: 'danau.toba@example.com',
-    },
-    {
-      namaDestinasi: 'Danau Toba',
-      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
-      linkTerkait: 'danau.toba@example.com',
-    },
-    {
-      namaDestinasi: 'Danau Toba',
-      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
-      linkTerkait: 'danau.toba@example.com',
-    },
-    {
-      namaDestinasi: 'Danau Toba',
-      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
-      linkTerkait: 'danau.toba@example.com',
-    },
-    {
-      namaDestinasi: 'Danau Toba',
-      deskripsiKonten: 'Danau Toba adalah tujuan wisata yang populer, menawarkan pemandangan alam yang spektakuler, budaya yang kaya, dan berbagai aktivitas rekreasi seperti berlayar, berenang, dan mendaki. Ada banyak resor dan penginapan di sekitar danau yang melayani wisatawan domestik maupun internasional.',
-      linkTerkait: 'danau.toba@example.com',
-    }
-  ];
-
-  const truncateText = (text, maxWords) => {
-    const words = text.split(' ');
-    if (words.length > maxWords) {
-      return words.slice(0, maxWords).join(' ') + '...';
-    }
-    return text;
-  };
-
+  const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 8;
+  const [searchQuery, setSearchQuery] = useState("");
+  const { data, error, isLoading } = useGetContent(currentPage);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
 
-  // Calculate the total number of pages
-  const totalPages = Math.ceil(users.length / usersPerPage);
+  const token = useSelector((state) => state.auth.user?.access_token);
 
-  // Get current users for the page
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+  const createDeletedMutation = useMutation({
+    mutationFn: (id) => deleteContent(token, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["content", currentPage]);
+      console.log("Content deleted successfully");
+    },
+    onError: (error) => {
+      console.error("Delete error:", error);
+    },
+  });
 
-  // Handle pagination click
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  const handleUserClick = (user) => {
-    navigate(`/manage-content/detail`, { state: { user } });
+  const handleDeleteContent = (content) => {
+    const contentId = content.id;
+    createDeletedMutation.mutate(contentId);
   };
 
-  const handleEditClick = (event, user) => {
-    event.stopPropagation();
-    navigate(`/manage-content/edit`, { state: { user } });
-  };  
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  const contents = data?.data || [];
+  const totalContents = data?.pagination?.total || 0;
+  const totalPages = data?.pagination?.last_page || 1;
+
+  const filteredContents = contents.filter(content => {
+    const name = content.destination.name || "";
+    const title = content.title || "";
+    const url = content.url || "";
+    return (
+      name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      url.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
+  
+
+  const handleDetailClick = (content) => {
+    const { id } = content;
+    // navigate(`/manage-content/detail/${id}`, { state: { content } });
+    navigate(privateRoutes.CONTENT+`/detail/${id}`);
+  };
+
+  const handleEditClick = (content) => {
+    const { id } = content;
+    // navigate(`/manage-content/edit/${id}`);
+    navigate(privateRoutes.CONTENT+`/edit/${id}`);
+  };
+
+  const paginate = (pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  };
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr]">
-      <SideBar />
-      <div className="flex flex-col">
-        <HeaderAdmin />
+    <ProtectedLayout>
         <main className="flex">
           <div className="flex w-full h-screen flex-col gap-6 bg-primary-50 px-10 py-6 font-sans">
             <div className="grid grid-cols-12 gap-4">
@@ -109,9 +113,19 @@ export default function LandingContent() {
                       type="text" 
                       placeholder="Cari data konten ..." 
                       className="w-full border-none outline-none bg-transparent font-jakarta-sans text-neutral-800" 
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
                     />
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery("")}
+                        className="absolute right-3 top-3 h-4 w-4 text-neutral-800"
+                      >
+                        &times;
+                      </button>
+                    )}
                   </div>
-                  <Link to="/manage-content/create" className="flex items-center border px-4 py-3 text-primary-500 rounded-lg font-jakarta-sans">
+                  <Link to={`${privateRoutes.CONTENT}/create`} className="flex items-center border px-4 py-3 text-primary-500 rounded-lg font-jakarta-sans">
                     <img src={plus} alt="Plus Icon" className="w-6 h-6 mr-4" />
                     Tambah Konten
                   </Link>
@@ -119,7 +133,7 @@ export default function LandingContent() {
               </div>
               <div className="col-span-2 bg-neutral-50 p-4 flex flex-col items-left justify-center rounded-lg">
                 <img src={content} alt="Person Icon" className="w-6 h-6 mb-4" />
-                <p className="text-[26px] font-[700] text-neutral-800 font-jakarta-sans">{users.length}</p>
+                <p className="text-[26px] font-[700] text-neutral-800 font-jakarta-sans">{totalContents}</p>
                 <p className="text-[16px] font-[400] text-neutral-800 font-jakarta-sans">Total Konten</p>
               </div>
             </div>
@@ -134,24 +148,45 @@ export default function LandingContent() {
                   </TableRow>
                 </TableHeader>
                 <TableBody className="bg-neutral-50 font-jakarta-sans">
-                  {currentUsers.map((user, index) => (
-                    <TableRow key={index} onClick={() => handleUserClick(user)} className="cursor-pointer">
-                      <TableCell>{user.namaDestinasi}</TableCell>
-                      <TableCell className="max-w-xs truncate overflow-hidden whitespace-nowrap">{user.deskripsiKonten}</TableCell>
-                      <TableCell>{user.linkTerkait}</TableCell>
+                  {filteredContents.map((content) => (
+                    <TableRow key={content.id}>
+                      <TableCell onClick={() => handleDetailClick(content)} className="max-w-xs truncate overflow-hidden whitespace-nowrap cursor-pointer">{content.destination.name}</TableCell>
+                      <TableCell onClick={() => handleDetailClick(content)} className="max-w-xs truncate overflow-hidden whitespace-nowrap cursor-pointer">{content.title}</TableCell>
+                      <TableCell onClick={() => handleDetailClick(content)} className="max-w-xs truncate overflow-hidden whitespace-nowrap cursor-pointer">{content.url}</TableCell>
                       <TableCell>
-                          <button className="mr-2" onClick={(e) => handleEditClick(e, user)}>
-                            <img src={edit} alt="Edit Icon" className="w-6 h-6" />
+                        <div className="flex items-center">
+                          <button
+                            className="mr-2"
+                            onClick={() => handleEditClick(content)}
+                          >
+                            <img src={edit} alt="Edit Icon" className="h-6 w-6" />
                           </button>
-                          <button>
-                            <img src={deleteIcon} alt="Delete Icon" className="w-6 h-6" />
-                          </button>
+                          <AlertConfirm
+                            backround="outline-none bg-transparent border-none rounded-0 w-fit h-fit p-0 hover:bg-transparent"
+                            textBtn={
+                              <img src={deleteIcon} className="h-6 w-6" alt="" />
+                            }
+                            img={AlertDelete}
+                            title="Hapus Data !"
+                            desc="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
+                            textDialogCancel="Batal"
+                            textDialogSubmit="Hapus"
+                            bgBtn="True"
+                            successOpen={openSuccess}
+                            setSuccessOpen={setOpenSuccess}
+                            errorOpen={openError}
+                            setErrorOpen={setOpenError}
+                            onConfirm={() => handleDeleteContent(content)}
+                          ></AlertConfirm>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </div>
+
+            {/* Problem When Click Next Page */}
             <div className="flex justify-center my-3">
               <button
                 onClick={() => paginate(currentPage - 1)}
@@ -173,7 +208,6 @@ export default function LandingContent() {
             </div>
           </div>
         </main>
-      </div>
-    </div>
+    </ProtectedLayout>
   );
 }

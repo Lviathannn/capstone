@@ -1,6 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import SideBar from "@/components/layout/sidebar";
-import HeaderAdmin from "@/components/layout/header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

@@ -69,11 +69,11 @@ function App() {
           element={currentUser ? <CreateContent /> : <Navigate to="/login" />}
         />
         <Route
-          path={`${privateRoutes.CONTENT}/detail`}
+          path={`${privateRoutes.CONTENT}/detail/:id`}
           element={currentUser ? <DetailContent /> : <Navigate to="/login" />}
         />
         <Route
-          path={`${privateRoutes.CONTENT}/edit:id`}
+          path={`${privateRoutes.CONTENT}/edit/:id`}
           element={currentUser ? <EditContent /> : <Navigate to="/login" />}
         />
 
