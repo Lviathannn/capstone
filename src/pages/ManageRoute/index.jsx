@@ -58,8 +58,6 @@ export default function ManageRoute() {
     createDeletedMutation.mutate(id);
   };
 
-  console.log("Data route:", data);
-
   return (
     <ProtectedLayout>
       <div className="flex w-full flex-col gap-6 bg-primary-50 px-10 py-6 font-sans">

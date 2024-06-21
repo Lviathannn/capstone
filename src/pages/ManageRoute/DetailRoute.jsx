@@ -35,81 +35,86 @@ export default function DetailRoute() {
 
   return (
     <ProtectedLayout>
-      <div className="mb-6 rounded-lg bg-neutral-50 p-4 shadow-md">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="font-jakarta-sans text-[26px] font-bold text-neutral-800">
-              Detail User
-            </h1>
-            <p className="font-jakarta-sans text-base font-medium text-neutral-700">
-              Lihat detail data pengguna
-            </p>
-          </div>
-          <Button
-            className="bg-primary-500 font-jakarta-sans text-[14px] font-medium text-white"
-            onClick={() => navigate("/manage-route")}
-          >
-            Kembali
-          </Button>
-        </div>
-      </div>
-      <div className="flex h-full flex-col gap-2 rounded-lg bg-neutral-50 px-6 py-8 shadow-md">
-        <div className="grid grid-cols-1">
-          <div className="flex flex-col gap-2">
-            <Label
-              className="font-jakarta-sans text-sm font-bold"
-              htmlFor="username"
+      <div className="flex min-h-screen flex-col bg-primary-50 px-10 py-6 gap-6">
+        <div className="rounded-lg bg-neutral-50 p-4 shadow-md">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="font-jakarta-sans text-[26px] font-bold text-neutral-800">
+                Detail Rute
+              </h1>
+              <p className="font-jakarta-sans text-base font-medium text-neutral-700">
+                Lihat detail rute pengguna
+              </p>
+            </div>
+            <Button
+              className="bg-primary-500 font-jakarta-sans text-[14px] font-medium text-white"
+              onClick={() => navigate("/route")}
             >
-              Username
-            </Label>
-            <ReadOnlyField id="username" children={detailRoute?.username} />
+              Kembali
+            </Button>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="flex flex-col gap-2">
-            <Label
-              className="font-jakarta-sans text-sm font-bold"
-              htmlFor="Kota"
-            >
-              Kota
-            </Label>
-            <ReadOnlyField id="kota" children={detailRoute?.kota} />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label
-              className="font-jakarta-sans text-sm font-bold"
-              htmlFor="Nama Rute Perjalanan"
-            >
-              Nama Rute Perjalanan
-            </Label>
-            <ReadOnlyField id="namaRute" children={detailRoute?.nama_rute} />
-          </div>
-        </div>
-        <div className="grid grid-cols-3 gap-4">
-          {extendedDestinasi.map((dest, index) => (
-            <div key={index} className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 rounded-lg bg-neutral-50 px-6 py-8 shadow-md">
+          <div className="grid grid-cols-1">
+            <div className="flex flex-col gap-2">
               <Label
                 className="font-jakarta-sans text-sm font-bold"
-                htmlFor={`destinasi${index + 1}`}
+                htmlFor="username"
               >
-                {`Destinasi ${index + 1}`}
+                Username
+              </Label>
+              <ReadOnlyField id="username" children={detailRoute?.username} />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-2">
+              <Label
+                className="font-jakarta-sans text-sm font-bold"
+                htmlFor="Kota"
+              >
+                Kota
+              </Label>
+              <ReadOnlyField id="kota" children={detailRoute?.kota} />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label
+                className="font-jakarta-sans text-sm font-bold"
+                htmlFor="Nama Rute Perjalanan"
+              >
+                Nama Rute Perjalanan
+              </Label>
+              <ReadOnlyField id="namaRute" children={detailRoute?.nama_rute} />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            {extendedDestinasi.map((dest, index) => (
+              <div key={index} className="flex flex-col gap-2">
+                <Label
+                  className="font-jakarta-sans text-sm font-bold"
+                  htmlFor={`destinasi${index + 1}`}
+                >
+                  {`Destinasi ${index + 1}`}
+                </Label>
+                <ReadOnlyField
+                  id={`destinasi${index + 1}`}
+                  children={dest.nama_destinasi || "-"}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1">
+            <div className="flex flex-col gap-2">
+              <Label
+                className="font-jakarta-sans text-sm font-bold"
+                htmlFor="biaya"
+              >
+                Estimasi Biaya
               </Label>
               <ReadOnlyField
-                id={`destinasi${index + 1}`}
-                children={dest.nama_destinasi || "-"}
+                id="biaya"
+                children={detailRoute?.estimasi_biaya}
               />
             </div>
-          ))}
-        </div>
-        <div className="grid grid-cols-1">
-          <div className="flex flex-col gap-2">
-            <Label
-              className="font-jakarta-sans text-sm font-bold"
-              htmlFor="biaya"
-            >
-              Estimasi Biaya
-            </Label>
-            <ReadOnlyField id="biaya" children={detailRoute?.estimasi_biaya} />
           </div>
         </div>
       </div>
