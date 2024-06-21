@@ -1,15 +1,13 @@
 import { axiosInstance } from "@/lib/axios";
 
-export const addUsers = async (token,formData) => {
+export const addUsers = async (token, formData) => {
   try {
-    const res = await axiosInstance.post(`admin/admins`, formData,{
+    const res = await axiosInstance.post(`admin/admins`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
-    console.log("Fetching Data: ", res.data);
-    console.log("Fetching Data: ", res.data?.data);
     return res.data;
   } catch (error) {
     console.error("Error fetching users:", error); // Logging untuk debug

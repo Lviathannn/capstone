@@ -1,202 +1,359 @@
-import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import SideBar from "@/components/layout/sidebar";
-import HeaderAdmin from "@/components/layout/header";
+import { useState, useEffect, useRef } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Eye from "@/components/icons/Eye";
-import AddPhoto from "@/assets/icons/add photo.png"
-import EditIcon from "@/assets/icons/edit photo.png";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
-import AlertEdit from "@/assets/img/alert edit.png";
+import DefaultPhoto from "@/assets/default-photo.svg";
+import EditPhoto from "@/assets/edit-photo.svg";
+import VisibilityOff from "@/components/icons/VisibilityOff";
+import Edit from "@/assets/ImgModal/Ilustrasi-edit.svg";
+import { updateUsers } from "@/services/manageUser/updateUsers";
+import { getUserById } from "@/services/manageUser/getUserById";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import { z as zod } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { AlertConfirm } from "@/components/features/alert/alertConfirm";
+import ProtectedLayout from "@/components/layout/ProtectedLayout";
+import { privateRoutes } from "@/constant/routes";
+
+const formSchema = zod.object({
+  username: zod.string().min(2).max(50),
+  password: zod.string().min(1).max(50),
+  foto_profil: zod.any().nullable(),
+  nama_lengkap: zod.string().min(1).max(100),
+  email: zod.string().email(),
+  no_telepon: zod.string().min(10).max(15),
+  jenis_kelamin: zod.string().min(1),
+  provinsi: zod.string().min(1),
+  kota: zod.string().min(1),
+});
+
+export const useGetUserId = (id) => {
+  const token = useSelector((state) => state.auth.user?.access_token);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["user", id],
+    queryFn: () => getUserById(token, id),
+    enabled: !!token,
+    onSuccess: () => setOpenSuccess(true),
+    onError: (error) => {
+      setOpenError(true);
+      console.error("Query error:", error);
+    },
+  });
+  return { data, isLoading, error };
+};
 
 export default function UserEdit() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const { user } = state || {};
+  const fileInputRef = useRef(null);
+  const queryClient = useQueryClient();
+  const [visible, setVisible] = useState(false);
+  const token = useSelector((state) => state.auth.user?.access_token);
+  const [preview, setPreview] = useState(null);
+  const { id } = useParams();
+  const { data, isLoading } = useGetUserId(id);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
 
-  const [userData, setUserData] = useState({
-    username: '',
-    fullName: '',
-    email: '',
-    phoneNumber: '',
-    password: '',
-    gender: '',
-    city: '',
-    province: '',
-    photo: null
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+      foto_profil: null,
+      nama_lengkap: "",
+      email: "",
+      no_telepon: "",
+      jenis_kelamin: "",
+      provinsi: "",
+      kota: "",
+    },
   });
 
-  const [visible, setVisible] = useState(false);
-
   useEffect(() => {
-    if (user) {
-      setUserData({
-        username: user.namaPengguna,
-        fullName: user.namaLengkap,
-        email: user.email,
-        phoneNumber: user.noTelpon,
-        password: '',
-        gender: user.jenisKelamin,
-        city: user.kota,
-        province: user.provinsi,
-        photo: null
+    if (data) {
+      form.reset({
+        username: data?.data?.username || "",
+        password: "",
+        foto_profil: data?.data?.foto_profil || null,
+        nama_lengkap: data?.data?.nama_lengkap || "",
+        email: data?.data?.email || "",
+        no_telepon: data?.data?.no_telepon || "",
+        jenis_kelamin: data?.data?.jenis_kelamin || "",
+        provinsi: data?.data?.provinsi || "",
+        kota: data?.data?.kota || "",
       });
+      if (data?.data?.foto_profil) {
+        setPreview(data.data?.foto_profil);
+      }
     }
-  }, [user]);
+  }, [data, form]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUserData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
+  const createUpdateMutation = useMutation({
+    mutationFn: (values) => updateUsers(token, id, values),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["user", id]);
+      navigate(privateRoutes.USER);
+    },
+    onError: () => {
+      toast.error("Update data gagal dilakukan");
+    },
+  });
+
+  const handleClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
-  const handlePhotoChange = (e) => {
+  const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setUserData(prevState => ({
-      ...prevState,
-      photo: file
-    }));
+    if (file) {
+      form.setValue("foto_profil", file);
+      setPreview(URL.createObjectURL(file));
+    }
   };
+
+  function onSubmit(values) {
+    const formData = new FormData();
+    console.log(values);
+    formData.append("username", values.username);
+    if (values.password) {
+      formData.append("password", values.password);
+    }
+    if (values.foto_profil instanceof File) {
+      formData.append("foto_profil", values.foto_profil);
+    } else if (data?.foto_profil) {
+      formData.append("foto_profil", data.data?.foto_profil);
+    }
+    formData.append("nama_lengkap", values.nama_lengkap);
+    formData.append("email", values.email);
+    formData.append("no_telepon", values.no_telepon);
+    formData.append("jenis_kelamin", values.jenis_kelamin);
+    formData.append("provinsi", values.provinsi);
+    formData.append("kota", values.kota);
+    createUpdateMutation.mutate(formData);
+  }
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr]">
-      <SideBar />
-      <div className="flex flex-col">
-        <HeaderAdmin />
-        <main className="flex flex-col px-4 py-4 bg-primary-50 h-full">
-          <div className="bg-neutral-50 shadow-md p-4 rounded-lg mb-4">
+    <ProtectedLayout>
+      <Form {...form}>
+        <form
+          className="flex h-full flex-col bg-primary-50 px-10 py-6"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
+          <div className="mb-4 rounded-lg bg-neutral-50 p-4 shadow-md">
             <div>
-              <h1 className="text-[22px] font-bold text-neutral-800 font-jakarta-sans">Edit User</h1>
-              <p className="text-base font-medium text-neutral-700 font-jakarta-sans">Mengedit data pengguna</p>
+              <h1 className="font-jakarta-sans text-[22px] font-bold text-neutral-800">
+                Edit User
+              </h1>
+              <p className="font-jakarta-sans text-base font-medium text-neutral-700">
+                Mengedit data pengguna
+              </p>
             </div>
           </div>
-          <div className="bg-neutral-50 px-6 py-8 shadow-md rounded-lg grid grid-cols-12 gap-4">
-            <div className="col-span-2 flex justify-center items-start">
+          <div className="grid grid-cols-12 gap-4 rounded-lg bg-neutral-50 px-6 py-8 shadow-md">
+            <div className="col-span-2 flex items-start justify-center">
               <label htmlFor="photo" className="cursor-pointer">
-                <div className="relative w-40 h-40 bg-neutral-100 rounded-full flex items-center justify-center overflow-hidden">
-                  <input
-                    type="file"
-                    id="photo"
-                    name="photo"
-                    className="hidden"
-                    onChange={handlePhotoChange}
+                <div className="relative flex h-40 w-40 items-center justify-center overflow-hidden rounded-full bg-neutral-100">
+                  <FormField
+                    name="foto_profil"
+                    render={() => (
+                      <FormItem>
+                        <FormControl>
+                          <div className="relative w-fit rounded-full bg-neutral-200">
+                            <div className="mx-auto">
+                              <img
+                                className="h-40 w-40 rounded-full object-cover"
+                                src={preview || DefaultPhoto}
+                                alt="photo"
+                              />
+                            </div>
+                            <div className="absolute left-0 top-0 rounded-full">
+                              <Input
+                                type="file"
+                                ref={fileInputRef}
+                                onChange={handleFileChange}
+                                className="mx-auto hidden rounded-full border-none bg-transparent"
+                              ></Input>
+                            </div>
+                            <Button
+                              type="button"
+                              onClick={handleClick}
+                              className="absolute left-0 top-0 h-full w-full rounded-full border-none bg-transparent hover:bg-transparent "
+                            >
+                              {preview && (
+                                <div className="absolute left-0 top-0 z-20 flex h-full w-full items-center justify-center rounded-full bg-transparent opacity-0 transition-opacity hover:bg-[#D5D5D580] hover:bg-opacity-30 hover:opacity-100">
+                                  <img
+                                    className="h-10 w-10"
+                                    src={EditPhoto}
+                                    alt="Edit"
+                                  />
+                                </div>
+                              )}
+                            </Button>
+                          </div>
+                        </FormControl>
+                      </FormItem>
+                    )}
                   />
-                  {userData.photo ? (
-                    <>
-                      <img
-                        src={URL.createObjectURL(userData.photo)}
-                        alt="Photo Preview"
-                        className="w-full h-full object-cover"
-                        style={{ filter: 'brightness(0.7)' }}
-                      />
-                      <img
-                        src={EditIcon}
-                        alt="Edit Icon"
-                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 cursor-pointer"
-                      />
-                    </>
-                  ) : (
-                    <img
-                      src={AddPhoto}
-                      alt="Add Photo"
-                      className="w-12 h-12 cursor-pointer"
-                    />
-                  )}
                 </div>
               </label>
             </div>
             <div className="col-span-10 grid grid-cols-12 gap-4">
-              <div className="col-span-6 mb-3">
-                <Label htmlFor="username" className="text-sm font-bold font-jakarta-sans pb-2">Nama Pengguna</Label>
-                <Input type="text" id="username" name="username" value={userData.username} onChange={handleInputChange} />
-              </div>
-              <div className="col-span-6 mb-3">
-                <Label htmlFor="fullName" className="text-sm font-bold font-jakarta-sans pb-2">Nama Lengkap</Label>
-                <Input type="text" id="fullName" name="fullName" value={userData.fullName} onChange={handleInputChange} />
-              </div>
-              <div className="col-span-12 mb-3 relative">
-                <Label htmlFor="password" className="text-sm font-bold font-jakarta-sans pb-2">Password</Label>
-                <Input
-                  type={visible ? "text" : "password"}
-                  id="password"
-                  name="password"
-                  value={userData.password}
-                  onChange={handleInputChange}
-                  className="pr-10"
+              <FormItem className="col-span-6 mb-3">
+                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                  Nama Pengguna
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => <Input {...field} />}
                 />
-                <button
-                  className="absolute right-3 top-8 cursor-pointer"
-                  type="button"
-                  onClick={() => setVisible(!visible)}
-                >
-                  <Eye />
-                </button>
-              </div>
-              <div className="col-span-6 mb-3">
-                <Label htmlFor="email" className="text-sm font-bold font-jakarta-sans pb-2">Email</Label>
-                <Input type="email" id="email" name="email" value={userData.email} onChange={handleInputChange} />
-              </div>
-              <div className="col-span-6 mb-3">
-                <Label htmlFor="phoneNumber" className="text-sm font-bold font-jakarta-sans pb-2">Nomor Telepon</Label>
-                <Input type="tel" id="phoneNumber" name="phoneNumber" value={userData.phoneNumber} onChange={handleInputChange} />
-              </div>
-              <div className="col-span-12 mb-3">
-                <Label className="text-sm font-bold font-jakarta-sans pb-2">Jenis Kelamin</Label>
-                <RadioGroup
-                  value={userData.gender}
-                  onValueChange={value => setUserData(prevState => ({ ...prevState, gender: value }))}
-                >
-                  <div className="flex items-center">
-                    <div className="pr-6 flex items-center">
-                      <RadioGroupItem value="Laki-laki" id="male" />
-                      <Label className="ml-2" htmlFor="male">Laki-Laki</Label>
+              </FormItem>
+              <FormItem className="col-span-6 mb-3">
+                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                  Nama Lengkap
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="nama_lengkap"
+                  render={({ field }) => <Input {...field} />}
+                />
+              </FormItem>
+              <FormItem className="relative col-span-12 mb-3">
+                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                  Password
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        type={visible ? "text" : "password"}
+                        className="pr-10"
+                      />
+                      <button
+                        className="absolute inset-y-0 right-0 flex items-center px-3"
+                        type="button"
+                        onClick={() => setVisible(!visible)}
+                      >
+                        {visible ? <VisibilityOff /> : <Eye />}
+                      </button>
                     </div>
-                    <div className="flex items-center">
-                      <RadioGroupItem value="Perempuan" id="female" />
-                      <Label className="ml-2" htmlFor="female">Perempuan</Label>
-                    </div>
-                  </div>
-                </RadioGroup>
-              </div>
-              <div className="col-span-6">
-                <Label htmlFor="city" className="text-sm font-bold font-jakarta-sans pb-2">Kota/Kabupaten</Label>
-                <Input type="text" id="city" name="city" value={userData.city} onChange={handleInputChange} />
-              </div>
-              <div className="col-span-6">
-                <Label htmlFor="province" className="text-sm font-bold font-jakarta-sans pb-2">Provinsi</Label>
-                <Input type="text" id="province" name="province" value={userData.province} onChange={handleInputChange} />
-              </div>
+                  )}
+                />
+              </FormItem>
+              <FormItem className="col-span-6 mb-3">
+                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                  Email
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => <Input type="email" {...field} />}
+                />
+              </FormItem>
+              <FormItem className="col-span-6 mb-3">
+                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                  Nomor Telepon
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="no_telepon"
+                  render={({ field }) => <Input {...field} />}
+                />
+              </FormItem>
+              <FormItem className="col-span-12 mb-3">
+                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                  Jenis Kelamin
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="jenis_kelamin"
+                  render={({ field }) => (
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex items-center gap-4"
+                    >
+                      <RadioGroupItem value="Pria" id="Pria" />
+                      <Label htmlFor="Pria">Pria</Label>
+                      <RadioGroupItem value="Wanita" id="Wanita" />
+                      <Label htmlFor="Wanita">Wanita</Label>
+                    </RadioGroup>
+                  )}
+                />
+              </FormItem>
+              <FormItem className="col-span-6 mb-3">
+                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                  Provinsi
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="provinsi"
+                  render={({ field }) => <Input {...field} />}
+                />
+              </FormItem>
+              <FormItem className="col-span-6 mb-3">
+                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                  Kota
+                </FormLabel>
+                <FormField
+                  control={form.control}
+                  name="kota"
+                  render={({ field }) => <Input {...field} />}
+                />
+              </FormItem>
             </div>
           </div>
-          <div className="flex justify-end mt-4">
-            <Button variant="outlined" color="primary" className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-primary-500 hover:text-neutral-50 mr-6" onClick={() => navigate('/manage-user')}>Kembali</Button>
-            {/* <Button variant="outlined" color="primary" className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-primary-500 hover:text-neutral-50 mr-6" >Edit</Button> */}
-            <AlertDialog>
-                <AlertDialogTrigger className="border-primary-500 border px-7 py-1 rounded-lg bg-neutral-50 text-primary-500 hover:bg-primary-500 hover:text-neutral-50 text-center text-sm font-medium">Edit</AlertDialogTrigger>
-                <AlertDialogContent>
-                        <AlertDialogHeader className="pb-6">
-                            <div className="flex justify-center pb-6">
-                                <img src={AlertEdit} alt="Alert Add" className="w-[240px] h-[100px]" />
-                            </div>
-                            <AlertDialogTitle className="text-lg font-bold text-neutral-900 font-jakarta-sans text-center pb-4">Edit User?</AlertDialogTitle>
-                            <AlertDialogDescription className="text-sm font-medium text-neutral-600 font-jakarta-sans text-center">
-                                Sebelum menambahkan data pengguna, pastikan informasi yang dimasukkan benar dan sesuai. Apakah Anda yakin ingin menambahkan data ini?
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter className="flex justify-center w-full">
-                            <AlertDialogCancel className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-primary-500 hover:text-neutral-50 mx-2 w-full text-center">Periksa Kembali</AlertDialogCancel>
-                            <AlertDialogAction className="border-primary-500 border px-7 py-2 rounded-lg bg-neutral-50 text-primary-500 hover:bg-primary-500 hover:text-neutral-50 mx-2 w-full text-center">Simpan</AlertDialogAction>
-                        </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
+          <div className="mt-4 flex justify-end">
+            <Button
+              variant="outlined"
+              color="primary"
+              className="mr-6 rounded-lg border border-primary-500 bg-neutral-50 px-7 py-2 text-primary-500 hover:bg-primary-500 hover:text-neutral-50"
+              onClick={() => navigate(privateRoutes.USER)}
+            >
+              Kembali
+            </Button>
+
+            <AlertConfirm
+              textBtn="Edit"
+              img={Edit}
+              title="Simpan Perubahan !"
+              desc="Pastikan perubahan Anda benar. Yakin ingin mengubah dan menyimpan data ini?"
+              textDialogCancel="Periksa Kembali"
+              textDialogSubmit="Simpan"
+              onConfirm={form.handleSubmit(onSubmit)}
+              disabled={!form.watch("username")}
+              successOpen={openSuccess}
+              setSuccessOpen={setOpenSuccess}
+              errorOpen={openError}
+              isLoading={isLoading}
+              setErrorOpen={setOpenError}
+              backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
+            />
           </div>
-        </main>
-      </div>
-    </div>
+        </form>
+      </Form>
+    </ProtectedLayout>
   );
 }

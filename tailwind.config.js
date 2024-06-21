@@ -14,10 +14,10 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: "1rem",
       screens: {
         "2xl": "1400px",
-        "xl": "1300px",
+        xl: "1300px",
       },
     },
     extend: {
@@ -25,7 +25,6 @@ export default {
         "jakarta-sans": ["Plus Jakarta Sans", "sans-serif"],
       },
       colors: {
-       
         primary: {
           DEFAULT: "#0A6847",
           foreground: "hsl(var(--primary-foreground))",

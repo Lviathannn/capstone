@@ -1,5 +1,5 @@
-import HorizontalBarChart from "@/components/BarChart";
-import DonutChartComponent from "@/components/DonutChart";
+import HorizontalBarChart from "@/components/features/BarChart";
+import DonutChartComponent from "@/components/features/DonutChart";
 
 export default function DestinationGraph({dataDestinasi}) {
   return (

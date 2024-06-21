@@ -1,5 +1,5 @@
 import Edit from "@/assets/ImgModal/Ilustrasi-edit.svg";
-import { AlertConfirm } from "@/components/layout/manageAdmin/alertConfirm";
+import { AlertConfirm } from "@/components/features/alert/alertConfirm";
 
 export const ModalEdit = () => {
   return (
