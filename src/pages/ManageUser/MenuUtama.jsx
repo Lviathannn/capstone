@@ -7,7 +7,7 @@ import search from "@/assets/icons/search.png";
 import edit from "@/assets/icons/edit.png";
 import deleteIcon from "@/assets/icons/delete.png";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@/components/ui/skeleton";
 import AlertDelete from "@/assets/img/alert delete.png";
 import { useSelector } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -18,6 +18,10 @@ import { AlertConfirm } from "@/components/features/alert/alertConfirm";
 import { privateRoutes } from "@/constant/routes";
 import Pagination from "@/components/features/Pagination";
 import { useSearchParams } from "react-router-dom";
+import TableSkeleton from "@/components/features/skeleton/TableSkeleton";
+import Dialog from "@/components/features/alert/Dialog";
+import Notification from "@/components/features/alert/Notification";
+import TrashCan from "@/components/icons/TrachCan";
 
 export const useGetUser = (page, searchQuery) => {
   const token = useSelector((state) => state.auth.user?.access_token);
@@ -39,19 +43,25 @@ export default function MenuUtama() {
   const currentPage = parseInt(searchParams.get('page')) || 1;
   const [searchQuery, setSearchQuery] = useState("");
   const { data, error, isLoading } = useGetUser(currentPage, searchQuery);
-  const [openSuccess, setOpenSuccess] = useState(false);
-  const [openError, setOpenError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const token = useSelector((state) => state.auth.user?.access_token);
 
   const createDeletedMutation = useMutation({
     mutationFn: (id) => deleteUsers(token, id),
     onSuccess: () => {
-      queryClient.invalidateQueries(["user", currentPage]);
-      console.log("User deleted successfully");
+      setIsSuccess(true);
+      queryClient.invalidateQueries(["user", currentPage, searchQuery]);
     },
-    onError: (error) => {
-      console.error("Delete error:", error);
+    onError: () => {
+      setIsError(true);
+    },
+    onSettled: () => {
+      setTimeout(() => {
+        setIsSuccess(false);
+        setIsError(false);
+      }, 2000);
     },
   });
 
@@ -60,9 +70,7 @@ export default function MenuUtama() {
     createDeletedMutation.mutate(userId);
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -80,24 +88,22 @@ export default function MenuUtama() {
       user.no_telepon.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.jenis_kelamin.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.kota.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.provinsi.toLowerCase().includes(searchQuery.toLowerCase()),
+      user.provinsi.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleUserDetailClick = (user) => {
     const { id } = user;
-    // navigate(`/manage-user/detail/${id}`);
-    navigate(privateRoutes.USER+`/detail/${id}`);
+    navigate(privateRoutes.USER + `/detail/${id}`);
   };
 
   const handleUserClick = (user) => {
     const { id } = user;
-    // navigate(`/manage-user/edit/${id}`);
-    navigate(privateRoutes.USER+ `/edit/${id}`);
+    navigate(privateRoutes.USER + `/edit/${id}`);
   };
 
   const paginate = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
+      setSearchParams({ page: pageNumber });
     }
   };
 
@@ -132,7 +138,7 @@ export default function MenuUtama() {
                 )}
               </div>
               <Link
-                to={privateRoutes.USER+"/create"}
+                to={privateRoutes.USER + "/create"}
                 className="flex items-center rounded-lg border px-10 py-3 shadow-sm font-jakarta-sans text-primary-500"
               >
                 <img src={plus} alt="Plus Icon" className="mr-4 h-6 w-6" />
@@ -181,6 +187,10 @@ export default function MenuUtama() {
               </TableRow>
             </TableHeader>
             <TableBody className="bg-neutral-50 font-jakarta-sans">
+              {isLoading &&
+                Array.from({ length: 10 }).map((_, index) => (
+                  <TableSkeleton key={index} />
+                ))}
               {filteredUsers.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell
@@ -232,24 +242,17 @@ export default function MenuUtama() {
                         onClick={() => handleUserClick(user)}
                       >
                         <img src={edit} alt="Edit Icon" className="h-6 w-6" />
-                      </button>
-                      <AlertConfirm
-                        backround="outline-none bg-transparent border-none rounded-0 w-fit h-fit p-0 hover:bg-transparent"
-                        textBtn={
-                          <img src={deleteIcon} className="h-6 w-6" alt="" />
-                        }
-                        img={AlertDelete}
+                      </button>           
+                      <Dialog
+                        action={() => handleDeleteUser(user)}
+                        type="delete"
                         title="Hapus Data !"
-                        desc="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
-                        textDialogCancel="Batal"
-                        textDialogSubmit="Hapus"
-                        bgBtn="True"
-                        successOpen={openSuccess}
-                        setSuccessOpen={setOpenSuccess}
-                        errorOpen={openError}
-                        setErrorOpen={setOpenError}
-                        onConfirm={() => handleDeleteUser(user)}
-                      ></AlertConfirm>
+                        description="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
+                      >
+                        <button>
+                          <TrashCan />
+                        </button>
+                      </Dialog>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -261,9 +264,18 @@ export default function MenuUtama() {
           <Pagination
             currentPage={data?.pagination.current_page}
             lastPage={data?.pagination?.last_page}
+            onPageChange={paginate}
           />
         </div>
       </div>
+      <Notification
+        title={isSuccess ? "Sukses !" : "Gagal !"}
+        description={
+          isSuccess ? "Proses berhasil dilakukan" : "Proses gagal dilakukan"
+        }
+        open={isSuccess || isError}
+        type={isSuccess ? "success" : "error"}
+      />
     </ProtectedLayout>
   );
 }
