@@ -27,9 +27,7 @@ const getShownMessage = (error) => {
 
 axiosInstance.interceptors.response.use(
   (res) => res,
-
   async (error) => {
-    console.log(error);
     if (
       error?.response?.status === 500 ||
       error?.response?.data?.message == "Token sudah kadaluwarsa"

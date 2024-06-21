@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import SideBar from "@/components/layout/sidebar";
 import HeaderAdmin from "@/components/layout/header";
+import VisibilityOff from "@/components/icons/VisibilityOff";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,7 +16,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Eye from "@/components/icons/Eye";
 import AddPhoto from "@/assets/icons/add photo.png";
 import EditIcon from "@/assets/icons/edit photo.png";
-import VisibilityOff from "@/components/icons/VisibilityOff";
 import { createUsers } from "@/services/manageUser/createUsers";
 import Add from "@/assets/ImgModal/Ilustrasi-add.svg";
 import { AlertConfirm } from "@/components/features/alert/alertConfirm";
@@ -36,7 +36,7 @@ const formSchema = zod.object({
 
 export default function UserCreate() {
   const navigate = useNavigate();
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false);
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef(null);
   const queryClient = useQueryClient();
@@ -62,10 +62,9 @@ export default function UserCreate() {
   const createPostMutation = useMutation({
     mutationFn: (values) => createUsers(token, values),
     onSuccess: () => {
-      queryClient.invalidateQueries(["user"]); // Invalidasi query setelah mutasi berhasil
+      queryClient.invalidateQueries(["user"]);
       toast.success("User added successfully");
-      form.reset(); // Reset form setelah berhasil
-      // navigate("/manage-user");
+      form.reset(); 
       navigate(privateRoutes.USER);
     },
     onError: (error) => {
@@ -90,7 +89,7 @@ export default function UserCreate() {
 
   function onSubmit(values) {
     try {
-      createPostMutation.mutate(values); 
+      createPostMutation.mutate(values);
     } catch (error) {
       console.error(error);
       toast.error("Failed to add user");
@@ -157,6 +156,7 @@ export default function UserCreate() {
                 <Input
                   type="text"
                   id="username"
+                  placeholder="Masukkan Nama Pengguna"
                   {...form.register("username")}
                 />
               </div>
@@ -170,6 +170,7 @@ export default function UserCreate() {
                 <Input
                   type="text"
                   id="nama_lengkap"
+                  placeholder="Masukkan Nama Lengkap"
                   {...form.register("nama_lengkap")}
                 />
               </div>
@@ -178,12 +179,14 @@ export default function UserCreate() {
                   Password
                 </Label>
                 <Input
-                  {...form}
                   type={visible ? "text" : "password"}
+                  id="password"
+                  placeholder="Masukkan Password Pengguna"
+                  {...form.register("password")}
                   className="pr-10"
                 />
                 <button
-                  className="absolute inset-y-0 right-0 flex items-center pt-6 px-2"
+                  className="absolute right-3 top-8 cursor-pointer"
                   type="button"
                   onClick={() => setVisible(!visible)}
                 >
@@ -194,7 +197,7 @@ export default function UserCreate() {
                 <Label htmlFor="email" className="pb-2 text-sm font-bold">
                   Email
                 </Label>
-                <Input type="email" id="email" {...form.register("email")} />
+                <Input type="email" id="email" {...form.register("email")} placeholder="Masukkan Email Pengguna" />
               </div>
               <div className="col-span-6 mb-3">
                 <Label htmlFor="no_telepon" className="pb-2 text-sm font-bold">
@@ -203,6 +206,7 @@ export default function UserCreate() {
                 <Input
                   type="tel"
                   id="no_telepon"
+                  placeholder="Masukkan Nomor Telepon Pengguna"
                   {...form.register("no_telepon")}
                 />
               </div>
@@ -242,7 +246,7 @@ export default function UserCreate() {
                 <Label htmlFor="kota" className="pb-2 text-sm font-bold">
                   Kota/Kabupaten
                 </Label>
-                <Input type="text" id="kota" {...form.register("kota")} />
+                <Input type="text" id="kota" {...form.register("kota")} placeholder="Nama Kota/Kabupaten" />
               </div>
               <div className="col-span-6">
                 <Label htmlFor="provinsi" className="pb-2 text-sm font-bold">
@@ -251,12 +255,12 @@ export default function UserCreate() {
                 <Input
                   type="text"
                   id="provinsi"
+                  placeholder="Nama Provinsi"
                   {...form.register("provinsi")}
                 />
               </div>
             </div>
           </div>
-          {/* </div> */}
           <div className="mt-4 flex justify-end">
             <Button
               variant="outlined"

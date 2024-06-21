@@ -11,125 +11,85 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ChevronLeft } from "lucide-react";
-import { ChevronRight } from "lucide-react";
 import { privateRoutes } from "@/constant/routes";
 import { Link } from "react-router-dom";
-
-const data = [
-  {
-    id: "1",
-    nama: "Pantai Kuta",
-    kategori: "Pantai",
-    provinsi: "Bali",
-    kota: "Denpasar",
-    alamat: "Jl. Pantai Kuta, Kuta, Badung",
-    jamOperasional: "24 jam",
-    biaya: 50000,
-    totalKonten: "123",
-  },
-  {
-    id: "2",
-    nama: "Taman Mini Indonesia Indah",
-    kategori: "Taman",
-    provinsi: "DKI Jakarta",
-    kota: "Jakarta Timur",
-    alamat: "Jl. Raya Taman Mini, Cipayung",
-    jamOperasional: "07:00 - 22:00",
-    biaya: 25000,
-    totalKonten: "456",
-  },
-  {
-    id: "3",
-    nama: "Kawah Ijen",
-    kategori: "Gunung",
-    provinsi: "Jawa Timur",
-    kota: "Banyuwangi",
-    alamat: "Desa Tamansari, Licin",
-    jamOperasional: "24 jam",
-    biaya: 100000,
-    totalKonten: "789",
-  },
-  {
-    id: "4",
-    nama: "Candi Borobudur",
-    kategori: "Candi",
-    provinsi: "Jawa Tengah",
-    kota: "Magelang",
-    alamat: "Jl. Badrawati, Borobudur",
-    jamOperasional: "06:00 - 18:00",
-    biaya: 30000,
-    totalKonten: "321",
-  },
-  {
-    id: "5",
-    nama: "Raja Ampat",
-    kategori: "Pulau",
-    provinsi: "Papua Barat",
-    kota: "Waisai",
-    alamat: "Kabupaten Raja Ampat",
-    jamOperasional: "24 jam",
-    biaya: 200000,
-    totalKonten: "654",
-  },
-  {
-    id: "6",
-    nama: "Danau Toba",
-    kategori: "Danau",
-    provinsi: "Sumatera Utara",
-    kota: "Medan",
-    alamat: "Parapat, Simalungun",
-    jamOperasional: "24 jam",
-    biaya: 150000,
-    totalKonten: "987",
-  },
-  {
-    id: "7",
-    nama: "Museum Nasional",
-    kategori: "Museum",
-    provinsi: "DKI Jakarta",
-    kota: "Jakarta Pusat",
-    alamat: "Jl. Medan Merdeka Barat No.12",
-    jamOperasional: "08:00 - 17:00",
-    biaya: 20000,
-    totalKonten: "432",
-  },
-  {
-    id: "8",
-    nama: "Taman Safari Indonesia",
-    kategori: "Kebun Binatang",
-    provinsi: "Jawa Barat",
-    kota: "Bogor",
-    alamat: "Cisarua, Puncak",
-    jamOperasional: "09:00 - 17:00",
-    biaya: 180000,
-    totalKonten: "765",
-  },
-  {
-    id: "9",
-    nama: "Gunung Bromo",
-    kategori: "Gunung",
-    provinsi: "Jawa Timur",
-    kota: "Probolinggo",
-    alamat: "Tosari, Pasuruan",
-    jamOperasional: "24 jam",
-    biaya: 35000,
-    totalKonten: "678",
-  },
-  {
-    id: "10",
-    nama: "Taman Nasional Komodo",
-    kategori: "Taman Nasional",
-    provinsi: "Nusa Tenggara Timur",
-    kota: "Labuan Bajo",
-    alamat: "Pulau Komodo",
-    jamOperasional: "24 jam",
-    biaya: 500000,
-    totalKonten: "1234",
-  },
-];
+import Pen from "@/components/icons/Pen";
+import TrashCan from "@/components/icons/TrachCan";
+import { useSelector } from "react-redux";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getAllDestination } from "@/services/destination/getAllDestination";
+import { useSearchParams } from "react-router-dom";
+import Pagination from "@/components/features/Pagination";
+import TableSkeleton from "@/components/features/skeleton/TableSkeleton";
+import { useState } from "react";
+import { useDebounce } from "use-debounce";
+import { useEffect } from "react";
+import notFoundImg from "@/assets/icons/not-found.svg";
+import { useNavigate } from "react-router-dom";
+import { deleteDestination } from "@/services/destination/deleteDestionation";
+import Dialog from "@/components/features/alert/Dialog";
+import Notification from "@/components/features/alert/Notification";
 
 export default function DestinationPage() {
+  const token = useSelector((state) => state.auth.user.access_token);
+  const [search, setSearch] = useState("");
+  const [searchQuery] = useDebounce(search, 1000);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const page = searchParams.get("page") || 1;
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { data: destination, isLoading } = useQuery({
+    queryKey: ["destination", page, searchQuery],
+    queryFn: () => getAllDestination(token, page, searchQuery),
+  });
+
+  useEffect(() => {
+    setSearchParams({ page: 1 });
+  }, [search, setSearchParams]);
+
+  useEffect(() => {
+    if (searchQuery !== "") {
+      setSearchParams({ page, search: searchQuery });
+    } else {
+      setSearchParams({ page });
+    }
+  }, [page, searchQuery, setSearchParams]);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const destinationMutation = useMutation({
+    mutationFn: async (id) => {
+      try {
+        const res = await deleteDestination(token, id);
+        if (res?.status === 200) {
+          return res.data;
+        } else {
+          throw new Error("Gagal menghapus data");
+        }
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    onSuccess: () => {
+      setIsSuccess(true);
+    },
+    onError: () => {
+      setIsError(true);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(["destination", page, searchQuery]);
+      setTimeout(() => {
+        setIsSuccess(false);
+        setIsError(false);
+      }, 2000);
+    },
+  });
+  const handleDelete = (id) => {
+    destinationMutation.mutate(id);
+  };
+
   return (
     <ProtectedLayout>
       <section
@@ -150,6 +110,7 @@ export default function DestinationPage() {
               <Input
                 placeholder="Cari destinasi"
                 className="md:max-w-[400px]"
+                onChange={(e) => setSearch(e.target.value)}
               />
               <Link to={privateRoutes.DESTINATION + "/create"}>
                 <Button
@@ -165,81 +126,126 @@ export default function DestinationPage() {
           </div>
           <div className="flex w-full flex-col justify-center space-y-4 rounded-xl bg-white p-4 shadow-md lg:col-start-5 lg:col-end-6">
             <Map />
-            <p className="text-xl font-bold text-neutral-800">10</p>
+            <p className="text-xl font-bold text-neutral-800">
+              {destination?.data?.pagination?.total}
+            </p>
             <p className="text-neutral-800">Total destinasi</p>
           </div>
         </div>
         <div className="max-w-screen overflow-hidden rounded-xl">
-          <Table className="rounded-lg">
-            <TableHeader className="rounded-lg bg-primary-500">
-              <TableRow>
-                <TableHead className="min-w-[300px] text-nowrap">
-                  Nama
-                </TableHead>
-                <TableHead className="min-w-[200px] text-nowrap">
-                  Kategori
-                </TableHead>
-                <TableHead className="min-w-[200px] text-nowrap">
-                  Provinsi
-                </TableHead>
-                <TableHead className="min-w-[200px] text-nowrap">
-                  Kota / Kabupaten
-                </TableHead>
-                <TableHead className="min-w-[300px] text-nowrap">
-                  Alamat
-                </TableHead>
-                <TableHead className="min-w-[200px] text-nowrap">
-                  Jam Operasional
-                </TableHead>
-                <TableHead className="min-w-[200px] text-nowrap">
-                  Biaya
-                </TableHead>
-                <TableHead className="min-w-[100px] text-nowrap">
-                  Total Konten
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody className="overflow-hidden bg-white">
-              {data.map((data) => (
-                <TableRow key={data.name}>
-                  <TableCell className="text-nowrap">{data.nama}</TableCell>
-                  <TableCell>{data.kategori}</TableCell>
-                  <TableCell>{data.provinsi}</TableCell>
-                  <TableCell>{data.kota}</TableCell>
-                  <TableCell>{data.alamat}</TableCell>
-                  <TableCell>{data.jamOperasional}</TableCell>
-                  <TableCell>{data.biaya}</TableCell>
-                  <TableCell>{data.totalKonten}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+          {destination?.data?.data?.length === 0 ? (
+            <div className="flex h-full w-full flex-grow flex-col items-center justify-center gap-5">
+              <img className="h-[200px] w-[200px]" src={notFoundImg} alt="" />
+              <span className="mx-auto flex items-center text-[16px] font-medium">
+                Maaf, Hasil Pencarian Tidak Ditemukan!
+              </span>
+            </div>
+          ) : (
+            <>
+              <Table className="rounded-lg">
+                <TableHeader className="rounded-lg bg-primary-500">
+                  <TableRow>
+                    <TableHead className="min-w-[300px] text-nowrap">
+                      Nama
+                    </TableHead>
+                    <TableHead className="min-w-[200px] text-nowrap">
+                      Kategori
+                    </TableHead>
+                    <TableHead className="min-w-[200px] text-nowrap">
+                      Provinsi
+                    </TableHead>
+                    <TableHead className="min-w-[200px] text-nowrap">
+                      Kota / Kabupaten
+                    </TableHead>
+                    <TableHead className="min-w-[300px] text-nowrap">
+                      Alamat
+                    </TableHead>
+                    <TableHead className="min-w-[200px] text-nowrap">
+                      Jam Operasional
+                    </TableHead>
+                    <TableHead className="min-w-[200px] text-nowrap">
+                      Biaya
+                    </TableHead>
+                    <TableHead className="min-w-[100px] text-nowrap">
+                      Total Konten
+                    </TableHead>
+                    <TableHead className="min-w-[200px] text-nowrap text-center">
+                      Aksi
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody className="overflow-hidden bg-white">
+                  {isLoading &&
+                    Array.from({ length: 8 }).map((_, index) => (
+                      <TableSkeleton key={index} />
+                    ))}
 
-        <div className="flex items-center justify-center gap-5">
-          <Button
-            size="icon"
-            variant="outline"
-            className="shadow-xs group rounded-xl border-none"
-          >
-            <ChevronLeft
-              size={16}
-              className="text-neutral-600 group-hover:text-white"
-            />
-          </Button>
-          <p className="text-sm font-bold text-neutral-600">Page 1 of 10</p>
-          <Button
-            size="icon"
-            variant="outline"
-            className="shadow-xs group rounded-xl border-none"
-          >
-            <ChevronRight
-              size={16}
-              className="text-neutral-600 group-hover:text-white"
-            />
-          </Button>
+                  {destination?.data?.data?.map((data) => (
+                    <TableRow
+                      key={data?.id}
+                      className="cursor-pointer"
+                      onClick={() => {
+                        navigate(
+                          privateRoutes.DESTINATION + "/detail/" + data?.id,
+                        );
+                      }}
+                    >
+                      <TableCell className="text-nowrap">
+                        {data?.nama}
+                      </TableCell>
+                      <TableCell>{data?.kategori?.nama}</TableCell>
+                      <TableCell>{data?.alamat?.provinsi}</TableCell>
+                      <TableCell>{data?.alamat?.kota}</TableCell>
+                      <TableCell>
+                        {data?.alamat?.nama_jalan +
+                          " " +
+                          data?.alamat?.kecamatan}
+                      </TableCell>
+                      <TableCell>
+                        {data?.jam_buka + " - " + data?.jam_tutup}
+                      </TableCell>
+                      <TableCell>{data?.harga_masuk}</TableCell>
+                      <TableCell>{data?.visit_count}</TableCell>
+
+                      <TableCell
+                        className="flex items-center justify-center gap-7"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <button onClick={(e) => e.stopPropagation()}>
+                          <Pen />
+                        </button>
+                        <Dialog
+                          action={() => handleDelete(data?.id)}
+                          type="delete"
+                          title="Hapus Data !"
+                          description="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
+                        >
+                          <button>
+                            <TrashCan />
+                          </button>
+                        </Dialog>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+
+              <Pagination
+                currentPage={destination?.data?.pagination?.current_page}
+                lastPage={destination?.data?.pagination?.last_page}
+              />
+            </>
+          )}
         </div>
       </section>
+      <Notification
+        title={isSuccess ? "Sukses !" : "Gagal !"}
+        description={
+          isSuccess ? "Proses berhasil dilakukan" : "Proses gagal dilakukan"
+        }
+        open={isSuccess || isError}
+        type={isSuccess ? "success" : "error"}
+      />
     </ProtectedLayout>
   );
 }
