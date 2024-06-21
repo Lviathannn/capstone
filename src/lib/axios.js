@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "sonner";
 import { store } from "./store";
-import { resetUser, updateToken } from "./slice/authSlice";
+import { resetUser, setLoading, updateToken } from "./slice/authSlice";
 
 export const axiosInstance = axios.create({
   baseURL: "/api",
@@ -28,10 +28,8 @@ const getShownMessage = (error) => {
 axiosInstance.interceptors.response.use(
   (res) => res,
   async (error) => {
-    if (
-      error?.response?.status === 500 ||
-      error?.response?.data?.message == "Token sudah kadaluwarsa"
-    ) {
+    store.dispatch(setLoading(true));
+    if (error?.response?.data?.message == "Token sudah kadaluwarsa") {
       try {
         const res = await axiosInstance.get("/admin/auth/token", {
           withCredentials: true,
@@ -46,25 +44,28 @@ axiosInstance.interceptors.response.use(
           store.dispatch(resetUser());
         }
       } catch (error) {
-        console.log(error);
         toast.error("Unauthorized", {
           description: "Login untuk melanjutkan",
         });
         store.dispatch(resetUser());
       }
 
+      store.dispatch(setLoading(false));
+
       return;
     }
 
     if (error?.response?.status === 401) {
+      store.dispatch(resetUser());
+
       toast.error("Unauthorized", {
         description: "Login untuk melanjutkan",
       });
-
-      store.dispatch(resetUser());
+      store.dispatch(resetUser(false));
       return;
     }
 
+    store.dispatch(resetUser(false));
     toast.error("Terjadi kesalahan !", {
       description: getShownMessage(error),
     });

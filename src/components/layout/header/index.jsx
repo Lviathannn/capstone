@@ -27,7 +27,7 @@ import { NavLink } from "react-router-dom";
 export default function HeaderAdmin() {
   const pathname = useLocation().pathname.split("/").splice(1);
   const basePathname = pathname[0];
-  const user = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.auth?.user);
   return (
     <div className="fixed left-0 right-0 top-0 z-40 flex h-14 items-center justify-between gap-4 border-none bg-muted/40 bg-neutral-50 px-6 lg:h-[60px] lg:px-6">
       <Sheet>
@@ -154,14 +154,14 @@ export default function HeaderAdmin() {
       </div>
       <div className="flex items-center gap-2">
         <Avatar>
-          <AvatarImage src={user.profile_image} />
+          <AvatarImage src={user?.profile_image} />
           <AvatarFallback>
-            {user.username.charAt(0).toUpperCase()}
+            {user?.username?.charAt(0)?.toUpperCase()}
           </AvatarFallback>
         </Avatar>
         <div className="hidden sm:block">
-          <p className="font-medium text-neutral-800">{user.username}</p>
-          <p className="text-sm font-medium text-neutral-500">{user.role}</p>
+          <p className="font-medium text-neutral-800">{user?.username}</p>
+          <p className="text-sm font-medium text-neutral-500">{user?.role}</p>
         </div>
       </div>
     </div>

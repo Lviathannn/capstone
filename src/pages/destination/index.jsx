@@ -31,7 +31,7 @@ import Dialog from "@/components/features/alert/Dialog";
 import Notification from "@/components/features/alert/Notification";
 
 export default function DestinationPage() {
-  const token = useSelector((state) => state.auth.user.access_token);
+  const token = useSelector((state) => state.auth?.user?.access_token);
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 1000);
   const [searchParams, setSearchParams] = useSearchParams();

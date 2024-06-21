@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { DetailAdmin } from "@/pages/ManageAdmin/DetailAdmin/index";
 import { AddAdmin } from "@/pages/ManageAdmin/AddAdmin/index";
 import { LoginPage } from "@/pages/login";
@@ -18,14 +18,27 @@ import EditContent from "@/pages/manageContent/editContent";
 import CreateContent from "@/pages/manageContent/createContent";
 import ManageRoute from "@/pages/ManageRoute/index";
 import DetailRoute from "@/pages/ManageRoute/DetailRoute";
-import ProtectedRoute from "./hooks/protectedRoute";
-import { privateRoutes } from "./constant/routes";
-import DestinationPage from "./pages/destination";
-import CreateDestination from "./pages/destination/create";
-import DetailDestination from "./pages/destination/detail";
+import ProtectedRoute from "@/hooks/protectedRoute";
+import { privateRoutes } from "@/constant/routes";
+import DestinationPage from "@/pages/destination";
+import CreateDestination from "@/pages/destination/create";
+import DetailDestination from "@/pages/destination/detail";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
+  const loading = useSelector((state) => state.auth.loading);
+
+  if (currentUser === undefined || loading) {
+    console.log("loading");
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-white">
+        <div
+          className="text-surface inline-block h-10 w-10 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-primary-400 motion-reduce:animate-[spin_1.5s_linear_infinite]"
+          role="status"
+        />
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>
@@ -115,7 +128,6 @@ function App() {
         />
 
         {/* Destination */}
-
         <Route
           path={privateRoutes.DESTINATION}
           element={currentUser ? <DestinationPage /> : <Navigate to="/login" />}
@@ -136,7 +148,10 @@ function App() {
         {/* Public Routes */}
 
         <Route path="/" element={<Navigate to="/dashboard" />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/login"
+          element={currentUser ? <Navigate to="/dashboard" /> : <LoginPage />}
+        />
       </Routes>
       <Toaster />
     </BrowserRouter>
