@@ -23,6 +23,8 @@ import {
 import { z as zod } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { privateRoutes } from "@/constant/routes";
+import Dialog from "@/components/features/alert/Dialog";
+import Notification from "@/components/features/alert/Notification";
 
 const formSchema = zod.object({
   username: zod.string().min(6).max(16),
@@ -36,9 +38,10 @@ export const FormAddAdmin = () => {
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth.user?.access_token);
   const [visible, setVisible] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [preview, setPreview] = useState(null);
-  const [openNotif, setOpenNotif] = useState({ isSuccess: undefined });
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,17 +52,24 @@ export const FormAddAdmin = () => {
   });
 
   const createPostMutation = useMutation({
-    mutationFn: (values) => addAdmins(token, values),
-    onSuccess: () => {
-      navigate(privateRoutes.ADMIN);
+    mutationFn: async (values) => addAdmins(token, values),
+    onSuccess:(data)=>{
+      console.log("Mutation successful");
+      setIsSuccess(true);
+      //navigate(privateRoutes.ADMIN);
+    },
+    onSettled:(data,error)=>{
+      console.log("onSettled successful",data,error);
       queryClient.invalidateQueries({ queryKey: ["admin"] });
-      toast.success("User added successfully");
-      navigate(privateRoutes.ADMIN);
-      setOpenNotif({isSuccess:true});
+      setTimeout(() => {
+        setIsSuccess(false);
+        setIsError(false);
+      }, 2000);
+      
     },
     onError: () => {
-      setOpenNotif({isSuccess:true});
-      toast.error("Tidak berhasil menambahkan Admin");
+      console.log("Mutation failed");
+      setIsError(true);
     },
   });
 
@@ -77,22 +87,21 @@ export const FormAddAdmin = () => {
     }
   };
 
-  
-
-  async function onSubmit(values) {
+  const onSubmit = async (values) => {
     try {
-      await createPostMutation.mutate(values);
+      await createPostMutation.mutateAsync(values);
     } catch (error) {
-      toast.error("Tidak berhasil menambahkan Admin");
-      throw error("Error adding Admin");
+      throw Error(error);
     }
   }
+
+ 
   return (
     <div className="flex flex-col gap-10">
       <div>
         <Form {...form}>
           <form className="grid gap-10" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid sm:flex h-[476px] w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 shadow-md sm:py-0 py-5">
+            <div className="grid h-[476px] w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 py-5 shadow-md sm:flex sm:py-0">
               <div className="flex justify-center sm:block">
                 <FormField
                   name="foto_profil"
@@ -186,31 +195,47 @@ export const FormAddAdmin = () => {
                 />
               </div>
             </div>
-            <div className="flex items-center sm:justify-end justify-between gap-6">
+            <div className="flex items-center justify-between gap-6 sm:justify-end">
               <Link to={privateRoutes.ADMIN} className="w-full sm:w-fit">
                 <Button className="h-[42px] w-full border border-primary-500 bg-white text-sm font-medium text-primary-500 hover:bg-primary-50 hover:text-primary-500 sm:w-[180px] sm:rounded-[12px]">
                   Kembali
                 </Button>
               </Link>
               <div className="w-full sm:w-[180px]">
-                <AlertConfirm
-                  textBtn="Tambah"
-                  img={Add}
-                  title="Tambah Admin?"
-                  desc="Pastikan informasi benar dan sesuai sebelum menambahkan data. Yakin ingin menambahkan data ini?"
-                  textDialogCancel="Batal"
-                  textDialogSubmit="Tambah"
-                  onConfirm={form.handleSubmit(onSubmit)}
-                  disabled={!form.watch("username") || !form.watch("password")}
-                  openNotif={createPostMutation}
-                  backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
-                  
-                />
+                <Dialog
+                  action={()=> form.handleSubmit(onSubmit)()}
+                  title="Tambah Admin !"
+                  description="Pastikan informasi benar dan sesuai sebelum menambahkan data. Yakin ingin menambahkan data ini?"
+                  textSubmit="Tambah"
+                  textCancel="Batal"
+                >
+                  <button
+                    disabled={
+                      !form.watch("username") || !form.watch("password")
+                    }
+                    className={`${
+                      !form.watch("username") || !form.watch("password")
+                        ? "cursor-not-allowed bg-gray-400"
+                        : "bg-primary-500 hover:bg-primary-600"
+                      } h-[42px] w-[180px] text-[16px] font-medium text-neutral-100 sm:rounded-[12px]`}
+                  >
+                    Tambah
+                  </button>
+                </Dialog>
+                
               </div>
             </div>
           </form>
         </Form>
       </div>
+      <Notification
+        title={isSuccess ? "Sukses !" : "Gagal !"}
+        description={
+          isSuccess ? "Proses berhasil dilakukan" : "Proses gagal dilakukan"
+        }
+        open={isSuccess || isError}
+        type={isSuccess ? "success" : "error"}
+      />
     </div>
   );
 };

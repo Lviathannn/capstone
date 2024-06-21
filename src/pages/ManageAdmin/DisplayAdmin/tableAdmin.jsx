@@ -22,8 +22,8 @@ import IcEdit from "@/components/icons/ic-edit.svg";
 import IcDelete from "@/components/icons/ic-delete.svg";
 import { useSelector } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import IlusDelete from "@/assets/ImgModal/Ilustrasi-delete.svg";
 import { AlertConfirm } from "@/components/features/alert/alertConfirm";
@@ -33,12 +33,17 @@ import { Clear } from "@/components/icons/Clear";
 import notFound from "@/assets/icons/not-found.svg";
 import { privateRoutes } from "@/constant/routes";
 import { getAllAdmins } from "@/services/manageAdmin/getAllAdmins";
+import Dialog from "@/components/features/alert/Dialog";
+import TrashCan from "@/components/icons/TrachCan";
+import Notification from "@/components/features/alert/Notification";
+import { useDebounce } from "use-debounce";
+import Pagination from "@/components/features/Pagination";
 
-export const useGetAdmin = (page) => {
+export const useGetAdmin = (page, searchQuery) => {
   const token = useSelector((state) => state.auth.user?.access_token); // Mengambil token dari Redux state
   const { data, error, isLoading } = useQuery({
-    queryKey: ["admin", page],
-    queryFn: () => getAllAdmins(token, page),
+    queryKey: ["admin", page, searchQuery],
+    queryFn: () => getAllAdmins(token, page, searchQuery),
     enabled: !!token,
     onError: (error) => {
       console.error("Query error:", error);
@@ -51,68 +56,70 @@ export const TableAdmin = () => {
   const token = useSelector((state) => state.auth.user?.access_token);
   const [currentPage, setCurrentPage] = useState(1);
   const queryClient = useQueryClient();
-  const { data, error, isLoading } = useGetAdmin(currentPage);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = searchParams.get("page") || 1;
+  const [search, setSearch] = useState('');
+  const [searchQuery] = useDebounce(search, 1000);
+
+  const { data, error, isLoading } = useGetAdmin(page, searchQuery);
   const totalPages = data?.pagination?.last_page;
-  const [openNotif, setOpenNotif] = useState({ isSuccess: undefined });
-  const [deleted, setDeleted] = useState("");
   const inputRef = useRef(null);
-  const [searchTerm, setSearchTerm] = useState("");
+
   const navigate = useNavigate();
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    setSearchParams({ page: 1 });
+  }, [search, setSearchParams]);
+
+  useEffect(() => {
+    if (searchQuery !== "") {
+      setSearchParams({ page, search: searchQuery });
+    } else {
+      setSearchParams({ page });
+    }
+  }, [page, searchQuery, setSearchParams]);
 
   const createDeletedMutation = useMutation({
-    mutationFn: (id) => deleteAdmins(token, id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", currentPage] });
-      toast.success("Berhasil menghapus data admin")
-      
+    mutationFn: async (id) => {
+      deleteAdmins(token, id);
     },
-    onError: (error) => {
-      //setOpenError(true);
-      setOpenNotif({ isSuccess: true });
-      toast.error("Gagal melakukan hapus admin");
+    onSuccess: () => {
+      setIsSuccess(true);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", page, searchQuery] });
+      setTimeout(() => {
+        setIsSuccess(false);
+        setIsError(false);
+      }, 2000);
+    },
+    onError: () => {
+      setIsError(true);
     },
   });
 
-  const handleDeletedById = async (id) => {
-    try {
-     await createDeletedMutation.mutate(id);
-  
-    } catch (error) {
-      toast.error("Gagal melakukan hapus admin");
-    }
-    
-  };
+  const handleDeletedById = 
+    async (id) => {
+      createDeletedMutation.mutate(id);
+    };
 
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+    setSearch(e.target.value);
   };
 
   const handleClear = () => {
-    setSearchTerm("");
+    setSearch("");
     if (inputRef.current) {
       inputRef.current.value = "";
     }
   };
 
-  const filteredData = data?.data?.filter((item) =>
-    item.username.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-
-  const handleDetail = (id) => {
-    navigate(`${privateRoutes.ADMIN}/detail/${id}`);
-  };
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  if (!data || data.length === 0) {
-    return <div>No admin data available</div>;
-  }
+  const handleDetail = 
+    (id) => {
+      navigate(`${privateRoutes.ADMIN}/detail/${id}`);
+    };
 
   return (
     <section className="container mx-auto flex h-full flex-col gap-6 py-6">
@@ -122,7 +129,7 @@ export const TableAdmin = () => {
             x-chunk="dashboard-05-chunk-1"
             className="flex w-full flex-col gap-4 bg-neutral-50 px-4"
           >
-            <CardHeader className="pb-2 w-full">
+            <CardHeader className="w-full pb-2">
               <CardTitle className="text-[26px] font-bold text-neutral-800">
                 Kelola Admin
               </CardTitle>
@@ -139,12 +146,11 @@ export const TableAdmin = () => {
                     type="text"
                     placeholder="Cari berdasarkan username"
                     onChange={handleSearchChange}
-                    required
                     autoComplete="off"
                     ref={inputRef}
                     name="search"
                   />
-                  {searchTerm && (
+                  {search && (
                     <Clear
                       className="absolute right-3 top-3 opacity-75"
                       onClick={handleClear}
@@ -168,7 +174,7 @@ export const TableAdmin = () => {
             x-chunk="dashboard-05-chunk-1"
             className="flex h-full w-full flex-col bg-neutral-50 px-4 py-4"
           >
-            <CardHeader >
+            <CardHeader>
               <CardDescription>
                 <img src={IcAdmin} sizes="24" alt="" />
               </CardDescription>
@@ -177,14 +183,14 @@ export const TableAdmin = () => {
               <CardTitle className="text-2xl font-semibold text-neutral-900">
                 {data?.pagination?.total}
               </CardTitle>
-              <div className="font-normal text-muted-foreground text-neutral-900 text-[16px] sm:text-[14px] lg:text-[16px]">
+              <div className="text-[16px] font-normal text-muted-foreground text-neutral-900 sm:text-[14px] lg:text-[16px]">
                 Total Admin
               </div>
             </CardContent>
           </Card>
         </div>
       </div>
-      {filteredData && filteredData.length === 0 ? (
+      {data?.data && data?.data?.length === 0 ? (
         <div className="flex h-full w-full flex-grow flex-col items-center justify-center gap-5">
           <img className="h-[200px] w-[200px]" src={notFound} alt="" />
           <span className="mx-auto flex items-center text-[16px] font-medium">
@@ -209,7 +215,7 @@ export const TableAdmin = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredData.map((item) => (
+                {data?.data.map((item) => (
                   <TableRow
                     key={item.id}
                     className="w-full font-jakarta-sans text-sm font-normal text-neutral-800"
@@ -217,9 +223,7 @@ export const TableAdmin = () => {
                     <TableCell
                       className="w-fit sm:w-[459px]"
                       onClick={(e) => {
-                        
-                          handleDetail(item.id);
-                        
+                        handleDetail(item.id);
                       }}
                     >
                       {item.username}
@@ -234,18 +238,18 @@ export const TableAdmin = () => {
                         </Link>
                       </div>
                       <div>
-                        <AlertConfirm
-                          backround="outline-none bg-transparent border-none rounded-0 w-fit h-fit p-0 hover:bg-transparent"
-                          textBtn={<img src={IcDelete} sizes="24" alt="" />}
-                          img={IlusDelete}
-                          title="Hapus Admin?"
-                          desc="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
-                          textDialogCancel="Batal"
-                          textDialogSubmit="Hapus"
-                          bgBtn={true}
-                          openNotif={createDeletedMutation}
-                          onConfirm={() => handleDeletedById(item.id)}
-                        ></AlertConfirm>
+                        <Dialog
+                          action={() => handleDeletedById(item?.id)}
+                          type="delete"
+                          title="Hapus Admin !"
+                          description="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
+                          textSubmit="Hapus"
+                          textCancel="Batal"
+                        >
+                          <button>
+                            <TrashCan />
+                          </button>
+                        </Dialog>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -253,7 +257,11 @@ export const TableAdmin = () => {
               </TableBody>
             </Table>
           </div>
-          <div className="pagination my-3 flex items-center justify-center">
+          <Pagination
+                currentPage={data?.pagination?.current_page}
+                lastPage={data?.pagination?.last_page}
+              />
+          {/* <div className="pagination my-3 flex items-center justify-center">
             <Button
               className={`rounded-lg bg-neutral-50 px-4 py-2 shadow-sm hover:text-neutral-50 ${currentPage === 1 ? "text-neutral-400" : "text-primary-500"}`}
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -273,9 +281,17 @@ export const TableAdmin = () => {
             >
               &gt;
             </Button>
-          </div>
+          </div> */}
         </section>
       )}
+      <Notification
+        title={isSuccess ? "Sukses !" : "Gagal !"}
+        description={
+          isSuccess ? "Proses berhasil dilakukan" : "Proses gagal dilakukan"
+        }
+        open={isSuccess || isError}
+        type={isSuccess ? "success" : "error"}
+      />
     </section>
   );
 };
