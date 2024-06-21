@@ -29,6 +29,7 @@ import { useNavigate } from "react-router-dom";
 import { deleteDestination } from "@/services/destination/deleteDestionation";
 import Dialog from "@/components/features/alert/Dialog";
 import Notification from "@/components/features/alert/Notification";
+import DeleteImage from "@/assets/ImgModal/Ilustrasi-delete.svg";
 
 export default function DestinationPage() {
   const token = useSelector((state) => state.auth?.user?.access_token);
@@ -215,9 +216,11 @@ export default function DestinationPage() {
                           <Pen />
                         </button>
                         <Dialog
+                          img={DeleteImage}
                           action={() => handleDelete(data?.id)}
-                          type="delete"
+                          type="danger"
                           title="Hapus Data !"
+                          actionTitle="Hapus"
                           description="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
                         >
                           <button>

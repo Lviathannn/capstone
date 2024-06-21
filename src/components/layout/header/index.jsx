@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Link } from "react-router-dom";
 import Logo from "@/assets/logo.svg";
+import LogoutImg from "@/assets/ImgModal/Ilustrasi-failed.svg";
+
 import {
   PeopleAltIcon,
   PersonIcon,
@@ -23,11 +25,30 @@ import { privateRoutes, publicRoutes } from "@/constant/routes";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { logout } from "@/services/auth/logout";
+import { resetUser } from "@/lib/slice/authSlice";
+import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import Dialog from "@/components/features/alert/Dialog";
 
 export default function HeaderAdmin() {
   const pathname = useLocation().pathname.split("/").splice(1);
   const basePathname = pathname[0];
   const user = useSelector((state) => state.auth?.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/login");
+      dispatch(resetUser());
+    } catch {
+      toast.error("Gagal keluar dari aplikasi");
+    }
+  };
+
   return (
     <div className="fixed left-0 right-0 top-0 z-40 flex h-14 items-center justify-between gap-4 border-none bg-muted/40 bg-neutral-50 px-6 lg:h-[60px] lg:px-6">
       <Sheet>
@@ -105,13 +126,22 @@ export default function HeaderAdmin() {
           </nav>
           <div className="flex flex-col px-2 lg:px-[10px]">
             <h1 className="font-bold text-primary-600 lg:px-[10px]">Lainnya</h1>
-            <Link
-              to={publicRoutes.LOGIN}
-              className="flex gap-[10px] px-3 py-6 font-medium text-danger-500"
+            <Dialog
+              actionTitle="Keluar"
+              img={LogoutImg}
+              title="Anda Yakin Ingin Keluar?"
+              description="Perubahan tidak akan disimpan. Sampai jumpa lagi di Tourease!"
+              action={handleLogout}
+              type="danger"
             >
-              <LogoutIcon />
-              Keluar
-            </Link>
+              <Button
+                className="flex justify-start gap-[10px] px-3 py-6 font-medium text-danger-500 hover:bg-danger-500 hover:text-white"
+                variant="ghost"
+              >
+                <LogoutIcon />
+                Keluar
+              </Button>
+            </Dialog>
           </div>
         </SheetContent>
       </Sheet>

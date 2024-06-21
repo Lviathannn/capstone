@@ -8,17 +8,7 @@ import {
   LogoutIcon,
   VideoIcon,
 } from "@/assets/icons";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import LogoutImg from "@/assets/ImgModal/Ilustrasi-failed.svg";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { logout } from "@/services/auth/logout";
@@ -28,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { resetUser } from "@/lib/slice/authSlice";
 import { privateRoutes, publicRoutes } from "@/constant/routes";
 import { useSelector } from "react-redux";
+import Dialog from "@/components/features/alert/Dialog";
 
 export default function SideBar() {
   const navigate = useNavigate();
@@ -120,35 +111,22 @@ export default function SideBar() {
           <div className="flex flex-col gap-3 px-2 py-5 lg:px-[10px]">
             <h1 className="font-bold text-primary-600 lg:px-[10px]">Lainnya</h1>
 
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button
-                  className="flex justify-start gap-[10px] px-3 py-6 font-medium text-danger-500 hover:bg-danger-500 hover:text-white"
-                  variant="ghost"
-                >
-                  <LogoutIcon />
-                  Keluar
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Konfirmasi Logout ?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Apakah Anda yakin ingin logout? Semua perubahan yang belum
-                    disimpan akan hilang
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    className="bg-danger-300 hover:bg-danger-500"
-                    onClick={handleLogout}
-                  >
-                    Continue
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            <Dialog
+              img={LogoutImg}
+              title="Anda Yakin Ingin Keluar?"
+              description="Perubahan tidak akan disimpan. Sampai jumpa lagi di Tourease!"
+              action={handleLogout}
+              type="danger"
+              actionTitle="Keluar"
+            >
+              <Button
+                className="flex w-full justify-start gap-[10px] px-3 py-6 font-medium text-danger-500 hover:bg-danger-500 hover:text-white"
+                variant="ghost"
+              >
+                <LogoutIcon />
+                Keluar
+              </Button>
+            </Dialog>
           </div>
         </div>
       </div>

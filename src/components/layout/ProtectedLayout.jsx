@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 export default function ProtectedLayout({ children }) {
   const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
-
   if (!user) {
     navigate("/login");
     return null;

@@ -5,16 +5,19 @@ import person from "@/assets/icons/person.png";
 import plus from "@/assets/icons/plus.png";
 import search from "@/assets/icons/search.png";
 import edit from "@/assets/icons/edit.png";
-import deleteIcon from "@/assets/icons/delete.png";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
-import AlertDelete from "@/assets/img/alert delete.png";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useSelector } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getUsers } from "@/services/manageUser/getUsers";
 import { deleteUsers } from "@/services/manageUser/deleteUsers";
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
-import { AlertConfirm } from "@/components/features/alert/alertConfirm";
 import { privateRoutes } from "@/constant/routes";
 import Pagination from "@/components/features/Pagination";
 import { useSearchParams } from "react-router-dom";
@@ -22,6 +25,7 @@ import TableSkeleton from "@/components/features/skeleton/TableSkeleton";
 import Dialog from "@/components/features/alert/Dialog";
 import Notification from "@/components/features/alert/Notification";
 import TrashCan from "@/components/icons/TrachCan";
+import DeleteImage from "@/assets/ImgModal/Ilustrasi-delete.svg";
 
 export const useGetUser = (page, searchQuery) => {
   const token = useSelector((state) => state.auth.user?.access_token);
@@ -40,7 +44,7 @@ export default function MenuUtama() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
-  const currentPage = parseInt(searchParams.get('page')) || 1;
+  const currentPage = parseInt(searchParams.get("page")) || 1;
   const [searchQuery, setSearchQuery] = useState("");
   const { data, error, isLoading } = useGetUser(currentPage, searchQuery);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -70,8 +74,6 @@ export default function MenuUtama() {
     createDeletedMutation.mutate(userId);
   };
 
-  
-
   if (error) {
     return <div>Error: {error.message}</div>;
   }
@@ -88,7 +90,7 @@ export default function MenuUtama() {
       user.no_telepon.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.jenis_kelamin.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.kota.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.provinsi.toLowerCase().includes(searchQuery.toLowerCase())
+      user.provinsi.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const handleUserDetailClick = (user) => {
@@ -139,7 +141,7 @@ export default function MenuUtama() {
               </div>
               <Link
                 to={privateRoutes.USER + "/create"}
-                className="flex items-center rounded-lg border px-10 py-3 shadow-sm font-jakarta-sans text-primary-500"
+                className="flex items-center rounded-lg border px-10 py-3 font-jakarta-sans text-primary-500 shadow-sm"
               >
                 <img src={plus} alt="Plus Icon" className="mr-4 h-6 w-6" />
                 Tambah ...
@@ -242,10 +244,12 @@ export default function MenuUtama() {
                         onClick={() => handleUserClick(user)}
                       >
                         <img src={edit} alt="Edit Icon" className="h-6 w-6" />
-                      </button>           
+                      </button>
                       <Dialog
+                        img={DeleteImage}
+                        actionTitle="Hapus"
                         action={() => handleDeleteUser(user)}
-                        type="delete"
+                        type="danger"
                         title="Hapus Data !"
                         description="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
                       >

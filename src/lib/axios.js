@@ -51,7 +51,6 @@ axiosInstance.interceptors.response.use(
       }
 
       store.dispatch(setLoading(false));
-
       return;
     }
 
@@ -61,6 +60,8 @@ axiosInstance.interceptors.response.use(
       toast.error("Unauthorized", {
         description: "Login untuk melanjutkan",
       });
+
+      store.dispatch(setLoading(false));
       store.dispatch(resetUser(false));
       return;
     }

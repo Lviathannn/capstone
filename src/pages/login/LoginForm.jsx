@@ -39,13 +39,13 @@ export default function LoginForm() {
     },
   });
 
-  
   async function onSubmit(values) {
     // dispatch(setUser(values));
     setLoading(true);
     try {
       const res = await login(values);
       dispatch(setUser(res.data));
+      dispatch(setLoading(false));
       navigate("/dashboard");
       toast.success("Login berhasil", {
         description: "Anda akan diarahkan ke halaman dashboard",

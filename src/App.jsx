@@ -29,7 +29,6 @@ function App() {
   const loading = useSelector((state) => state.auth.loading);
 
   if (currentUser === undefined || loading) {
-    console.log("loading");
     return (
       <div className="flex h-screen w-full items-center justify-center bg-white">
         <div
