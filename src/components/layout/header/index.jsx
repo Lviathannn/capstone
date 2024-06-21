@@ -31,6 +31,7 @@ import { toast } from "sonner";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Dialog from "@/components/features/alert/Dialog";
+import { Fragment } from "react";
 
 export default function HeaderAdmin() {
   const pathname = useLocation().pathname.split("/").splice(1);
@@ -155,8 +156,8 @@ export default function HeaderAdmin() {
                     <BreadcrumbList>
                       {pathname.map((path, index) => {
                         return (
-                          <>
-                            <BreadcrumbItem key={path}>
+                          <Fragment key={path}>
+                            <BreadcrumbItem>
                               <Link
                                 to={
                                   index === 0
@@ -171,7 +172,7 @@ export default function HeaderAdmin() {
                             {index !== pathname.length - 1 && (
                               <BreadcrumbSeparator>/</BreadcrumbSeparator>
                             )}
-                          </>
+                          </Fragment>
                         );
                       })}
                     </BreadcrumbList>

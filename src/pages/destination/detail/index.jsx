@@ -53,7 +53,7 @@ export default function DetailDestination() {
           </Button>
         </div>
         {destination?.status === 200 ? (
-          <div className="flex gap-5">
+          <div className="flex flex-col gap-5 lg:flex-row">
             <div className="w-full rounded-xl bg-neutral-50 p-5 shadow-md">
               {/* Image List */}
               <div className="flex w-full justify-center gap-2">
