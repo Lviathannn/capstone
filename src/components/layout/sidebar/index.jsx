@@ -46,7 +46,7 @@ export default function SideBar() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 top-0 z-40 hidden border-none bg-muted/40 md:block">
+    <div className="fixed bottom-0 left-0 top-0 z-50 hidden border-none bg-muted/40 md:block">
       <div className="fixed flex h-full max-h-screen flex-col bg-neutral-50 md:w-[240px]">
         <div className="flex h-14 items-center px-4 lg:h-[60px]">
           <Link
