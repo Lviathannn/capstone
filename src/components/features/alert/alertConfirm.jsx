@@ -13,6 +13,7 @@ import { AlertNotif } from "./alertNotif";
 import Succes from "@/assets/ImgModal/Ilustrasi-succes.svg";
 import Error from "@/assets/ImgModal/Ilustrasi-failed.svg";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 export const AlertConfirm = ({
   textBtn,
@@ -26,10 +27,7 @@ export const AlertConfirm = ({
   onConfirm,
   backround,
   disabled,
-  successOpen,
-  setSuccessOpen,
-  errorOpen,
-  setErrorOpen,
+  openNotif,
 }) => {
   // function handleSubmit(e) {
   //   e.preventDefault();
@@ -39,14 +37,13 @@ export const AlertConfirm = ({
   //     onConfirm();
   //   }
   // }
+
+  const [open, setOpen] = useState(false);
   const handleConfirm = async () => {
-    try {
-      await onConfirm();
-      setSuccessOpen(true);
-    } catch (err) {
-      setErrorOpen(true);
-      console.error("Error deleting data: ", err);
-    }
+    onConfirm();
+    setTimeout(() => {
+      setOpen(true);
+    }, 1000);
   };
   return (
     <div>
@@ -93,24 +90,14 @@ export const AlertConfirm = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
       <AlertNotif
-        open={successOpen}
-        onOpenChange={setSuccessOpen}
-        img={Succes}
-        isLoading={isLoading}
-        title="Sukses!"
-        desc="Proses berhasil dilakukan."
-        type="success"
-      />
-      <AlertNotif
-        open={errorOpen}
-        onOpenChange={setErrorOpen}
-        isLoading={isLoading}
-        img={Error}
-        title="Gagal"
-        desc="Proses gagal dilakukan"
-        type="error"
+        open={open}
+        onOpenChange={setOpen}
+        img={openNotif.isSuccess ? Succes : Error}
+        title={openNotif.isSuccess ? "Berhasil" : "Gagal"}
+        desc={
+          openNotif.isSuccess ? "Data berhasil dihapus" : "Data gagal dihapus"
+        }
       />
     </div>
   );
