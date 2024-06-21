@@ -115,15 +115,17 @@ export default function HeaderAdmin() {
               <DestinationIcon />
               Destinasi
             </NavLink>
-            <NavLink
-              to={privateRoutes.ADMIN}
-              className={({ isActive }) => {
-                return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
-              }}
-            >
-              <PeopleAltIcon />
-              Admin
-            </NavLink>
+            {user?.role == "super admin" && (
+              <NavLink
+                to={privateRoutes.ADMIN}
+                className={({ isActive }) => {
+                  return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
+                }}
+              >
+                <PeopleAltIcon />
+                Admin
+              </NavLink>
+            )}
           </nav>
           <div className="flex flex-col px-2 lg:px-[10px]">
             <h1 className="font-bold text-primary-600 lg:px-[10px]">Lainnya</h1>
@@ -136,7 +138,7 @@ export default function HeaderAdmin() {
               type="danger"
             >
               <Button
-                className="flex justify-start gap-[10px] px-3 py-6 font-medium text-danger-500 hover:bg-danger-500 hover:text-white"
+                className="mt-2 flex w-full justify-start gap-[10px] px-3 py-6 font-medium text-danger-500 hover:bg-danger-500 hover:text-white"
                 variant="ghost"
               >
                 <LogoutIcon />

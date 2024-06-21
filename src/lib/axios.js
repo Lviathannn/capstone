@@ -34,7 +34,6 @@ axiosInstance.interceptors.response.use(
         const res = await axiosInstance.get("/admin/auth/token", {
           withCredentials: true,
         });
-        console.log(res);
         if (res?.data?.status == "Success") {
           store.dispatch(updateToken(res?.data?.data?.access_token));
         } else {
@@ -66,7 +65,7 @@ axiosInstance.interceptors.response.use(
       return;
     }
 
-    store.dispatch(resetUser(false));
+    store.dispatch(setLoading(false));
     toast.error("Terjadi kesalahan !", {
       description: getShownMessage(error),
     });

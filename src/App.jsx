@@ -1,4 +1,4 @@
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { DetailAdmin } from "@/pages/ManageAdmin/DetailAdmin/index";
 import { AddAdmin } from "@/pages/ManageAdmin/AddAdmin/index";
 import { LoginPage } from "@/pages/login";
@@ -23,6 +23,8 @@ import { privateRoutes } from "@/constant/routes";
 import DestinationPage from "@/pages/destination";
 import CreateDestination from "@/pages/destination/create";
 import DetailDestination from "@/pages/destination/detail";
+import Spinner from "./components/ui/Spinner";
+import NotFound from "./components/features/error/NotFound";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -31,16 +33,13 @@ function App() {
   if (currentUser === undefined || loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-white">
-        <div
-          className="text-surface inline-block h-10 w-10 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-primary-400 motion-reduce:animate-[spin_1.5s_linear_infinite]"
-          role="status"
-        />
+        <Spinner />
       </div>
     );
   }
 
   return (
-    <BrowserRouter>
+    <>
       <Routes>
         {/* Private Routes */}
         {/* Admin */}
@@ -151,9 +150,12 @@ function App() {
           path="/login"
           element={currentUser ? <Navigate to="/dashboard" /> : <LoginPage />}
         />
+
+        {/* 404 */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster />
-    </BrowserRouter>
+    </>
   );
 }
 

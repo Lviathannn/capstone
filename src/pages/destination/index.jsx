@@ -41,7 +41,6 @@ export default function DestinationPage() {
   const page = searchParams.get("page") || 1;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
   const { data: destination, isLoading } = useQuery({
     queryKey: ["destination", page, searchQuery],
     queryFn: () => getAllDestination(token, page, searchQuery),
