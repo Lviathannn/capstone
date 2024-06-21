@@ -156,6 +156,7 @@ export default function UserCreate() {
                 <Input
                   type="text"
                   id="username"
+                  placeholder="Masukkan Nama Pengguna"
                   {...form.register("username")}
                 />
               </div>
@@ -169,6 +170,7 @@ export default function UserCreate() {
                 <Input
                   type="text"
                   id="nama_lengkap"
+                  placeholder="Masukkan Nama Lengkap"
                   {...form.register("nama_lengkap")}
                 />
               </div>
@@ -179,6 +181,7 @@ export default function UserCreate() {
                 <Input
                   type={visible ? "text" : "password"}
                   id="password"
+                  placeholder="Masukkan Password Pengguna"
                   {...form.register("password")}
                   className="pr-10"
                 />
@@ -194,7 +197,7 @@ export default function UserCreate() {
                 <Label htmlFor="email" className="pb-2 text-sm font-bold">
                   Email
                 </Label>
-                <Input type="email" id="email" {...form.register("email")} />
+                <Input type="email" id="email" {...form.register("email")} placeholder="Masukkan Email Pengguna" />
               </div>
               <div className="col-span-6 mb-3">
                 <Label htmlFor="no_telepon" className="pb-2 text-sm font-bold">
@@ -203,6 +206,7 @@ export default function UserCreate() {
                 <Input
                   type="tel"
                   id="no_telepon"
+                  placeholder="Masukkan Nomor Telepon Pengguna"
                   {...form.register("no_telepon")}
                 />
               </div>
@@ -242,7 +246,7 @@ export default function UserCreate() {
                 <Label htmlFor="kota" className="pb-2 text-sm font-bold">
                   Kota/Kabupaten
                 </Label>
-                <Input type="text" id="kota" {...form.register("kota")} />
+                <Input type="text" id="kota" {...form.register("kota")} placeholder="Nama Kota/Kabupaten" />
               </div>
               <div className="col-span-6">
                 <Label htmlFor="provinsi" className="pb-2 text-sm font-bold">
@@ -251,12 +255,12 @@ export default function UserCreate() {
                 <Input
                   type="text"
                   id="provinsi"
+                  placeholder="Nama Provinsi"
                   {...form.register("provinsi")}
                 />
               </div>
             </div>
           </div>
-          {/* </div> */}
           <div className="mt-4 flex justify-end">
             <Button
               variant="outlined"
