@@ -98,7 +98,8 @@ export const TableAdmin = () => {
     },
   });
 
-  const handleDeletedById = async (id) => {
+
+  const handleDeletedById = (id) => {
     createDeletedMutation.mutate(id);
   };
 

@@ -76,6 +76,9 @@ export const FormEditAdmin = () => {
     },
     onError: (error) => {
       //setOpenError(true);
+      navigate(privateRoutes.ADMIN);
+    },
+    onError: (error) => {
       toast.error("Update data gagal dilakukan");
     },
   });
@@ -297,6 +300,7 @@ export const FormEditAdmin = () => {
                   openNotif={createUpdateMutation}
                   isLoading={isLoading}
                   //setErrorOpen={setOpenError}
+                  //onClick={() => {handleConfirmClick}}
                   backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
                 ></AlertConfirm>
               </div>

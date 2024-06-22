@@ -15,6 +15,7 @@ import Error from "@/assets/ImgModal/Ilustrasi-failed.svg";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
+
 export const AlertConfirm = ({
   textBtn,
   img,
@@ -28,9 +29,8 @@ export const AlertConfirm = ({
   backround,
   disabled,
   openNotif,
-
 }) => {
-  const [showModal, setShowModal] = useState(false);
+  const [open, setOpen] = useState(false);
   const handleConfirm = async () => {
     try {
       console.log("confirm jalan");
@@ -42,9 +42,9 @@ export const AlertConfirm = ({
     } catch (error) {
       setShowModal(true);
     }
-  };
+}
   useEffect(() => {
-    console.log("showModal updated:", showModal);
+    console.log("showModal updated:", open);
     console.log(openNotif.isSuccess);
   }, [showModal, openNotif]);
 
@@ -94,14 +94,12 @@ export const AlertConfirm = ({
         </AlertDialogContent>
       </AlertDialog>
       <AlertNotif
-        open={showModal}
-        onOpenChange={setShowModal}
-        img={openNotif.isSuccess? Succes : Error}
-        title={openNotif.isSuccess? "Sukses!" : "Gagal"}
+        open={open}
+        onOpenChange={setOpen}
+        img={openNotif.isSuccess ? Succes : Error}
+        title={openNotif.isSuccess ? "Berhasil" : "Gagal"}
         desc={
-          openNotif.isSuccess
-            ? "Proses berhasil dilakukan"
-            : "Proses gagal dilakukan"
+          openNotif.isSuccess ? "Data berhasil dihapus" : "Data gagal dihapus"
         }
       />
     </div>

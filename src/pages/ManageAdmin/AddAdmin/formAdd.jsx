@@ -40,9 +40,12 @@ export const FormAddAdmin = () => {
   const token = useSelector((state) => state.auth.user?.access_token);
   const [visible, setVisible] = useState(false);
   const [preview, setPreview] = useState(null);
+<<<<<<< HEAD
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isloading, setIsLoading] = useState(true);
+=======
+>>>>>>> 5bd931bae1deb4ae11195a87736d1ae3c5db243e
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -63,6 +66,7 @@ export const FormAddAdmin = () => {
     onSettled: (data, error) => {
       console.log("onSettled successful", data, error);
       queryClient.invalidateQueries({ queryKey: ["admin"] });
+<<<<<<< HEAD
       setTimeout(() => {
         setIsSuccess(false);
         setIsError(false);
@@ -71,6 +75,14 @@ export const FormAddAdmin = () => {
     onError: () => {
       console.log("Mutation failed");
       setIsError(true);
+=======
+      toast.success("User added successfully");
+      form.reset();
+      navigate(privateRoutes.ADMIN);
+    },
+    onError: () => {
+      toast.error("Failed to add user");
+>>>>>>> 5bd931bae1deb4ae11195a87736d1ae3c5db243e
     },
   });
 
@@ -236,6 +248,7 @@ export const FormAddAdmin = () => {
                     ) : ("Kembali")}
                 </Button>
               </Link>
+<<<<<<< HEAD
               <div className="w-full sm:w-[180px]">
                 <Dialog
                   action={handleSubmit}
@@ -255,6 +268,21 @@ export const FormAddAdmin = () => {
                     ) : ("Tambah")}
                   </button>
                 </Dialog>
+=======
+              <div className="w-[150px] sm:w-[180px]">
+                <AlertConfirm
+                  textBtn="Tambah"
+                  img={Add}
+                  title="Tambah Admin?"
+                  desc="Pastikan informasi benar dan sesuai sebelum menambahkan data. Yakin ingin menambahkan data ini?"
+                  textDialogCancel="Batal"
+                  textDialogSubmit="Tambah"
+                  onConfirm={form.handleSubmit(onSubmit)}
+                  disabled={!form.watch("username") || !form.watch("password")}
+                  backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
+                  openNotif={createPostMutation}
+                />
+>>>>>>> 5bd931bae1deb4ae11195a87736d1ae3c5db243e
               </div>
             </div>
           </form>
