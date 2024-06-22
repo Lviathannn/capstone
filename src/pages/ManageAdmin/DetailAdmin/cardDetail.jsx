@@ -6,10 +6,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { privateRoutes } from "@/constant/routes";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 export const CardDetail = () => {
+  const [isloading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+  }, [setIsLoading]);
+
   return (
     <div>
       <div className="w-full overflow-hidden rounded-[10px] border-none shadow-md">
@@ -19,16 +29,28 @@ export const CardDetail = () => {
         >
           <CardHeader className="flex flex-col gap-1 sm:gap-2">
             <CardTitle className="text-[26px] font-bold text-neutral-800">
-              Detail Admin
+              {isloading ? (
+                <Skeleton className="h-7 w-full rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+              ) : (
+                "Detail Admin"
+              )}
             </CardTitle>
             <CardDescription className="text-[16px] font-medium text-neutral-700">
-              Lihat detail data admin disini.
+              {isloading ? (
+                <Skeleton className="h-4 w-full rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+              ) : (
+                "Lihat detail data admin disini."
+              )}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Link to={privateRoutes.ADMIN}>
               <Button className="h-fit w-fit bg-primary-500 px-10 py-[13px] text-sm font-medium text-neutral-100 hover:bg-primary-600 sm:h-[48px] sm:w-[135px] sm:rounded-[12px]">
-                Kembali
+                {isloading ? (
+                  <Skeleton className=" h-4 w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                ) : (
+                  "Kembali"
+                )}
               </Button>
             </Link>
           </CardContent>

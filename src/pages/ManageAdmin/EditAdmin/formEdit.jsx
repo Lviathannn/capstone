@@ -25,6 +25,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAdminById } from "@/services/manageAdmin/getAdminById";
 import VisibilityOff from "@/components/icons/VisibilityOff";
 import { privateRoutes } from "@/constant/routes";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const formSchema = zod.object({
   username: zod.string().min(6).max(16),
@@ -33,17 +34,17 @@ const formSchema = zod.object({
 });
 
 export const useGetAdminId = (id) => {
-    const token = useSelector((state) => state.auth.user?.access_token); // Mengambil token dari Redux state
-    const { data, error, isLoading } = useQuery({
-      queryKey: ["admin"],
-      queryFn: () => getAdminById(token, id),
-      enabled: !!token,
-      onError: (error) => {
-        toast.error("Data tidak berhasil ditampilkan");
-      },
-    });
-    return { data, error, isLoading };
-  };
+  const token = useSelector((state) => state.auth.user?.access_token); // Mengambil token dari Redux state
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["admin"],
+    queryFn: () => getAdminById(token, id),
+    enabled: !!token,
+    onError: (error) => {
+      toast.error("Data tidak berhasil ditampilkan");
+    },
+  });
+  return { data, error, isLoading };
+};
 
 export const FormEditAdmin = () => {
   const { id } = useParams();
@@ -74,9 +75,9 @@ export const FormEditAdmin = () => {
       //setOpenSuccess(true);
     },
     onError: (error) => {
-        //setOpenError(true);
-        toast.error("Update data gagal dilakukan")
-      },
+      //setOpenError(true);
+      toast.error("Update data gagal dilakukan");
+    },
   });
 
   useEffect(() => {
@@ -106,29 +107,34 @@ export const FormEditAdmin = () => {
     }
   };
 
- async function onSubmit(values) {
+  async function onSubmit(values) {
     try {
-    const formData = new FormData();
-    formData.append('username', values.username);
-    if (values.password) {
-      formData.append('password', values.password);
-    }
-    // Handle foto_profil if it's a URL
-    if (typeof values.foto_profil === 'string' && values.foto_profil.includes('cloudinary')) {
+      const formData = new FormData();
+      formData.append("username", values.username);
+      if (values.password) {
+        formData.append("password", values.password);
+      }
+      // Handle foto_profil if it's a URL
+      if (
+        typeof values.foto_profil === "string" &&
+        values.foto_profil.includes("cloudinary")
+      ) {
         try {
           const response = await fetch(values.foto_profil);
           const blob = await response.blob();
-          const fileName = values.foto_profil.substring(values.foto_profil.lastIndexOf('/') + 1); // Mengambil nama file dari URL
+          const fileName = values.foto_profil.substring(
+            values.foto_profil.lastIndexOf("/") + 1,
+          ); // Mengambil nama file dari URL
           const file = new File([blob], fileName, { type: blob.type });
-          formData.append('foto_profil', file);
+          formData.append("foto_profil", file);
         } catch (error) {
-          toast.error('Failed to update profile picture');
+          toast.error("Failed to update profile picture");
           return;
         }
       } else if (values.foto_profil instanceof File) {
-        formData.append('foto_profil', values.foto_profil);
+        formData.append("foto_profil", values.foto_profil);
       } else if (data?.data?.foto_profil) {
-        formData.append('foto_profil', data.data.foto_profil);
+        formData.append("foto_profil", data.data.foto_profil);
       }
       createUpdateMutation.mutate(formData);
     } catch (error) {
@@ -142,20 +148,24 @@ export const FormEditAdmin = () => {
       <div>
         <Form {...form}>
           <form className="grid gap-10" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="grid sm:flex h-[476px] w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 sm:py-0 py-5 shadow-md">
-              <div className="sm:block flex justify-center">
+            <div className="grid h-[476px] w-full items-center gap-10 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 py-5 shadow-md sm:flex sm:py-0">
+              <div className="flex justify-center sm:block">
                 <FormField
                   name="foto_profil"
                   render={() => (
                     <FormItem>
                       <FormControl>
-                        <div className="relative sm:w-[212px] w-fit rounded-full bg-neutral-200 ">
+                        <div className="relative w-fit rounded-full bg-neutral-200 sm:w-[212px] ">
                           <div className=" mx-auto">
-                            <img
-                              className="h-[180px] w-[180px] sm:h-[212px] sm:w-[212px] rounded-full"
-                              src={preview || DefaultPhoto}
-                              alt="photo"
-                            />
+                            {isLoading ? (
+                              <Skeleton className="h-[212px] w-[212px] rounded-full bg-neutral-200" />
+                            ) : (
+                              <img
+                                className="h-[180px] w-[180px] rounded-full sm:h-[212px] sm:w-[212px]"
+                                src={preview || DefaultPhoto}
+                                alt="photo"
+                              />
+                            )}
                           </div>
                           <div className="absolute left-0 top-0 rounded-full">
                             <Input
@@ -168,11 +178,17 @@ export const FormEditAdmin = () => {
                           <Button
                             type="button"
                             onClick={handleClick}
-                            className="absolute w-full h-full left-0 top-0 rounded-full border-none bg-transparent hover:bg-transparent "
+                            className="absolute left-0 top-0 h-full w-full rounded-full border-none bg-transparent hover:bg-transparent "
                           >
-                            {preview&&
-                              <div className="z-20 bg-transparent rounded-full hover:bg-[#D5D5D580] hover:bg-opacity-30 absolute w-full h-full left-0 top-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"><img className="" sizes="60" src={EditPhoto}></img></div>
-                            } 
+                            {preview && (
+                              <div className="absolute left-0 top-0 z-20 flex h-full w-full items-center justify-center rounded-full bg-transparent opacity-0 transition-opacity hover:bg-[#D5D5D580] hover:bg-opacity-30 hover:opacity-100">
+                                <img
+                                  className=""
+                                  sizes="60"
+                                  src={EditPhoto}
+                                ></img>
+                              </div>
+                            )}
                           </Button>
                         </div>
                       </FormControl>
@@ -187,15 +203,23 @@ export const FormEditAdmin = () => {
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
                       <FormLabel className="font-jakarta-sans text-sm font-bold text-neutral-900">
-                        Username
+                        {isLoading ? (
+                          <Skeleton className="h-4 w-[500px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                        ) : (
+                          "Username"
+                        )}
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          type="text"
-                          className={`border-solid-1 font-jakarta-sans rounded-[10px] bg-transparent bg-white px-[12px] py-5 text-sm font-normal text-neutral-700 ${form.formState.errors.username && "border-danger-400 focus-visible:ring-0"}`}
-                          placeholder="Masukan nama admin"
-                          {...field}
-                        />
+                        {isLoading ? (
+                          <Skeleton className="ml-6 h-4 w-[700px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                        ) : (
+                          <Input
+                            type="text"
+                            className={`border-solid-1 rounded-[10px] bg-transparent bg-white px-[12px] py-5 font-jakarta-sans text-sm font-normal text-neutral-700 ${form.formState.errors.username && "border-danger-400 focus-visible:ring-0"}`}
+                            placeholder="Masukan nama admin"
+                            {...field}
+                          />
+                        )}
                       </FormControl>
                     </FormItem>
                   )}
@@ -206,24 +230,30 @@ export const FormEditAdmin = () => {
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
                       <FormLabel className="font-jakarta-sans text-sm font-bold text-neutral-900">
-                        Password
+                        {isLoading ? (
+                          <Skeleton className="h-4 w-[500px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                        ) : (
+                          "Password"
+                        )}
                       </FormLabel>
                       <FormControl>
                         <div className="relative w-full rounded-[12px] ">
-                          <Input
-                            className={`border-solid-1 font-jakarta-sans rounded-[10px] bg-transparent bg-white px-[12px] py-5 text-sm font-normal text-neutral-700 ${form.formState.errors.password && "border-danger-400 focus-visible:ring-0"}`}
-                            type={visible ? "text" : "password"}
-                            placeholder="Masukan password admin"
-                            {...field}
-                          />
+                          {isLoading ? (
+                            <Skeleton className="ml-6 h-4 w-[700px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                          ) : (
+                            <Input
+                              className={`border-solid-1 rounded-[10px] bg-transparent bg-white px-[12px] py-5 font-jakarta-sans text-sm font-normal text-neutral-700 ${form.formState.errors.password && "border-danger-400 focus-visible:ring-0"}`}
+                              type={visible ? "text" : "password"}
+                              placeholder="Masukan password admin"
+                              {...field}
+                            />
+                          )}
                           <button
                             className="absolute right-3 top-2"
                             type="button"
                             onClick={() => setVisible(!visible)}
                           >
-                            { 
-                              visible ? <VisibilityOff /> : <Eye /> 
-                            }
+                            {visible ? <VisibilityOff /> : <Eye />}
                           </button>
                         </div>
                       </FormControl>
@@ -232,22 +262,35 @@ export const FormEditAdmin = () => {
                 />
               </div>
             </div>
-            <div className="flex items-center sm:justify-end justify-between gap-6">
+            <div className="flex items-center justify-between gap-6 sm:justify-end">
               <Link to={privateRoutes.ADMIN} className="w-full sm:w-fit">
-                <Button type="button" className="border-primary-500 text-primary-500 hover:text-primary-500 hover:bg-primary-50 h-[42px] w-full sm:w-[180px] border bg-white text-sm font-medium sm:rounded-[12px]">
-                  Kembali
+                <Button
+                  type="button"
+                  className="h-[42px] w-full border border-primary-500 bg-white text-sm font-medium text-primary-500 hover:bg-primary-50 hover:text-primary-500 sm:w-[180px] sm:rounded-[12px]"
+                >
+                  {isLoading ? (
+                    <Skeleton className="ml-6 h-4 w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                  ) : (
+                    "Kembal"
+                  )}
                 </Button>
               </Link>
               <div className="w-full sm:w-[180px]">
                 <AlertConfirm
-                  textBtn="Simpan"
+                  textBtn={
+                    isLoading ? (
+                      <Skeleton className="ml-6 h-4 w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                    ) : (
+                      "Simpan"
+                    )
+                  }
                   img={Edit}
                   title="Edit Admin?"
                   desc="Pastikan perubahan Anda benar. Yakin ingin mengubah dan menyimpan data ini?"
                   textDialogCancel="Periksa Kembali"
                   textDialogSubmit="Simpan"
                   onConfirm={form.handleSubmit(onSubmit)}
-                  disabled={!form.watch('username')}
+                  disabled={!form.watch("username")}
                   //successOpen={openSuccess}
                   //setSuccessOpen={setOpenSuccess}
                   //errorOpen={openError}
