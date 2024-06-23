@@ -82,6 +82,16 @@ export default function LandingContent() {
     navigate(`${privateRoutes.CONTENT}/detail`, { state: { user } });
   };
 
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 300);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchQuery]);
+
   if (isLoading) {
     return <div>Loading...</div>;
   }

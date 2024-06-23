@@ -52,7 +52,6 @@ export default function CreateContent() {
     },
   });
 
-  {/* setting auto-height Input Deskripsi */}
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
