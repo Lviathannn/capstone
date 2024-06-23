@@ -6,7 +6,7 @@ export const DisplayAdmin = () => {
     <ProtectedLayout>
       <section
         className="h-full rounded-t-2xl bg-primary-50 "
-        style={{ minHeight: "calc(100vh - 80px)" }}
+        style={{ minHeight: "calc(100vh - 65px)" }}
       >
         <TableAdmin />
       </section>

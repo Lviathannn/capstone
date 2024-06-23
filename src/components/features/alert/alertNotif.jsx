@@ -16,7 +16,6 @@ export const AlertNotif = ({
   desc,
   isLoading,
 }) => {
-
   return (
     <AlertDialog
       className="rounded bg-white"

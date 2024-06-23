@@ -9,9 +9,9 @@ import {
     return (
           <Card
             x-chunk="dashboard-05-chunk-1"
-            className="flex flex-col bg-neutral-50 overflow-hidden rounded-[10px] border-none shadow-md"
+            className="flex w-full flex-col bg-neutral-50 overflow-hidden rounded-[10px] border-none shadow-md"
           >
-            <CardHeader className="flex flex-col gap-2">
+            <CardHeader className="w-full flex flex-col p-4 gap-1 sm:gap-2 ">
               <CardTitle className="text-[26px] font-bold text-neutral-800">
                 {title}
               </CardTitle>

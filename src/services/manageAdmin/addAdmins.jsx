@@ -1,8 +1,8 @@
 import { axiosInstance } from "@/lib/axios";
 
-export const addUsers = async (token, formData) => {
+export const addAdmins = async (token, values) => {
   try {
-    const res = await axiosInstance.post(`admin/admins`, formData, {
+    const res = await axiosInstance.post(`admin/admins`, values, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",

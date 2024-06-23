@@ -8,7 +8,7 @@ export default function Pagination({ currentPage, lastPage }) {
   const [_, setSearchParams] = useSearchParams();
 
   return (
-    <div className="mt-10 flex items-center justify-center gap-5">
+    <div className="mt-2 flex items-center justify-center gap-14">
       <Button
         size="icon"
         variant="outline"

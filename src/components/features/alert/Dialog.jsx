@@ -17,6 +17,7 @@ export default function Dialog({
   action,
   type,
   img,
+  textSubmit, textCancel,
   actionTitle,
 }) {
   const handleConfirm = () => {
@@ -25,17 +26,17 @@ export default function Dialog({
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger>{children}</AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogTrigger asChild className={`w-full`}>{children}</AlertDialogTrigger>
+      <AlertDialogContent className="flex flex-col gap-6">
         <img
           src={img}
           alt="alert"
-          className="mx-auto mb-8"
+          className="mx-auto"
           width={242}
           height={100}
         />
 
-        <AlertDialogHeader>
+        <AlertDialogHeader className="p-[11px] flex flex-col gap-4">
           <AlertDialogTitle className="text-center text-lg font-bold">
             {title}{" "}
           </AlertDialogTitle>
@@ -43,15 +44,16 @@ export default function Dialog({
             {description}
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel className="hover:bg-neutral-100 hover:text-neutral-800">
-            Batal
+        <AlertDialogFooter className="flex items-center gap-6 sm:justify-center sm:space-x-0">
+          <AlertDialogCancel className="border-primary-500 text-[16px] font-medium text-primary-500 hover:text-primary-500 h-[42px] w-full">
+            {textCancel}
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
-            className={`${type == "danger" ? "bg-danger-400 hover:bg-danger-500" : "bg-primary-500 hover:bg-primary-600"}`}
+            className={`h-[42px] w-full text-[16px] font-medium ${type == "danger" ? "bg-danger-400 hover:bg-danger-500" : "bg-primary-500 hover:bg-primary-600"}`}
           >
-            {actionTitle}
+            {textSubmit}
+            
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

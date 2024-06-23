@@ -1,8 +1,8 @@
 import { axiosInstance } from "@/lib/axios";
 
-export const getUsers = async (token,page) => {
+export const getAllAdmins = async (token,page,search) => {
   try {
-    const res = await axiosInstance.get(`admin/admins?page=${page}`, {
+    const res = await axiosInstance.get(`admin/admins?page=${page}&limit=8&search=${search}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data',
