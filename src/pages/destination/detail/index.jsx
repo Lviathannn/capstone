@@ -21,8 +21,7 @@ export default function DetailDestination() {
     return null;
   }
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { data: destination } = useQuery({
+  const { data: destination, isLoading, isError } = useQuery({
     queryKey: ["destination", id],
     queryFn: () => getDestination(token, id),
   });
@@ -52,10 +51,24 @@ export default function DetailDestination() {
             Kembali
           </Button>
         </div>
+        {isLoading && (
+          <div className="flex h-full w-full flex-grow flex-col items-center justify-center gap-5 pt-32">
+            <span className="mx-auto flex items-center text-[16px] font-medium">
+              Loading...
+            </span>
+          </div>
+        )}
+        {isError && (
+          <div className="flex h-full w-full flex-grow flex-col items-center justify-center gap-5 pt-32">
+            <img className="h-[200px] w-[200px]" src={notFoundImg} alt="" />
+            <span className="mx-auto flex items-center text-[16px] font-medium">
+              Maaf, Terjadi Kesalahan!
+            </span>
+          </div>
+        )}
         {destination?.status === 200 ? (
           <div className="flex gap-5">
             <div className="w-full rounded-xl bg-neutral-50 p-5 shadow-md">
-              {/* Image List */}
               <div className="flex w-full justify-center gap-2">
                 {destination?.data?.data?.url_gambar?.map((data) => (
                   <img
@@ -65,8 +78,6 @@ export default function DetailDestination() {
                   />
                 ))}
               </div>
-              {/* Form */}
-
               <div className="mt-5 w-full space-y-4">
                 <div className="grid w-full items-center gap-2">
                   <Label className="font-bold">Nama</Label>
@@ -101,7 +112,6 @@ export default function DetailDestination() {
                         className="w-full"
                       />
                     </div>
-
                     <div className="space-y-2">
                       <Label className="font-bold">Kota/Kabupaten</Label>
                       <Input
@@ -113,7 +123,6 @@ export default function DetailDestination() {
                         className="w-full"
                       />
                     </div>
-
                     <div className="space-y-2">
                       <Label className="font-bold">Kecamatan</Label>
                       <Input
@@ -126,7 +135,6 @@ export default function DetailDestination() {
                         className="w-full"
                       />
                     </div>
-
                     <div className="space-y-2">
                       <Label className="font-bold">Kode Pos</Label>
                       <Input
@@ -141,7 +149,6 @@ export default function DetailDestination() {
                     </div>
                   </div>
                 </div>
-
                 <div className="grid w-full items-center gap-2">
                   <Label className="font-bold">Nama Jalan</Label>
                   <Input
@@ -156,8 +163,6 @@ export default function DetailDestination() {
               </div>
             </div>
             <div className="w-full rounded-xl bg-neutral-50 p-5 shadow-md">
-              {/* Form */}
-
               <div className="mt-5 w-full space-y-4">
                 <div className="grid w-full items-center gap-2">
                   <Label className="font-bold">Deskripsi</Label>
@@ -168,7 +173,6 @@ export default function DetailDestination() {
                     className="min-h-32 w-full"
                   />
                 </div>
-
                 <div className="grid w-full items-center gap-2">
                   <Label className="text-xl font-bold">Jam Operasional</Label>
                   <div className="mt-2 grid w-full grid-cols-2 items-center gap-2">
@@ -181,7 +185,6 @@ export default function DetailDestination() {
                         className="w-full"
                       />
                     </div>
-
                     <div className="space-y-2">
                       <Label className="font-bold">Tutup</Label>
                       <Input
@@ -191,7 +194,6 @@ export default function DetailDestination() {
                         className="w-full"
                       />
                     </div>
-
                     <div className="space-y-2">
                       <Label className="font-bold">Biaya</Label>
                       <Input
@@ -203,7 +205,6 @@ export default function DetailDestination() {
                         className="w-full"
                       />
                     </div>
-
                     <div className="space-y-2">
                       <Label className="font-bold">Konten</Label>
                       <Input
@@ -217,10 +218,9 @@ export default function DetailDestination() {
                     </div>
                   </div>
                 </div>
-
                 <div className="grid w-full items-center gap-2">
                   <Label className="font-bold">Fasilitas</Label>
-                  <div className=" w-full space-y-2">
+                  <div className="w-full space-y-2">
                     {destination?.data?.data?.fasilitas?.map((data) => (
                       <Badge key={data?.id_fasilitas} className="mr-1">
                         {data.nama}
@@ -231,20 +231,15 @@ export default function DetailDestination() {
               </div>
             </div>
           </div>
-<<<<<<< HEAD
-        )}
-
-        {!destination && !isLoading && (
-          <div className="flex h-full w-full flex-grow flex-col items-center justify-center gap-5 pt-32">
-=======
         ) : (
-          <div className="flex h-full w-full flex-grow flex-col items-center justify-center gap-5">
->>>>>>> e4c74baaea5ee6d5277a862088c7da7c485c926f
-            <img className="h-[200px] w-[200px]" src={notFoundImg} alt="" />
-            <span className="mx-auto flex items-center text-[16px] font-medium">
-              Maaf, Hasil Pencarian Tidak Ditemukan!
-            </span>
-          </div>
+          !isLoading && (
+            <div className="flex h-full w-full flex-grow flex-col items-center justify-center gap-5 pt-32">
+              <img className="h-[200px] w-[200px]" src={notFoundImg} alt="" />
+              <span className="mx-auto flex items-center text-[16px] font-medium">
+                Maaf, Hasil Pencarian Tidak Ditemukan!
+              </span>
+            </div>
+          )
         )}
       </section>
     </ProtectedLayout>

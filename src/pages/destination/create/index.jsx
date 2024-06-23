@@ -1,5 +1,4 @@
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
-<<<<<<< HEAD
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -147,10 +146,6 @@ export default function CreateDestination() {
     destinationMutation.mutate(body);
   }
 
-=======
-
-export default function CreateDestination() {
->>>>>>> e4c74baaea5ee6d5277a862088c7da7c485c926f
   return (
     <ProtectedLayout>
       <section
@@ -158,7 +153,6 @@ export default function CreateDestination() {
         style={{
           minHeight: "calc(100vh - 60px)",
         }}
-<<<<<<< HEAD
       >
         <div className="flex w-full items-center justify-between rounded-xl bg-neutral-50 p-6 shadow-md">
           <div className="">
@@ -481,9 +475,6 @@ export default function CreateDestination() {
           </form>
         </Form>
       </section>
-=======
-      ></section>
->>>>>>> e4c74baaea5ee6d5277a862088c7da7c485c926f
     </ProtectedLayout>
   );
 }

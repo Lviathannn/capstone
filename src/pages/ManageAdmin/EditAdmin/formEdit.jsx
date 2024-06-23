@@ -77,7 +77,6 @@ export const FormEditAdmin = () => {
   const createUpdateMutation = useMutation({
     mutationFn: (values) => updateAdmins(token, id, values),
     onSuccess: () => {
-<<<<<<< HEAD
       setIsSuccess(true);
     },
     onSettled: () => {
@@ -87,12 +86,6 @@ export const FormEditAdmin = () => {
         setIsError(false);
         navigate(privateRoutes.ADMIN);
       }, 2000);
-=======
-      queryClient.invalidateQueries({ queryKey: ["admin"] });
-      toast.success("User update successfully");
-      navigate(privateRoutes.ADMIN);
-      setOpenSuccess(true);
->>>>>>> e4c74baaea5ee6d5277a862088c7da7c485c926f
     },
     onError: (error) => {
       setOpenError(true);
@@ -176,7 +169,6 @@ export const FormEditAdmin = () => {
                       <FormControl>
                         <div className="relative w-fit rounded-full bg-neutral-200 sm:w-[212px] ">
                           <div className=" mx-auto">
-<<<<<<< HEAD
                             {isLoading ? (
                               <Skeleton className="h-[180px] w-[180px] rounded-full bg-neutral-200 sm:h-[212px] sm:w-[212px]" />
                             ) : (
@@ -186,13 +178,6 @@ export const FormEditAdmin = () => {
                                 alt="photo"
                               />
                             )}
-=======
-                            <img
-                              className="h-[180px] w-[180px] rounded-full sm:h-[212px] sm:w-[212px]"
-                              src={preview || DefaultPhoto}
-                              alt="photo"
-                            />
->>>>>>> e4c74baaea5ee6d5277a862088c7da7c485c926f
                           </div>
                           <div className="absolute left-0 top-0 rounded-full">
                             <Input
@@ -282,7 +267,6 @@ export const FormEditAdmin = () => {
                   Kembali
                 </Button>
               </Link>
-<<<<<<< HEAD
               <div className="w-full sm:w-[180px]">
                 <Dialog
                   action={handleSubmit}
@@ -314,29 +298,6 @@ export const FormEditAdmin = () => {
             open={isSuccess || isError}
             type={isSuccess ? "success" : "error"}
           />
-=======
-              <div className="w-[150px] sm:w-[180px]">
-                <AlertConfirm
-                  textBtn="Simpan"
-                  img={Edit}
-                  title="Edit Admin?"
-                  desc="Pastikan perubahan Anda benar. Yakin ingin mengubah dan menyimpan data ini?"
-                  textDialogCancel="Periksa Kembali"
-                  textDialogSubmit="Simpan"
-                  onConfirm={form.handleSubmit(onSubmit)}
-                  disabled={!form.watch("username")}
-                  successOpen={openSuccess}
-                  setSuccessOpen={setOpenSuccess}
-                  errorOpen={openError}
-                  isLoading={isLoading}
-                  setErrorOpen={setOpenError}
-                  //onClick={() => {handleConfirmClick}}
-                  backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
-                ></AlertConfirm>
-              </div>
-            </div>
-          </form>
->>>>>>> e4c74baaea5ee6d5277a862088c7da7c485c926f
         </Form>
       </div>
     </div>
