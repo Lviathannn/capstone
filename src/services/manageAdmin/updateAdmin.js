@@ -10,7 +10,6 @@ export const updateAdmins = async (token,id,newData) => {
     });
     return res.data;
   } catch (error) {
-    console.error("Error data admins:", error); // Logging untuk debug
     throw new Error("Failed to update data admins");
   }
 };

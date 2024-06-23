@@ -22,12 +22,12 @@ import { z as zod } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateAdmins } from "@/services/manageAdmin/updateAdmin";
 import { useQuery } from "@tanstack/react-query";
-import { getAdminById } from "@/services/manageAdmin/getAdminById";
 import VisibilityOff from "@/components/icons/VisibilityOff";
 import { privateRoutes } from "@/constant/routes";
 import { Skeleton } from "@/components/ui/skeleton";
 import Dialog from "@/components/features/alert/Dialog";
 import Notification from "@/components/features/alert/Notification";
+import { getAdminById } from "@/services/manageAdmin/getAdminById";
 
 const formSchema = zod.object({
   username: zod.string().min(6).max(16),
@@ -152,7 +152,7 @@ export const FormEditAdmin = () => {
 
   const handleSubmit = () => {
     form.handleSubmit(onSubmit)();
-    if (form.formState.errors) {
+    if (form.formState.errors.username || form.formState.errors.password) {
       setIsError(true);
       setTimeout(() => {
         setIsError(false);

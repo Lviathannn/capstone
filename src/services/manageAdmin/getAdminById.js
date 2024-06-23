@@ -10,7 +10,6 @@ export const getAdminById = async (token,id) => {
     });
     return res.data;
   } catch (error) {
-    console.error("Error data admins:", error); // Logging untuk debug
     throw new Error("Failed to get data admins by ID");
   }
 };
