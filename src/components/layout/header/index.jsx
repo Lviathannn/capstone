@@ -132,12 +132,13 @@ export default function HeaderAdmin() {
           <div className="flex flex-col px-2 lg:px-[10px]">
             <h1 className="font-bold text-primary-600 lg:px-[10px]">Lainnya</h1>
             <Dialog
-              actionTitle="Keluar"
               img={LogoutImg}
               title="Anda Yakin Ingin Keluar?"
               description="Perubahan tidak akan disimpan. Sampai jumpa lagi di Tourease!"
               action={handleLogout}
               type="danger"
+              textSubmit="keluar"
+              textCancel="Batal"
             >
               <Button
                 className="mt-2 flex w-full justify-start gap-[10px] px-3 py-6 font-medium text-danger-500 hover:bg-danger-500 hover:text-white"
@@ -153,7 +154,7 @@ export default function HeaderAdmin() {
       <div className="w-full ">
         <nav>
           <div className="container mx-auto flex items-center px-6 py-5 lg:px-0">
-            <div className="hidden sm:flex h-14 items-center px-4 lg:h-[60px]">
+            <div className="hidden h-14 items-center px-4 sm:flex lg:h-[60px]">
               <Link
                 to={publicRoutes.HOME}
                 className="flex w-full items-center justify-center gap-2 font-semibold"

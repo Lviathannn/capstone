@@ -225,7 +225,8 @@ export default function DestinationPage() {
                           action={() => handleDelete(data?.id)}
                           type="danger"
                           title="Hapus Data !"
-                          actionTitle="Hapus"
+                          textSubmit="Hapus"
+                          textCancel="Batal"
                           description="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
                         >
                           <button>
@@ -247,14 +248,21 @@ export default function DestinationPage() {
           )}
         </div>
       </section>
-      <Notification
-        title={isSuccess ? "Sukses !" : "Gagal !"}
-        description={
-          isSuccess ? "Proses berhasil dilakukan" : "Proses gagal dilakukan"
-        }
-        open={isSuccess || isError}
-        type={isSuccess ? "success" : "error"}
-      />
+      {isSuccess && (
+        <Notification
+          title={"Sukses !"}
+          description={"Proses berhasil dilakukan"}
+          open={isSuccess}
+          type={"success"}
+        />
+      )}
+      {isError && (
+        <Notification
+          title={"Gagal !"}
+          description={"Proses gagal dilakukan"}
+          open={isError}
+        />
+      )}
     </ProtectedLayout>
   );
 }

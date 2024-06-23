@@ -435,22 +435,26 @@ export default function CreateDestination() {
               >
                 Kembali
               </Button>
-              <Dialog
-                title="Tambah Data !"
-                description="Pastikan informasi benar dan sesuai sebelum menambahkan data. Yakin ingin menambahkan data ini?"
-                action={form.handleSubmit(onSubmit)}
-                img={AddImage}
-                actionTitle="Tambah"
-              >
-                <Button
-                  size="lg"
-                  type="button"
-                  disabled={destinationMutation.isLoading}
+              <div className="">
+                <Dialog
+                  title="Tambah Data !"
+                  description="Pastikan informasi benar dan sesuai sebelum menambahkan data. Yakin ingin menambahkan data ini?"
+                  action={form.handleSubmit(onSubmit)}
+                  img={AddImage}
+                  textSubmit="Tambah"
+                  textCancel="Batal"
                 >
-                  {destinationMutation.isLoading ? "Menambahkan..." : "Tambah"}
-                </Button>
-              </Dialog>
-
+                  <Button
+                    size="lg"
+                    type="button"
+                    disabled={destinationMutation.isLoading}
+                  >
+                    {destinationMutation.isLoading
+                      ? "Menambahkan..."
+                      : "Tambah"}
+                  </Button>
+                </Dialog>
+              </div>
               {isSuccess && (
                 <Notification
                   open={isSuccess}

@@ -122,6 +122,8 @@ export default function SideBar() {
               action={handleLogout}
               type="danger"
               actionTitle="Keluar"
+              textSubmit="keluar"
+              textCancel="Batal"
             >
               <Button
                 className="flex w-full justify-start gap-[10px] px-3 py-6 font-medium text-danger-500 hover:bg-danger-500 hover:text-white"
