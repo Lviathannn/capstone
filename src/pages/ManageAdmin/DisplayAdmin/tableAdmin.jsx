@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import IcEdit from "@/components/icons/ic-edit.svg";
 import { useSelector } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { deleteAdmins } from "@/services/manageAdmin/deleteAdmins";
@@ -53,7 +53,6 @@ export const useGetAdmin = (page, searchQuery) => {
 
 export const TableAdmin = () => {
   const token = useSelector((state) => state.auth.user?.access_token);
-  const [currentPage, setCurrentPage] = useState(1);
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const page = searchParams.get("page") || 1;
@@ -61,7 +60,6 @@ export const TableAdmin = () => {
   const [searchQuery] = useDebounce(search, 1000);
 
   const { data, error, isLoading } = useGetAdmin(page, searchQuery);
-  const totalPages = data?.pagination?.last_page;
   const inputRef = useRef(null);
 
   const navigate = useNavigate();
@@ -230,20 +228,22 @@ export const TableAdmin = () => {
                 {data?.data.map((item) => (
                   <TableRow
                     key={item.id}
+                    onClick={(e) => {
+                      handleDetail(item.id);
+                    }}
                     className="w-full font-jakarta-sans text-sm font-normal text-neutral-800"
                   >
                     <TableCell
                       className="w-fit sm:w-[459px]"
-                      onClick={(e) => {
-                        handleDetail(item.id);
-                      }}
                     >
                       {item.username}
                     </TableCell>
                     <TableCell className="w-fit sm:w-[459px]">
                       {item.tanggal_pembuatan}
                     </TableCell>
-                    <TableCell className="flex w-fit items-center justify-center gap-2 px-0 sm:w-full sm:gap-7">
+                    <TableCell 
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex w-fit items-center justify-center gap-2 px-0 sm:w-full sm:gap-7">
                       <div>
                         <Link to={`${privateRoutes.ADMIN}/edit/${item.id}`}>
                           <img src={IcEdit} sizes="24" alt="" />

@@ -24,11 +24,7 @@ export const useGetAdminId = (id) => {
 
 export const FormDetail = () => {
   const { id } = useParams();
-
   const { data, error, isLoading } = useGetAdminId(id);
-
-  console.log(data?.data);
-  console.log(error);
   return (
     <div className="flex flex-col gap-5 sm:gap-10">
       <div className="grid h-fit w-full items-center gap-5 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-4 py-8 shadow-md sm:flex sm:gap-10 sm:py-[132px]">
