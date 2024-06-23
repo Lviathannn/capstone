@@ -5,7 +5,7 @@ export const addContent = async (token, formData) => {
     const res = await axiosInstance.post(`/admin/destination-media`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'application/json',
       },
     });
     return res.data;
