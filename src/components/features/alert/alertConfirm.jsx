@@ -13,7 +13,8 @@ import { AlertNotif } from "./alertNotif";
 import Succes from "@/assets/ImgModal/Ilustrasi-succes.svg";
 import Error from "@/assets/ImgModal/Ilustrasi-failed.svg";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 
 export const AlertConfirm = ({
   textBtn,
@@ -29,22 +30,24 @@ export const AlertConfirm = ({
   disabled,
   openNotif,
 }) => {
-  // function handleSubmit(e) {
-  //   e.preventDefault();
-  //   e.stopPropagation();
-  //   setSucces(true);
-  //   if (onConfirm) {
-  //     onConfirm();
-  //   }
-  // }
-
   const [open, setOpen] = useState(false);
   const handleConfirm = async () => {
-    onConfirm();
-    setTimeout(() => {
-      setOpen(true);
-    }, 1000);
-  };
+    try {
+      console.log("confirm jalan");
+      console.log(onConfirm);
+      await onConfirm();
+      setTimeout(()=>{
+        setShowModal(true)
+      }, 3000)
+    } catch (error) {
+      setShowModal(true);
+    }
+}
+  useEffect(() => {
+    console.log("showModal updated:", open);
+    console.log(openNotif.isSuccess);
+  }, [open, openNotif]);
+
   return (
     <div>
       <AlertDialog className={`rounded bg-white ${backround}`}>

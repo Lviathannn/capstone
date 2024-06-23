@@ -11,7 +11,7 @@ import {
 
 export default function Notification({ title, description, open, type }) {
   return (
-    <AlertDialog open={open}>
+    <AlertDialog asChild open={open}>
       <AlertDialogContent className="max-w-[320px]">
         <img
           src={type === "success" ? successImg : failedImg}

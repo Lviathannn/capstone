@@ -22,12 +22,15 @@ import { z as zod } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateAdmins } from "@/services/manageAdmin/updateAdmin";
 import { useQuery } from "@tanstack/react-query";
-import { getAdminById } from "@/services/manageAdmin/getAdminById";
 import VisibilityOff from "@/components/icons/VisibilityOff";
 import { privateRoutes } from "@/constant/routes";
+import { Skeleton } from "@/components/ui/skeleton";
+import Dialog from "@/components/features/alert/Dialog";
+import Notification from "@/components/features/alert/Notification";
+import { getAdminById } from "@/services/manageAdmin/getAdminById";
 
 const formSchema = zod.object({
-  username: zod.string().min(2).max(50),
+  username: zod.string().min(6).max(16),
   password: zod.string().optional(),
   foto_profil: zod.any().nullable(), // Allowing nullable foto for validation
 });
@@ -38,10 +41,13 @@ export const useGetAdminId = (id) => {
     queryKey: ["admin"],
     queryFn: () => getAdminById(token, id),
     enabled: !!token,
+<<<<<<< HEAD
     onSuccess: () => {},
 
+=======
+>>>>>>> 15394f65daf295b94566025b5a96938c7ae25fa2
     onError: (error) => {
-      console.error("Query error:", error);
+      toast.error("Data tidak berhasil ditampilkan");
     },
   });
   return { data, error, isLoading };
@@ -56,7 +62,8 @@ export const FormEditAdmin = () => {
   const token = useSelector((state) => state.auth.user?.access_token);
   const [visible, setVisible] = useState(false);
   const [preview, setPreview] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -70,12 +77,18 @@ export const FormEditAdmin = () => {
   const createUpdateMutation = useMutation({
     mutationFn: (values) => updateAdmins(token, id, values),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin"] });
-      toast.success("User update successfully");
-      navigate(privateRoutes.ADMIN);
+      setIsSuccess(true);
+    },
+    onSettled:() => {
+      queryClient.invalidateQueries({ queryKey: ["admin"] }); 
+      setTimeout(() => {
+        setIsSuccess(false);
+        setIsError(false);
+        navigate(privateRoutes.ADMIN);
+      }, 2000);
     },
     onError: (error) => {
-      toast.error("Update data gagal dilakukan");
+      setIsError(true);
     },
   });
 
@@ -141,6 +154,17 @@ export const FormEditAdmin = () => {
     }
   }
 
+  const handleSubmit = () => {
+    form.handleSubmit(onSubmit)();
+    if (form.formState.errors.username || form.formState.errors.password) {
+      setIsError(true);
+      setTimeout(() => {
+        setIsError(false);
+      }, 2000);
+      toast.error("username dan passworod harus 6-16 karakter");
+    }
+  };
+
   return (
     <div className="flex flex-col gap-10">
       <div>
@@ -155,11 +179,15 @@ export const FormEditAdmin = () => {
                       <FormControl>
                         <div className="relative w-fit rounded-full bg-neutral-200 sm:w-[212px] ">
                           <div className=" mx-auto">
-                            <img
-                              className="h-[180px] w-[180px] rounded-full sm:h-[212px] sm:w-[212px]"
-                              src={preview || DefaultPhoto}
-                              alt="photo"
-                            />
+                            {isLoading ? (
+                              <Skeleton className="h-[180px] w-[180px] sm:h-[212px] sm:w-[212px] rounded-full bg-neutral-200" />
+                            ) : (
+                              <img
+                                className="h-[180px] w-[180px] rounded-full sm:h-[212px] sm:w-[212px]"
+                                src={preview || DefaultPhoto}
+                                alt="photo"
+                              />
+                            )}
                           </div>
                           <div className="absolute left-0 top-0 rounded-full">
                             <Input
@@ -197,15 +225,23 @@ export const FormEditAdmin = () => {
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
                       <FormLabel className="font-jakarta-sans text-sm font-bold text-neutral-900">
-                        Username
+                        {isLoading ? (
+                          <Skeleton className="h-4 w-[500px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                        ) : (
+                          "Username"
+                        )}
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          type="text"
-                          className={`border-solid-1 rounded-[10px] bg-transparent bg-white px-[12px] py-5 font-jakarta-sans text-sm font-normal text-neutral-700 ${form.formState.errors.username && "border-danger-400 focus-visible:ring-0"}`}
-                          placeholder="Masukan nama admin"
-                          {...field}
-                        />
+                        {isLoading ? (
+                          <Skeleton className="ml-6 h-4 w-[700px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                        ) : (
+                          <Input
+                            type="text"
+                            className={`border-solid-1 rounded-[10px] bg-transparent bg-white px-[12px] py-5 font-jakarta-sans text-sm font-normal text-neutral-700 ${form.formState.errors.username && "border-danger-400 focus-visible:ring-0"}`}
+                            placeholder="Masukan nama admin"
+                            {...field}
+                          />
+                        )}
                       </FormControl>
                     </FormItem>
                   )}
@@ -216,16 +252,24 @@ export const FormEditAdmin = () => {
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
                       <FormLabel className="font-jakarta-sans text-sm font-bold text-neutral-900">
-                        Password
+                        {isLoading ? (
+                          <Skeleton className="h-4 w-[500px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                        ) : (
+                          "Password"
+                        )}
                       </FormLabel>
                       <FormControl>
                         <div className="relative w-full rounded-[12px] ">
-                          <Input
-                            className={`border-solid-1 rounded-[10px] bg-transparent bg-white px-[12px] py-5 font-jakarta-sans text-sm font-normal text-neutral-700 ${form.formState.errors.password && "border-danger-400 focus-visible:ring-0"}`}
-                            type={visible ? "text" : "password"}
-                            placeholder="Masukan password admin"
-                            {...field}
-                          />
+                          {isLoading ? (
+                            <Skeleton className="ml-6 h-4 w-[700px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                          ) : (
+                            <Input
+                              className={`border-solid-1 rounded-[10px] bg-transparent bg-white px-[12px] py-5 font-jakarta-sans text-sm font-normal text-neutral-700 ${form.formState.errors.password && "border-danger-400 focus-visible:ring-0"}`}
+                              type={visible ? "text" : "password"}
+                              placeholder="Masukan password admin"
+                              {...field}
+                            />
+                          )}
                           <button
                             className="absolute right-3 top-2"
                             type="button"
@@ -240,33 +284,52 @@ export const FormEditAdmin = () => {
                 />
               </div>
             </div>
-            <div className="flex items-center justify-end gap-6">
-              <Link to={privateRoutes.ADMIN}>
+            <div className="flex items-center justify-between gap-6 sm:justify-end">
+              <Link to={privateRoutes.ADMIN} className="w-full sm:w-fit">
                 <Button
                   type="button"
-                  className="h-[42px] w-[150px] border border-primary-500 bg-white text-sm font-medium text-primary-500 hover:bg-primary-50 hover:text-primary-500 sm:w-[180px] sm:rounded-[12px]"
+                  className="h-[42px] w-full border border-primary-500 bg-white text-sm font-medium text-primary-500 hover:bg-primary-50 hover:text-primary-500 sm:w-[180px] sm:rounded-[12px]"
                 >
-                  Kembali
+                  {isLoading ? (
+                    <Skeleton className="ml-6 h-4 w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                  ) : (
+                    "Kembal"
+                  )}
                 </Button>
               </Link>
-              <div className="w-[150px] sm:w-[180px]">
-                <AlertConfirm
-                  textBtn="Simpan"
+              <div className="w-full sm:w-[180px]">
+              <Dialog
+                  action={handleSubmit}
+                  title="Edit Admin !"
+                  description="Pastikan perubahan Anda benar. Yakin ingin mengubah dan menyimpan data ini?"
+                  textSubmit="Simpan"
+                  textCancel="Periksa Kembali"
                   img={Edit}
-                  title="Edit Admin?"
-                  desc="Pastikan perubahan Anda benar. Yakin ingin mengubah dan menyimpan data ini?"
-                  textDialogCancel="Periksa Kembali"
-                  textDialogSubmit="Simpan"
-                  onConfirm={form.handleSubmit(onSubmit)}
-                  disabled={!form.watch("username")}
-                  openNotif={createUpdateMutation}
-                  isLoading={isLoading}
-                  //onClick={() => {handleConfirmClick}}
-                  backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
-                ></AlertConfirm>
+                >
+                  <button
+                    disabled={
+                      !form.watch("username")
+                    }
+                    className={`${!form.watch("username") ? "cursor-not-allowed bg-gray-400" : "bg-primary-500 hover:bg-primary-600"} h-[42px] w-full sm:w-[180px] text-[16px] font-medium text-neutral-100 rounded-[12px]`}
+                  >
+                    {isLoading ? (
+                      <Skeleton className="ml-6 h-4 sm:w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                    ) : (
+                      "Tambah"
+                    )}
+                  </button>
+                </Dialog>
               </div>
             </div>
           </form>
+          <Notification
+          title={isSuccess ? "Sukses !" : "Gagal !"}
+          description={
+            isSuccess ? "Proses berhasil dilakukan" : "Proses gagal dilakukan"
+          }
+          open={isSuccess || isError}
+          type={isSuccess ? "success" : "error"}
+        />
         </Form>
       </div>
     </div>

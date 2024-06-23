@@ -115,7 +115,8 @@ function App() {
         </Route>
 
         {/* Public Routes */}
-
+   
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<Navigate to="/dashboard" />} />
         <Route path="/login" element={<LoginPage />} />
 
