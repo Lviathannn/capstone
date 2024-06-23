@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import person from "@/assets/icons/person.png";
 import plus from "@/assets/icons/plus.png";
@@ -17,9 +17,15 @@ import TableSkeleton from "@/components/features/skeleton/TableSkeleton";
 import Dialog from "@/components/features/alert/Dialog";
 import Notification from "@/components/features/alert/Notification";
 import TrashCan from "@/components/icons/TrachCan";
+<<<<<<< HEAD
 import IcEdit from "@/components/icons/ic-edit.svg";
 import IcDelete from "@/assets/ImgModal/Ilustrasi-delete.svg";
 import { Skeleton } from "@/components/ui/skeleton";
+=======
+import DeleteImage from "@/assets/ImgModal/Ilustrasi-delete.svg";
+import { useDebounce } from "use-debounce";
+import IcSearch from "@/components/icons/Search";
+>>>>>>> 113126b85b6f489af5b0f294277173c1ba5c5a1c
 
 export const useGetUser = (page, searchQuery) => {
   const token = useSelector((state) => state.auth.user?.access_token);
@@ -38,19 +44,20 @@ export default function MenuUtama() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
-  const currentPage = parseInt(searchParams.get("page")) || 1;
-  const [searchQuery, setSearchQuery] = useState("");
-  const { data, error, isLoading } = useGetUser(currentPage, searchQuery);
+  const page = searchParams.get("page") || 1;
+  const [search, setSearch] = useState("");
+  const [searchQuery] = useDebounce(search, 1000);
+  const { data, error, isLoading } = useGetUser(page, searchQuery);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
-
+  const inputRef = useRef(null);
   const token = useSelector((state) => state.auth.user?.access_token);
 
   const createDeletedMutation = useMutation({
     mutationFn: (id) => deleteUsers(token, id),
     onSuccess: () => {
       setIsSuccess(true);
-      queryClient.invalidateQueries(["user", currentPage, searchQuery]);
+      queryClient.invalidateQueries(["user", page, searchQuery]);
     },
     onError: () => {
       setIsError(true);
@@ -62,6 +69,18 @@ export default function MenuUtama() {
       }, 2000);
     },
   });
+
+  useEffect(() => {
+    setSearchParams({ page: 1 });
+  }, [search, setSearchParams]);
+
+  useEffect(() => {
+    if (searchQuery !== "") {
+      setSearchParams({ page, search: searchQuery });
+    } else {
+      setSearchParams({ page });
+    }
+  }, [page, searchQuery, setSearchParams]);
 
   const handleDeleteUser = (user) => {
     const userId = user.id;
@@ -76,16 +95,16 @@ export default function MenuUtama() {
   const totalUsers = data?.pagination?.total || 0;
   const totalPages = data?.pagination?.last_page || 1;
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.nama_lengkap.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.no_telepon.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.jenis_kelamin.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.kota.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.provinsi.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  // const filteredUsers = users.filter(
+  //   (user) =>
+  //     user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     user.nama_lengkap.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     user.no_telepon.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     user.jenis_kelamin.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     user.kota.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //     user.provinsi.toLowerCase().includes(searchQuery.toLowerCase()),
+  // );
 
   const handleUserDetailClick = (user) => {
     const { id } = user;
@@ -97,11 +116,22 @@ export default function MenuUtama() {
     navigate(privateRoutes.USER + `/edit/${id}`);
   };
 
-  const paginate = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setSearchParams({ page: pageNumber });
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+  };
+
+  const handleClear = () => {
+    setSearch("");
+    if (inputRef.current) {
+      inputRef.current.value = "";
     }
   };
+
+  // const paginate = (pageNumber) => {
+  //   if (pageNumber >= 1 && pageNumber <= totalPages) {
+  //     setSearchParams({ page: pageNumber });
+  //   }
+  // };
 
   return (
     <ProtectedLayout>
@@ -116,17 +146,18 @@ export default function MenuUtama() {
             </p>
             <div className="mt-4 flex justify-between">
               <div className="flex w-1/2 items-center rounded-lg border px-4 py-3">
-                <img src={search} alt="Search Icon" className="mr-4 h-4 w-4" />
+                <img src={IcSearch} alt="Search Icon" className="mr-4 h-4 w-4" />
                 <input
                   type="text"
                   placeholder="Cari ..."
                   className="h-full w-full border-none bg-transparent font-jakarta-sans text-neutral-800 outline-none"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  ref={inputRef}
+                  name="search"
+                  onChange={handleSearchChange}
                 />
-                {searchQuery && (
+                {search && (
                   <button
-                    onClick={() => setSearchQuery("")}
+                    onClick={handleClear}
                     className="absolute right-3 top-3 h-4 w-4 text-neutral-800"
                   >
                     &times;
@@ -187,7 +218,7 @@ export default function MenuUtama() {
                 Array.from({ length: 10 }).map((_, index) => (
                   <TableSkeleton key={index} tableCell={7} />
                 ))}
-              {filteredUsers.map((user) => (
+              {data?.data?.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell
                     onClick={() => handleUserDetailClick(user)}
@@ -261,10 +292,14 @@ export default function MenuUtama() {
           </Table>
         </div>
         <div className="my-3 flex justify-center">
-          <Pagination
+          {/* <Pagination
             currentPage={data?.pagination.current_page}
             lastPage={data?.pagination?.last_page}
             onPageChange={paginate}
+          /> */}
+          <Pagination
+            currentPage={data?.pagination?.current_page}
+            lastPage={data?.pagination?.last_page}
           />
         </div>
       </div>
