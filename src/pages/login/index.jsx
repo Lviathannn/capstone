@@ -10,6 +10,7 @@ export function LoginPage() {
   if (user) {
     return <Navigate to={privateRoutes.DASHBOARD} />;
   }
+
   return (
     <div className="bg-image h-screen w-full bg-cover bg-center lg:grid lg:min-h-[600px] lg:grid-cols-2 ">
       <div className="container flex h-screen items-center justify-center rounded-none bg-neutral-50 py-12 lg:rounded-r-3xl">

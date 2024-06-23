@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
@@ -35,7 +34,7 @@ export default function DetailRoute() {
 
   return (
     <ProtectedLayout>
-      <div className="flex min-h-screen flex-col bg-primary-50 px-10 py-6 gap-6">
+      <div className="flex min-h-screen flex-col gap-6 bg-primary-50 px-10 py-6">
         <div className="rounded-lg bg-neutral-50 p-4 shadow-md">
           <div className="flex items-center justify-between">
             <div>

@@ -239,8 +239,8 @@ export default function DetailDestination() {
           </div>
         )}
 
-        {destination && destination?.status === 404 && (
-          <div className="flex h-full w-full flex-grow flex-col items-center justify-center gap-5">
+        {!destination && !isLoading && (
+          <div className="flex h-full w-full flex-grow flex-col items-center justify-center gap-5 pt-32">
             <img className="h-[200px] w-[200px]" src={notFoundImg} alt="" />
             <span className="mx-auto flex items-center text-[16px] font-medium">
               Maaf, Hasil Pencarian Tidak Ditemukan!

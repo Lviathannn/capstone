@@ -2,8 +2,13 @@ import { ChevronLeft } from "lucide-react";
 import { ChevronRight } from "lucide-react";
 import { Button } from "../ui/button";
 import { useSearchParams } from "react-router-dom";
+import { Skeleton } from "../ui/skeleton";
 
-export default function Pagination({ currentPage, lastPage }) {
+export default function Pagination({
+  currentPage,
+  lastPage,
+  isLoading = false,
+}) {
   // eslint-disable-next-line no-unused-vars
   const [_, setSearchParams] = useSearchParams();
 
@@ -21,9 +26,13 @@ export default function Pagination({ currentPage, lastPage }) {
           className="text-neutral-600 group-hover:text-white"
         />
       </Button>
-      <p className="text-sm font-bold text-neutral-600">
-        Page {currentPage} of {lastPage}
-      </p>
+      {isLoading ? (
+        <Skeleton className="h-8 w-24 bg-neutral-200" />
+      ) : (
+        <p className="text-sm font-bold text-neutral-600">
+          Page {currentPage} of {lastPage}
+        </p>
+      )}
       <Button
         size="icon"
         variant="outline"

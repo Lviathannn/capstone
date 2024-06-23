@@ -106,25 +106,27 @@ export default function HeaderAdmin() {
               <VideoIcon />
               Konten
             </NavLink>
-            <NavLink
-              to={privateRoutes.DESTINATION}
-              className={({ isActive }) => {
-                return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
-              }}
-            >
-              <DestinationIcon />
-              Destinasi
-            </NavLink>
             {user?.role == "super admin" && (
-              <NavLink
-                to={privateRoutes.ADMIN}
-                className={({ isActive }) => {
-                  return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
-                }}
-              >
-                <PeopleAltIcon />
-                Admin
-              </NavLink>
+              <>
+                <NavLink
+                  to={privateRoutes.DESTINATION}
+                  className={({ isActive }) => {
+                    return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
+                  }}
+                >
+                  <DestinationIcon />
+                  Destinasi
+                </NavLink>
+                <NavLink
+                  to={privateRoutes.ADMIN}
+                  className={({ isActive }) => {
+                    return `flex items-center gap-[10px] rounded-lg px-6 py-3 font-medium text-muted-foreground transition-all ${isActive ? "bg-primary-600 text-neutral-50" : "bg-neutral-50 text-primary-600 hover:bg-primary-600 hover:text-neutral-50"}`;
+                  }}
+                >
+                  <PeopleAltIcon />
+                  Admin
+                </NavLink>
+              </>
             )}
           </nav>
           <div className="flex flex-col px-2 lg:px-[10px]">

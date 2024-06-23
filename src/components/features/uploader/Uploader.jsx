@@ -1,17 +1,23 @@
 import Upload from "@/assets/icons/Upload";
-import Files from "react-files";
+import File from "react-files";
 import { toast } from "sonner";
 
-export default function Uploader({ setFile }) {
+export default function Uploader({ setFile, fileState }) {
   return (
-    <Files
+    <File
       className="flex aspect-video w-full items-center justify-center rounded-lg bg-neutral-100 object-cover object-center"
       onChange={(file) => {
         if (file.length === 0) {
-          setFile(null);
+          setFile({
+            ...fileState,
+            file: null,
+          });
           return;
         }
-        setFile(file);
+        setFile({
+          ...fileState,
+          file,
+        });
       }}
       onError={(error) => {
         const errorMessage = () => {
@@ -39,6 +45,6 @@ export default function Uploader({ setFile }) {
       clickable
     >
       <Upload />
-    </Files>
+    </File>
   );
 }
