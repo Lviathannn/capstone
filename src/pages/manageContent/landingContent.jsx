@@ -58,7 +58,6 @@ export default function LandingContent() {
   }, [page, searchQuery, setSearchParams]);
 
   const createDeletedMutation = useMutation({
-    // Mengakses token di dalam fungsi createDeletedMutation
     mutationFn: (id) => deleteContent(token, id),
     onSuccess: () => {
       setIsSuccess(true);
@@ -75,11 +74,9 @@ export default function LandingContent() {
     },
   });
 
-  // Handle pagination click
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  const handleUserClick = (user) => {
-    navigate(`${privateRoutes.CONTENT}/detail`, { state: { user } });
+  const handleDeleteContent = (content) => {
+    const contentId = content.id;
+    createDeletedMutation.mutate(contentId);
   };
 
   if (isLoading) {

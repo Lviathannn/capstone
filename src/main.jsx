@@ -7,6 +7,7 @@ import { persistor, store } from "@/lib/store.js";
 import { PersistGate } from "redux-persist/integration/react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+<<<<<<< HEAD
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "./components/features/error/ErrorFallback.jsx";
 import { BrowserRouter } from "react-router-dom";
@@ -18,19 +19,19 @@ const queryClient = new QueryClient({
     },
   },
 });
+=======
+
+const queryClient = new QueryClient();
+>>>>>>> e4c74baaea5ee6d5277a862088c7da7c485c926f
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <BrowserRouter>
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <QueryClientProvider client={queryClient}>
-              <App />
-              <ReactQueryDevtools initialIsOpen={false} client={queryClient} />
-            </QueryClientProvider>
-          </ErrorBoundary>
-        </BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <App />
+          <ReactQueryDevtools initialIsOpen={false} client={queryClient} />
+        </QueryClientProvider>
       </PersistGate>
     </Provider>
   </React.StrictMode>,

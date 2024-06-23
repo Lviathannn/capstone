@@ -29,11 +29,14 @@ import { useNavigate } from "react-router-dom";
 import { deleteDestination } from "@/services/destination/deleteDestionation";
 import Dialog from "@/components/features/alert/Dialog";
 import Notification from "@/components/features/alert/Notification";
+<<<<<<< HEAD
 import DeleteImage from "@/assets/ImgModal/Ilustrasi-delete.svg";
 import { Skeleton } from "@/components/ui/skeleton";
+=======
+>>>>>>> e4c74baaea5ee6d5277a862088c7da7c485c926f
 
 export default function DestinationPage() {
-  const token = useSelector((state) => state.auth?.user?.access_token);
+  const token = useSelector((state) => state.auth.user.access_token);
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 1000);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -221,12 +224,14 @@ export default function DestinationPage() {
                           <Pen />
                         </button>
                         <Dialog
-                          img={DeleteImage}
                           action={() => handleDelete(data?.id)}
-                          type="danger"
+                          type="delete"
                           title="Hapus Data !"
+<<<<<<< HEAD
                           textSubmit="Hapus"
                           textCancel="Batal"
+=======
+>>>>>>> e4c74baaea5ee6d5277a862088c7da7c485c926f
                           description="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
                         >
                           <button>

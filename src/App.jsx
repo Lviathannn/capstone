@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DetailAdmin } from "@/pages/ManageAdmin/DetailAdmin/index";
 import { AddAdmin } from "@/pages/ManageAdmin/AddAdmin/index";
 import { LoginPage } from "@/pages/login";
@@ -18,6 +18,7 @@ import EditContent from "@/pages/manageContent/editContent";
 import CreateContent from "@/pages/manageContent/createContent";
 import ManageRoute from "@/pages/ManageRoute/index";
 import DetailRoute from "@/pages/ManageRoute/DetailRoute";
+<<<<<<< HEAD
 import ProtectedRoute from "@/hooks/protectedRoute";
 import { privateRoutes } from "@/constant/routes";
 import DestinationPage from "@/pages/destination";
@@ -25,21 +26,19 @@ import CreateDestination from "@/pages/destination/create";
 import DetailDestination from "@/pages/destination/detail";
 import Spinner from "@/components/ui/Spinner";
 import NotFound from "@/components/features/error/NotFound";
+=======
+import ProtectedRoute from "./hooks/protectedRoute";
+import { privateRoutes } from "./constant/routes";
+import DestinationPage from "./pages/destination";
+import CreateDestination from "./pages/destination/create";
+import DetailDestination from "./pages/destination/detail";
+>>>>>>> e4c74baaea5ee6d5277a862088c7da7c485c926f
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
-  const loading = useSelector((state) => state.auth.loading);
-
-  if (currentUser === undefined || loading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center bg-white">
-        <Spinner />
-      </div>
-    );
-  }
 
   return (
-    <>
+    <BrowserRouter>
       <Routes>
         {/* Private Routes */}
         {/* Admin */}
@@ -72,6 +71,7 @@ function App() {
         />
         <Route
 <<<<<<< HEAD
+<<<<<<< HEAD
           path={`${privateRoutes.CONTENT}/detail`}
           element={<DetailContent />}
         />
@@ -83,6 +83,12 @@ function App() {
           element={currentUser ? <DetailContent /> : <Navigate to="/login" />}
         />
         <Route
+=======
+          path={`${privateRoutes.CONTENT}/detail/:id`}
+          element={currentUser ? <DetailContent /> : <Navigate to="/login" />}
+        />
+        <Route
+>>>>>>> e4c74baaea5ee6d5277a862088c7da7c485c926f
           path={`${privateRoutes.CONTENT}/edit/:id`}
           element={currentUser ? <EditContent /> : <Navigate to="/login" />}
 >>>>>>> 582f697 (fix: Fix Bug Conflict)
@@ -108,6 +114,7 @@ function App() {
         <Route path={privateRoutes.USER} element={<ManageUser />} />
 
         {/* Destination */}
+<<<<<<< HEAD
         <Route element={<ProtectedRoute requiredRole="super admin" />}>
           <Route
             path={privateRoutes.DESTINATION}
@@ -144,9 +151,33 @@ function App() {
         <Route path="manage-content/detail/:id" element={<DetailContent />} />
         <Route path="manage-content/edit" element={<EditContent />}/>
 >>>>>>> af21de2 (feat: Implement GET API, Read, and Delete)
+=======
+
+        <Route
+          path={privateRoutes.DESTINATION}
+          element={currentUser ? <DestinationPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path={privateRoutes.DESTINATION + "/create"}
+          element={
+            currentUser ? <CreateDestination /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path={privateRoutes.DESTINATION + "/detail/:id"}
+          element={
+            currentUser ? <DetailDestination /> : <Navigate to="/login" />
+          }
+        />
+
+        {/* Public Routes */}
+
+        <Route path="/" element={<Navigate to="/dashboard" />} />
+        <Route path="/login" element={<LoginPage />} />
+>>>>>>> e4c74baaea5ee6d5277a862088c7da7c485c926f
       </Routes>
       <Toaster />
-    </>
+    </BrowserRouter>
   );
 }
 

@@ -10,7 +10,6 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import notFoundImg from "@/assets/icons/not-found.svg";
-import Spinner from "@/components/ui/Spinner";
 
 export default function DetailDestination() {
   const token = useSelector((state) => state.auth.user.access_token);
@@ -23,7 +22,7 @@ export default function DetailDestination() {
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { data: destination, isLoading } = useQuery({
+  const { data: destination } = useQuery({
     queryKey: ["destination", id],
     queryFn: () => getDestination(token, id),
   });
@@ -53,13 +52,8 @@ export default function DetailDestination() {
             Kembali
           </Button>
         </div>
-        {isLoading && (
-          <div className="flex justify-center pt-52">
-            <Spinner />
-          </div>
-        )}
-        {destination && destination?.status === 200 && (
-          <div className="flex flex-col gap-5 lg:flex-row">
+        {destination?.status === 200 ? (
+          <div className="flex gap-5">
             <div className="w-full rounded-xl bg-neutral-50 p-5 shadow-md">
               {/* Image List */}
               <div className="flex w-full justify-center gap-2">
@@ -237,10 +231,15 @@ export default function DetailDestination() {
               </div>
             </div>
           </div>
+<<<<<<< HEAD
         )}
 
         {!destination && !isLoading && (
           <div className="flex h-full w-full flex-grow flex-col items-center justify-center gap-5 pt-32">
+=======
+        ) : (
+          <div className="flex h-full w-full flex-grow flex-col items-center justify-center gap-5">
+>>>>>>> e4c74baaea5ee6d5277a862088c7da7c485c926f
             <img className="h-[200px] w-[200px]" src={notFoundImg} alt="" />
             <span className="mx-auto flex items-center text-[16px] font-medium">
               Maaf, Hasil Pencarian Tidak Ditemukan!
