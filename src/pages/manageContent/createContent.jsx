@@ -9,20 +9,7 @@ import { toast } from 'sonner';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useNavigate } from "react-router-dom";
-import EditIcon from "@/assets/icons/edit photo.png";
 import Preview from "@/assets/img/preview-video.png";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import AlertAdd from "@/assets/img/alert add.png";
 import ReactPlayer from 'react-player';
 import { addContent } from '@/services/manageContent/addContent';
@@ -30,6 +17,35 @@ import { getDestination } from '@/services/manageContent/getDestination';
 import { AlertConfirm } from '@/components/features/alert/alertConfirm';
 import ProtectedLayout from '@/components/layout/ProtectedLayout';
 import { privateRoutes } from "@/constant/routes";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+export const useGetDestination = () => {
+  const token = useSelector((state) => state.auth.user?.access_token);
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["destination"],
+    queryFn: () => getDestination(token),
+    enabled: !!token,
+    onError: (error) => {
+      console.error("Query error:", error);
+    },
+  });
+  return { data, error, isLoading };
+};
+
+const formSchema = z.object({
+  destination_id: z.string().nonempty("Destination is required"),
+  url: z.string().url("Invalid URL format"),
+  title: z.string().nonempty("Title is required"),
+});
+
 export default function CreateContent() {
   const [visible, setVisible] = useState(false);
   const textareaRef = useRef(null);
@@ -49,6 +65,20 @@ export default function CreateContent() {
       destination_id: "",
       url: "",
       title: "",
+    },
+  });
+
+  const createPostMutation = useMutation({
+    mutationFn: (values) => addContent(token, { ...values, type: contentType }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["content"]);
+      toast.success("Content added successfully");
+      form.reset();
+      navigate(privateRoutes.CONTENT);
+    },
+    onError: (error) => {
+      console.error(error);
+      toast.error("Failed to add content");
     },
   });
 
@@ -88,21 +118,6 @@ export default function CreateContent() {
       console.error(error);
       toast.error("Failed to add content");
     }
-  };
-
-  const handleSelectChange = (name, value) => {
-    setUserContent((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleVideoChange = (e) => {
-    const file = e.target.files[0];
-    setUserContent((prevState) => ({
-      ...prevState,
-      video: file,
-    }));
   };
 
   return (

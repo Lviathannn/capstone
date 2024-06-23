@@ -51,7 +51,7 @@ const AlertDialogHeader = ({ className, ...props }) => (
 AlertDialogHeader.displayName = "AlertDialogHeader";
 
 const AlertDialogFooter = ({ className, ...props }) => (
-  <div className={cn("grid grid-cols-2 gap-3", className)} {...props} />
+  <div className={cn("flex gap-6", className)} {...props} />
 );
 AlertDialogFooter.displayName = "AlertDialogFooter";
 
@@ -90,7 +90,7 @@ const AlertDialogCancel = React.forwardRef(({ className, ...props }, ref) => (
     ref={ref}
     className={cn(
       buttonVariants({ variant: "outline" }),
-      "hover:bg-neutral-100 hover:text-neutral-800",
+      "mt-2 sm:mt-0",
       className,
     )}
     {...props}

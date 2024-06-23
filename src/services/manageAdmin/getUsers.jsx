@@ -1,8 +1,8 @@
 import { axiosInstance } from "@/lib/axios";
 
-export const getAllAdmins = async (token,page,search) => {
+export const getUsers = async (token,page) => {
   try {
-    const res = await axiosInstance.get(`admin/admins?page=${page}&limit=8&search=${search}`, {
+    const res = await axiosInstance.get(`admin/admins?page=${page}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data',
@@ -10,6 +10,7 @@ export const getAllAdmins = async (token,page,search) => {
     });
     return res.data;
   } catch (error) {
+    console.error("Error fetching users:", error); // Logging untuk debug
     throw new Error("Failed to fetch users");
   }
 };

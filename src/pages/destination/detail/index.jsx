@@ -10,7 +10,6 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import notFoundImg from "@/assets/icons/not-found.svg";
-import Spinner from "@/components/ui/Spinner";
 
 export default function DetailDestination() {
   const token = useSelector((state) => state.auth.user.access_token);

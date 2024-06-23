@@ -55,10 +55,10 @@ export default function DetailRoute() {
               </div>
             ) : (
               <div>
-                <h1 className="font-jakarta-sans text-[26px] font-bold text-neutral-800">
+                <p className="font-jakarta-sans text-[26px] font-bold text-neutral-800">
                   Detail Rute
-                </h1>
-                <p className="font-jakarta-sans text-base font-medium text-neutral-700">
+                </p>
+                <p className="font-jakarta-sans font-medium text-neutral-800">
                   Lihat detail rute pengguna
                 </p>
               </div>
