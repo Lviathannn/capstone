@@ -1,8 +1,8 @@
 import { axiosInstance } from "@/lib/axios";
 
-export const getContent = async (token,page) => {
+export const getContent = async (token,page,search) => {
   try {
-    const res = await axiosInstance.get(`/admin/destination-media?page=${page}`, {
+    const res = await axiosInstance.get(`/admin/destination-media?page=${page}&limit=8&search=${search}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
