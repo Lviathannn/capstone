@@ -18,7 +18,6 @@ export default function Dialog({
   type,
   img,
   textSubmit, textCancel,
-  actionTitle,
 }) {
   const handleConfirm = () => {
     action();
