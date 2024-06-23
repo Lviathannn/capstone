@@ -17,15 +17,11 @@ import TableSkeleton from "@/components/features/skeleton/TableSkeleton";
 import Dialog from "@/components/features/alert/Dialog";
 import Notification from "@/components/features/alert/Notification";
 import TrashCan from "@/components/icons/TrachCan";
-<<<<<<< HEAD
 import IcEdit from "@/components/icons/ic-edit.svg";
 import IcDelete from "@/assets/ImgModal/Ilustrasi-delete.svg";
 import { Skeleton } from "@/components/ui/skeleton";
-=======
-import DeleteImage from "@/assets/ImgModal/Ilustrasi-delete.svg";
 import { useDebounce } from "use-debounce";
-import IcSearch from "@/components/icons/Search";
->>>>>>> 113126b85b6f489af5b0f294277173c1ba5c5a1c
+import IcSearch from "@/assets/icons/search.png";
 
 export const useGetUser = (page, searchQuery) => {
   const token = useSelector((state) => state.auth.user?.access_token);
@@ -95,17 +91,6 @@ export default function MenuUtama() {
   const totalUsers = data?.pagination?.total || 0;
   const totalPages = data?.pagination?.last_page || 1;
 
-  // const filteredUsers = users.filter(
-  //   (user) =>
-  //     user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //     user.nama_lengkap.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //     user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //     user.no_telepon.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //     user.jenis_kelamin.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //     user.kota.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //     user.provinsi.toLowerCase().includes(searchQuery.toLowerCase()),
-  // );
-
   const handleUserDetailClick = (user) => {
     const { id } = user;
     navigate(privateRoutes.USER + `/detail/${id}`);
@@ -127,26 +112,35 @@ export default function MenuUtama() {
     }
   };
 
-  // const paginate = (pageNumber) => {
-  //   if (pageNumber >= 1 && pageNumber <= totalPages) {
-  //     setSearchParams({ page: pageNumber });
-  //   }
-  // };
-
   return (
     <ProtectedLayout>
       <div className="flex w-full flex-col gap-6 bg-primary-50 px-10 py-6 font-sans">
         <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-10 rounded-lg bg-neutral-50 p-4">
-            <h1 className="font-jakarta-sans text-[26px] font-[700] text-neutral-800">
-              Kelola User
-            </h1>
-            <p className="font-jakarta-sans text-[16px] font-[500] text-neutral-700">
-              Kelola data pengguna dengan mudah!
-            </p>
-            <div className="mt-4 flex justify-between">
-              <div className="flex w-1/2 items-center rounded-lg border px-4 py-3">
+        <div className="col-span-10 rounded-lg bg-neutral-50 p-4">
+          <h1 className="font-jakarta-sans text-[26px] font-[700] text-neutral-800">
+            {isLoading ? (
+              <Skeleton className="h-5 w-full bg-gradient-to-r my-3 rounded-full from-neutral-200 to-neutral-50/0" />
+            ) : (
+              "Kelola User"
+            )}
+          </h1>
+          <p className="font-jakarta-sans text-[16px] font-[500] text-neutral-700">
+            {isLoading ? (
+              <Skeleton className="h-3 w-full bg-gradient-to-r my-3 rounded-full from-neutral-200 to-neutral-50/0" />
+            ) : (
+              "Kelola data pengguna dengan mudah!"
+            )}
+          </p>
+          <div className="mt-4 flex justify-between">
+            <div className="flex w-1/2 items-center rounded-lg border px-4 py-3 relative">
+              {isLoading ? (
+                <Skeleton className="h-5 w-5 bg-gradient-to-r rounded-full from-neutral-200 to-neutral-50/0 mr-2" />
+              ) : (
                 <img src={IcSearch} alt="Search Icon" className="mr-4 h-4 w-4" />
+              )}
+              {isLoading ? (
+                <Skeleton className="h-5 w-full bg-gradient-to-r rounded-full from-neutral-200 to-neutral-50/0" />
+              ) : (
                 <input
                   type="text"
                   placeholder="Cari ..."
@@ -155,32 +149,41 @@ export default function MenuUtama() {
                   name="search"
                   onChange={handleSearchChange}
                 />
-                {search && (
-                  <button
-                    onClick={handleClear}
-                    className="absolute right-3 top-3 h-4 w-4 text-neutral-800"
-                  >
-                    &times;
-                  </button>
-                )}
-              </div>
-              <Link
-                to={privateRoutes.USER + "/create"}
-                className="flex items-center rounded-lg border px-10 py-3 font-jakarta-sans text-primary-500 shadow-sm"
-              >
-                <img src={plus} alt="Plus Icon" className="mr-4 h-6 w-6" />
-                Tambah ...
-              </Link>
+              )}
+              {search && (
+                <button
+                  onClick={handleClear}
+                  className="absolute right-3 top-3 h-4 w-4 text-neutral-800"
+                >
+                  &times;
+                </button>
+              )}
             </div>
+            <Link
+              to={privateRoutes.USER + "/create"}
+              className="flex items-center rounded-lg border px-10 py-3 font-jakarta-sans text-primary-500 shadow-sm"
+            >
+              {isLoading ? (
+                <Skeleton className="h-6 w-6 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0 mr-3" />
+              ) : (
+                <img src={plus} alt="Plus Icon" className="mr-4 h-6 w-6" />
+              )}
+              {isLoading ? (
+                <Skeleton className="h-4 w-16 bg-gradient-to-r rounded-lg from-neutral-200 to-neutral-50/0" />
+              ) : (
+                <span>Tambah ...</span>
+              )}
+            </Link>
           </div>
+        </div>
           <div className="items-left col-span-2 flex flex-col justify-center rounded-lg bg-neutral-50 p-4">
-            <img src={person} alt="Person Icon" className="mb-4 h-6 w-6" />
-            <p className="font-jakarta-sans text-[26px] font-[700] text-neutral-800">
+            {isLoading ? ( <Skeleton className="h-6 w-6 mb-5 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />) :<img src={person} alt="Person Icon" className="mb-4 h-6 w-6" />}
+            {isLoading ? ( <Skeleton className="h-6 w-full mb-3 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />) :<p className="font-jakarta-sans text-[26px] font-[700] text-neutral-800">
               {totalUsers}
-            </p>
-            <p className="font-jakarta-sans text-[16px] font-[400] text-neutral-800">
+            </p>}
+            {isLoading ? ( <Skeleton className="h-4 w-full rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />) :<p className="font-jakarta-sans text-[16px] font-[400] text-neutral-800">
               Total User
-            </p>
+            </p>}
           </div>
         </div>
         <div className="overflow-hidden rounded-xl border border-neutral-200">
@@ -216,7 +219,7 @@ export default function MenuUtama() {
             <TableBody className="bg-neutral-50 font-jakarta-sans">
               {isLoading &&
                 Array.from({ length: 10 }).map((_, index) => (
-                  <TableSkeleton key={index} tableCell={7} />
+                  <TableSkeleton key={index} tableCell={8} />
                 ))}
               {data?.data?.map((user) => (
                 <TableRow key={user.id}>
@@ -265,7 +268,7 @@ export default function MenuUtama() {
                   <TableCell>
                     <div className="flex items-center">
                       <button
-                        className="mr-2"
+                        className="mr-4"
                         onClick={() => handleUserClick(user)}
                       >
                         <img src={IcEdit} alt="Edit Icon" sizes="24" />
@@ -292,11 +295,6 @@ export default function MenuUtama() {
           </Table>
         </div>
         <div className="my-3 flex justify-center">
-          {/* <Pagination
-            currentPage={data?.pagination.current_page}
-            lastPage={data?.pagination?.last_page}
-            onPageChange={paginate}
-          /> */}
           <Pagination
             currentPage={data?.pagination?.current_page}
             lastPage={data?.pagination?.last_page}
