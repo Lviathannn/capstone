@@ -90,21 +90,25 @@ export default function SideBar() {
                 <VideoIcon />
                 Konten
               </Link>
-              <Link
-                to={privateRoutes.DESTINATION}
-                className={getLinkClasses(privateRoutes.DESTINATION)}
-              >
-                <DestinationIcon />
-                Destinasi
-              </Link>
+
               {user?.role == "super admin" && (
-                <Link
-                  to={privateRoutes.ADMIN}
-                  className={getLinkClasses(privateRoutes.ADMIN)}
-                >
-                  <PeopleAltIcon />
-                  Admin
-                </Link>
+                <>
+                  <Link
+                    to={privateRoutes.DESTINATION}
+                    className={getLinkClasses(privateRoutes.DESTINATION)}
+                  >
+                    <DestinationIcon />
+                    Destinasi
+                  </Link>
+
+                  <Link
+                    to={privateRoutes.ADMIN}
+                    className={getLinkClasses(privateRoutes.ADMIN)}
+                  >
+                    <PeopleAltIcon />
+                    Admin
+                  </Link>
+                </>
               )}
             </div>
           </nav>

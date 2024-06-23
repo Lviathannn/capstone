@@ -2,7 +2,6 @@ import search from "@/assets/icons/search.png";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const SearchRoute = ({ searchTerm, handleSearchChange, isLoading }) => {
-  console.log("isLoading", isLoading);
   return (
     <div className="col-span-8 rounded-lg bg-neutral-50 p-4 lg:col-span-10">
       {isLoading ? (

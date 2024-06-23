@@ -41,6 +41,11 @@ export const useGetAdminId = (id) => {
     queryKey: ["admin"],
     queryFn: () => getAdminById(token, id),
     enabled: !!token,
+<<<<<<< HEAD
+    onSuccess: () => {},
+
+=======
+>>>>>>> 15394f65daf295b94566025b5a96938c7ae25fa2
     onError: (error) => {
       toast.error("Data tidak berhasil ditampilkan");
     },
@@ -145,7 +150,6 @@ export const FormEditAdmin = () => {
       }
       createUpdateMutation.mutate(formData);
     } catch (error) {
-      console.log(error);
       toast.error("Tidak berhasil menambahkan Admin");
     }
   }

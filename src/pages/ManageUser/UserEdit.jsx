@@ -132,7 +132,6 @@ export default function UserEdit() {
 
   function onSubmit(values) {
     const formData = new FormData();
-    console.log(values);
     formData.append("username", values.username);
     if (values.password) {
       formData.append("password", values.password);

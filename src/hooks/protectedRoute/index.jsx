@@ -9,9 +9,6 @@ const ProtectedRoute = ({ requiredRole, children }) => {
   const [hasNavigated, setHasNavigated] = useState(false);
 
   useEffect(() => {
-    console.log("Current role:", role);
-    console.log("Required role:", requiredRole);
-
     if (role != requiredRole) {
       if (!hasNavigated) {
         toast.error("Hanya Super Admin yang memiliki akses");

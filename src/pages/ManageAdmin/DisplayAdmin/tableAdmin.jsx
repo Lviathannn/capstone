@@ -63,6 +63,8 @@ export const TableAdmin = () => {
   const inputRef = useRef(null);
 
   const navigate = useNavigate();
+<<<<<<< HEAD
+=======
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
 
@@ -77,6 +79,7 @@ export const TableAdmin = () => {
       setSearchParams({ page });
     }
   }, [page, searchQuery, setSearchParams]);
+>>>>>>> 15394f65daf295b94566025b5a96938c7ae25fa2
 
   const createDeletedMutation = useMutation({
     mutationFn: async (id) => {

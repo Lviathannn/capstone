@@ -1,8 +1,8 @@
 import { axiosInstance } from "@/lib/axios";
 
-export const updateAdmins = async (token, id, newData) => {
+export const addAdmins = async (token, values) => {
   try {
-    const res = await axiosInstance.put(`admin/admins/${id}`, newData, {
+    const res = await axiosInstance.post(`admin/admins`, values, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
@@ -10,6 +10,6 @@ export const updateAdmins = async (token, id, newData) => {
     });
     return res.data;
   } catch (error) {
-    throw new Error("Failed to update data admins");
+    throw new Error("Failed to fetch users");
   }
 };

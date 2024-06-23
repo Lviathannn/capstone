@@ -23,8 +23,8 @@ import { privateRoutes } from "@/constant/routes";
 import DestinationPage from "@/pages/destination";
 import CreateDestination from "@/pages/destination/create";
 import DetailDestination from "@/pages/destination/detail";
-import Spinner from "./components/ui/Spinner";
-import NotFound from "./components/features/error/NotFound";
+import Spinner from "@/components/ui/Spinner";
+import NotFound from "@/components/features/error/NotFound";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -46,111 +46,79 @@ function App() {
         <Route element={<ProtectedRoute requiredRole="super admin" />}>
           <Route
             path={`${privateRoutes.ADMIN}/detail/:id`}
-            element={currentUser ? <DetailAdmin /> : <Navigate to="/login" />}
+            element={<DetailAdmin />}
           />
           <Route
             path={`${privateRoutes.ADMIN}/edit/:id`}
-            element={currentUser ? <EditAdmin /> : <Navigate to="/login" />}
+            element={<EditAdmin />}
           />
           <Route
             path={`${privateRoutes.ADMIN}/create`}
-            element={currentUser ? <AddAdmin /> : <Navigate to="/login" />}
+            element={<AddAdmin />}
           />
-          <Route
-            path={privateRoutes.ADMIN}
-            element={currentUser ? <DisplayAdmin /> : <Navigate to="/login" />}
-          />
+          <Route path={privateRoutes.ADMIN} element={<DisplayAdmin />} />
         </Route>
         {/* Dashboard */}
 
-        <Route
-          path={privateRoutes.DASHBOARD}
-          element={currentUser ? <DashboardPage /> : <Navigate to="/login" />}
-        />
+        <Route path={privateRoutes.DASHBOARD} element={<DashboardPage />} />
 
         {/* Content */}
 
-        <Route
-          path={privateRoutes.CONTENT}
-          element={currentUser ? <ManageContent /> : <Navigate to="/login" />}
-        />
+        <Route path={privateRoutes.CONTENT} element={<ManageContent />} />
 
         <Route
           path={`${privateRoutes.CONTENT}/create`}
-          element={currentUser ? <CreateContent /> : <Navigate to="/login" />}
+          element={<CreateContent />}
         />
         <Route
           path={`${privateRoutes.CONTENT}/detail`}
-          element={currentUser ? <DetailContent /> : <Navigate to="/login" />}
+          element={<DetailContent />}
         />
         <Route
           path={`${privateRoutes.CONTENT}/edit`}
-          element={currentUser ? <EditContent /> : <Navigate to="/login" />}
+          element={<EditContent />}
         />
 
         {/* User */}
 
-        <Route
-          path={privateRoutes.USER}
-          element={currentUser ? <ManageUser /> : <Navigate to="/login" />}
-        />
+        <Route path={privateRoutes.USER} element={<ManageUser />} />
         <Route
           path={`${privateRoutes.USER}/detail/:id`}
-          element={currentUser ? <UserDetail /> : <Navigate to="/login" />}
+          element={<UserDetail />}
         />
-        <Route
-          path={`${privateRoutes.USER}/create`}
-          element={currentUser ? <UserCreate /> : <Navigate to="/login" />}
-        />
-        <Route
-          path={`${privateRoutes.USER}/edit/:id`}
-          element={currentUser ? <UserEdit /> : <Navigate to="/login" />}
-        />
+        <Route path={`${privateRoutes.USER}/create`} element={<UserCreate />} />
+        <Route path={`${privateRoutes.USER}/edit/:id`} element={<UserEdit />} />
 
         {/* Route */}
 
-        <Route
-          path={privateRoutes.ROUTE}
-          element={currentUser ? <ManageRoute /> : <Navigate to="/login" />}
-        />
-        <Route
-          path={`${privateRoutes.ROUTE}/:id`}
-          element={currentUser ? <DetailRoute /> : <Navigate to="/login" />}
-        />
+        <Route path={privateRoutes.ROUTE} element={<ManageRoute />} />
+        <Route path={`${privateRoutes.ROUTE}/:id`} element={<DetailRoute />} />
 
         {/* User */}
 
-        <Route
-          path={privateRoutes.USER}
-          element={currentUser ? <ManageUser /> : <Navigate to="/login" />}
-        />
+        <Route path={privateRoutes.USER} element={<ManageUser />} />
 
         {/* Destination */}
-        <Route
-          path={privateRoutes.DESTINATION}
-          element={currentUser ? <DestinationPage /> : <Navigate to="/login" />}
-        />
-        <Route
-          path={privateRoutes.DESTINATION + "/create"}
-          element={
-            currentUser ? <CreateDestination /> : <Navigate to="/login" />
-          }
-        />
-        <Route
-          path={privateRoutes.DESTINATION + "/detail/:id"}
-          element={
-            currentUser ? <DetailDestination /> : <Navigate to="/login" />
-          }
-        />
+        <Route element={<ProtectedRoute requiredRole="super admin" />}>
+          <Route
+            path={privateRoutes.DESTINATION}
+            element={<DestinationPage />}
+          />
+          <Route
+            path={privateRoutes.DESTINATION + "/create"}
+            element={<CreateDestination />}
+          />
+          <Route
+            path={privateRoutes.DESTINATION + "/detail/:id"}
+            element={<DetailDestination />}
+          />
+        </Route>
 
         {/* Public Routes */}
    
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<Navigate to="/dashboard" />} />
-        <Route
-          path="/login"
-          element={currentUser ? <Navigate to="/dashboard" /> : <LoginPage />}
-        />
+        <Route path="/login" element={<LoginPage />} />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
