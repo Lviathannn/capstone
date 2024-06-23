@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import content from "@/assets/icons/content.png";
 import plus from "@/assets/icons/plus.png";
 import search from "@/assets/icons/search.png";
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/table";
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
 import { privateRoutes } from "@/constant/routes";
+import Pagination from "@/components/features/Pagination"
 
 export const useGetContent = (page, searchQuery) => {
   const token = useSelector((state) => state.auth.user?.access_token);
@@ -95,7 +96,8 @@ export default function LandingContent() {
   ]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const { data, error, isLoading } = useGetContent(currentPage);
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(searchQuery);
+  const { data, error, isLoading } = useGetContent(currentPage, debouncedSearchQuery);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
 
