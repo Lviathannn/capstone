@@ -34,6 +34,7 @@ import Notification from "@/components/features/alert/Notification";
 import { useDebounce } from "use-debounce";
 import Pagination from "@/components/features/Pagination";
 import { NotFound } from "./NotFound";
+import Icdelete from "@/assets/ImgModal/Ilustrasi-delete.svg"
 import TableSkeleton from "@/components/features/skeleton/TableSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -119,23 +120,23 @@ export const TableAdmin = () => {
   };
 
   return (
-    <section className="container mx-auto flex h-full flex-col gap-6 py-6 ">
-      <div className="grid w-full items-center justify-between gap-4 sm:flex">
-        <div className="h-full overflow-hidden rounded-[10px] border-none shadow-md sm:w-full ">
+    <section className="px-6 sm:px-10 mx-auto flex h-full flex-col gap-6 py-6 w-full ">
+      <section className="grid h-full w-full items-center justify-between gap-4 sm:flex">
+        <div className="h-full w-full overflow-hidden rounded-[10px] border-none shadow-md">
           <Card
             x-chunk="dashboard-05-chunk-1"
-            className="flex w-full flex-col gap-4 bg-neutral-50 px-4"
+            className="flex w-full flex-col gap-4 bg-neutral-50"
           >
-            <CardHeader className="w-full pb-2">
-              <CardTitle className="text-[26px] font-bold text-neutral-800">
+            <CardHeader className="w-full p-4 pb-2">
+              <CardTitle className="text-[26px] w-full font-bold text-neutral-800">
               {isLoading? <Skeleton className="h-6 w-full rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />:"Kelola Admin"}
               </CardTitle>
-              <CardDescription className="text-[16px] font-medium text-neutral-700">
+              <CardDescription className="text-[16px] font-medium text-neutral-700 w-full">
               {isLoading? <Skeleton className="h-4 w-full rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />:"Kelola data admin dengan mudah!"}
               </CardDescription>
             </CardHeader>
 
-            <CardContent>
+            <CardContent className="px-4 w-full">
               <div className="grid w-full gap-3 sm:flex sm:items-center sm:gap-3 md:justify-between">
                 <div className="relative h-[48px] w-full bg-neutral-50 sm:w-full md:w-[400px]">
                 {isLoading? <Skeleton className="absolute left-3 top-2 h-4 w-[24px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />:<Search className="absolute left-3 top-3" />}
@@ -151,7 +152,7 @@ export const TableAdmin = () => {
                 }
                   {search && (
                     <Clear
-                      className="absolute right-3 top-3 opacity-75"
+                      className="absolute right-3 top-3 opacity-50"
                       onClick={handleClear}
                     />
                   )}
@@ -159,7 +160,7 @@ export const TableAdmin = () => {
                 </div>
                 <div>
                   <Link to={`${privateRoutes.ADMIN}/create`}>
-                    <Button className="flex w-full items-center gap-1 overflow-hidden rounded-[12px] border border-neutral-300 bg-transparent px-4 py-6 text-primary-500 shadow-sm hover:bg-neutral-100 sm:w-fit md:gap-4">
+                    <Button className="flex w-full items-center gap-1 overflow-hidden rounded-[12px] border border-neutral-300 bg-transparent px-10 py-6 text-primary-500 shadow-sm hover:bg-neutral-100 sm:w-fit md:gap-4">
                     {isLoading? <Skeleton className="h-4 w-[24px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />:<img src={IcAdd} sizes="24" alt="" />}
                     {isLoading? <Skeleton className="h-4 w-[100px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />:<span>Tambah Admin</span>}
                     </Button>
@@ -172,14 +173,14 @@ export const TableAdmin = () => {
         <div className="h-full w-full overflow-hidden rounded-[10px] border-none shadow-md sm:w-[218px] ">
           <Card
             x-chunk="dashboard-05-chunk-1"
-            className="flex h-full w-full flex-col bg-neutral-50 px-4 py-4"
+            className="flex py-4 w-full flex-col gap-2 bg-neutral-50"
           >
-            <CardHeader>
+            <CardHeader className="p-4">
               <CardDescription>
               {isLoading? <Skeleton className="h-4 w-[40px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />:<img src={IcAdmin} sizes="24" alt="" />}
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex flex-col gap-1">
+            <CardContent className="flex flex-col gap-1 px-4">
               <CardTitle className="text-2xl font-semibold text-neutral-900">
               {isLoading? <Skeleton className="h-6 w-full rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />:data?.pagination?.total}
               </CardTitle>
@@ -189,7 +190,7 @@ export const TableAdmin = () => {
             </CardContent>
           </Card>
         </div>
-      </div>
+      </section>
       {data?.data && data?.data?.length === 0 ? (
         <NotFound />
       ) : (
@@ -251,8 +252,9 @@ export const TableAdmin = () => {
                       <div>
                         <Dialog
                           action={() => handleDeletedById(item?.id)}
-                          type="delete"
+                          type="danger"
                           title="Hapus Admin !"
+                          img={Icdelete}
                           description="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
                           textSubmit="Hapus"
                           textCancel="Batal"

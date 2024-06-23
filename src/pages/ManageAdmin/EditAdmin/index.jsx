@@ -10,13 +10,13 @@ export const EditAdmin = () => {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
+    }, 500);
   },[setIsLoading])
 
   return (
     <ProtectedLayout>
       <section className="rounded-t-2xl  bg-primary-50">
-        <div className="container mx-auto ">
+        <div className="px-6 sm:px-10 mx-auto ">
           <div className="flex flex-col gap-10 py-6 ">
             <CardHead
               title={isloading ? (

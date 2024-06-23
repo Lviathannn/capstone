@@ -26,6 +26,8 @@ import { getAdminById } from "@/services/manageAdmin/getAdminById";
 import VisibilityOff from "@/components/icons/VisibilityOff";
 import { privateRoutes } from "@/constant/routes";
 import { Skeleton } from "@/components/ui/skeleton";
+import Dialog from "@/components/features/alert/Dialog";
+import Notification from "@/components/features/alert/Notification";
 
 const formSchema = zod.object({
   username: zod.string().min(6).max(16),
@@ -55,7 +57,8 @@ export const FormEditAdmin = () => {
   const token = useSelector((state) => state.auth.user?.access_token);
   const [visible, setVisible] = useState(false);
   const [preview, setPreview] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -69,17 +72,18 @@ export const FormEditAdmin = () => {
   const createUpdateMutation = useMutation({
     mutationFn: (values) => updateAdmins(token, id, values),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin"] });
-      toast.success("User update successfully");
-      //navigate(privateRoutes.ADMIN);
-      //setOpenSuccess(true);
+      setIsSuccess(true);
+    },
+    onSettled:() => {
+      queryClient.invalidateQueries({ queryKey: ["admin"] }); 
+      setTimeout(() => {
+        setIsSuccess(false);
+        setIsError(false);
+        navigate(privateRoutes.ADMIN);
+      }, 2000);
     },
     onError: (error) => {
-      //setOpenError(true);
-      navigate(privateRoutes.ADMIN);
-    },
-    onError: (error) => {
-      toast.error("Update data gagal dilakukan");
+      setIsError(true);
     },
   });
 
@@ -146,6 +150,17 @@ export const FormEditAdmin = () => {
     }
   }
 
+  const handleSubmit = () => {
+    form.handleSubmit(onSubmit)();
+    if (form.formState.errors) {
+      setIsError(true);
+      setTimeout(() => {
+        setIsError(false);
+      }, 2000);
+      toast.error("username dan passworod harus 6-16 karakter");
+    }
+  };
+
   return (
     <div className="flex flex-col gap-10">
       <div>
@@ -161,7 +176,7 @@ export const FormEditAdmin = () => {
                         <div className="relative w-fit rounded-full bg-neutral-200 sm:w-[212px] ">
                           <div className=" mx-auto">
                             {isLoading ? (
-                              <Skeleton className="h-[212px] w-[212px] rounded-full bg-neutral-200" />
+                              <Skeleton className="h-[180px] w-[180px] sm:h-[212px] sm:w-[212px] rounded-full bg-neutral-200" />
                             ) : (
                               <img
                                 className="h-[180px] w-[180px] rounded-full sm:h-[212px] sm:w-[212px]"
@@ -279,33 +294,38 @@ export const FormEditAdmin = () => {
                 </Button>
               </Link>
               <div className="w-full sm:w-[180px]">
-                <AlertConfirm
-                  textBtn={
-                    isLoading ? (
-                      <Skeleton className="ml-6 h-4 w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
-                    ) : (
-                      "Simpan"
-                    )
-                  }
+              <Dialog
+                  action={handleSubmit}
+                  title="Edit Admin !"
+                  description="Pastikan perubahan Anda benar. Yakin ingin mengubah dan menyimpan data ini?"
+                  textSubmit="Simpan"
+                  textCancel="Periksa Kembali"
                   img={Edit}
-                  title="Edit Admin?"
-                  desc="Pastikan perubahan Anda benar. Yakin ingin mengubah dan menyimpan data ini?"
-                  textDialogCancel="Periksa Kembali"
-                  textDialogSubmit="Simpan"
-                  onConfirm={form.handleSubmit(onSubmit)}
-                  disabled={!form.watch("username")}
-                  //successOpen={openSuccess}
-                  //setSuccessOpen={setOpenSuccess}
-                  //errorOpen={openError}
-                  openNotif={createUpdateMutation}
-                  isLoading={isLoading}
-                  //setErrorOpen={setOpenError}
-                  //onClick={() => {handleConfirmClick}}
-                  backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
-                ></AlertConfirm>
+                >
+                  <button
+                    disabled={
+                      !form.watch("username")
+                    }
+                    className={`${!form.watch("username") ? "cursor-not-allowed bg-gray-400" : "bg-primary-500 hover:bg-primary-600"} h-[42px] w-full sm:w-[180px] text-[16px] font-medium text-neutral-100 rounded-[12px]`}
+                  >
+                    {isLoading ? (
+                      <Skeleton className="ml-6 h-4 sm:w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                    ) : (
+                      "Tambah"
+                    )}
+                  </button>
+                </Dialog>
               </div>
             </div>
           </form>
+          <Notification
+          title={isSuccess ? "Sukses !" : "Gagal !"}
+          description={
+            isSuccess ? "Proses berhasil dilakukan" : "Proses gagal dilakukan"
+          }
+          open={isSuccess || isError}
+          type={isSuccess ? "success" : "error"}
+        />
         </Form>
       </div>
     </div>

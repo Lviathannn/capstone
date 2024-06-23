@@ -26,20 +26,22 @@ export const FormDetail = () => {
   const { id } = useParams();
 
   const { data, error, isLoading } = useGetAdminId(id);
-  
 
+  console.log(data?.data);
+  console.log(error);
   return (
     <div className="flex flex-col gap-5 sm:gap-10">
-      <div className="grid h-fit w-full items-center gap-5 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-6 py-8 shadow-md sm:flex sm:gap-10 sm:py-[132px]">
+      <div className="grid h-fit w-full items-center gap-5 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-4 py-8 shadow-md sm:flex sm:gap-10 sm:py-[132px]">
         <div className="mx-auto w-fit rounded-full bg-neutral-200 sm:w-[212px]">
-        {isLoading ? (
-                              <Skeleton className="h-[212px] w-[212px] rounded-full bg-neutral-200" />
-                            ) : (
-          <img
-            className="h-[180px] w-[180px] rounded-full sm:h-[212px] sm:w-[212px]"
-            src={data?.data?.foto_profil || DefaultPhoto}
-            alt="photo"
-          />)}
+          {isLoading ? (
+            <Skeleton className="h-[212px] w-[212px] rounded-full bg-neutral-200" />
+          ) : (
+            <img
+              className="h-[180px] w-[180px] rounded-full sm:h-[212px] sm:w-[212px]"
+              src={data?.data?.foto_profil || DefaultPhoto}
+              alt="photo"
+            />
+          )}
         </div>
         <form action="" className="mx-auto flex w-full flex-1 flex-col gap-10">
           <div className="flex w-full gap-10">

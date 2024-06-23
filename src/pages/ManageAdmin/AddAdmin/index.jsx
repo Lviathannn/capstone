@@ -18,7 +18,7 @@ export const AddAdmin = () => {
         className="rounded-t-2xl bg-primary-50"
         style={{ minHeight: "calc(100vh - 80px)" }}
       >
-        <div className="container mx-auto ">
+        <div className="px-6 sm:px-10 mx-auto ">
           <div className="flex flex-col gap-10 py-6 ">
             <CardHead
               title={isloading ? (

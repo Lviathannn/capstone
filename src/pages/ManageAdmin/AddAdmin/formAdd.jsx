@@ -40,17 +40,15 @@ export const FormAddAdmin = () => {
   const token = useSelector((state) => state.auth.user?.access_token);
   const [visible, setVisible] = useState(false);
   const [preview, setPreview] = useState(null);
-<<<<<<< HEAD
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [isloading, setIsLoading] = useState(true);
-=======
->>>>>>> 5bd931bae1deb4ae11195a87736d1ae3c5db243e
+  const [isLoading, setIsLoading] = useState(true);
+  const [showNotif, setShowNotif] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "", 
+      username: "",
       password: "",
       foto_profil: null, // Allowing nullable foto for validation
     },
@@ -58,31 +56,20 @@ export const FormAddAdmin = () => {
 
   const createPostMutation = useMutation({
     mutationFn: async (values) => addAdmins(token, values),
-    onSuccess: (data) => {
-      console.log("Mutation successful");
+    onSuccess: () => {  
       setIsSuccess(true);
-      //navigate(privateRoutes.ADMIN);
     },
-    onSettled: (data, error) => {
-      console.log("onSettled successful", data, error);
+     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["admin"] });
-<<<<<<< HEAD
-      setTimeout(() => {
-        setIsSuccess(false);
-        setIsError(false);
-      }, 2000);
-    },
+        setTimeout(() => {
+          setIsSuccess(false);
+          setIsError(false);
+          navigate(privateRoutes.ADMIN);
+        }, 2000);
+     },
     onError: () => {
       console.log("Mutation failed");
       setIsError(true);
-=======
-      toast.success("User added successfully");
-      form.reset();
-      navigate(privateRoutes.ADMIN);
-    },
-    onError: () => {
-      toast.error("Failed to add user");
->>>>>>> 5bd931bae1deb4ae11195a87736d1ae3c5db243e
     },
   });
 
@@ -110,16 +97,20 @@ export const FormAddAdmin = () => {
 
   const handleSubmit = () => {
     form.handleSubmit(onSubmit)();
-    if (form.formState.errors){
+    if (form.formState.errors.username || form.formState.errors.password) {
+      setIsError(true);
+      setTimeout(() => {
+        setIsError(false);
+      }, 2000);
       toast.error("username dan passworod harus 6-16 karakter");
     }
-  }
+  };
 
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
-  },[setIsLoading])
+    }, 500);
+  }, [setIsLoading]);
 
   return (
     <div className="flex flex-col gap-10">
@@ -135,15 +126,15 @@ export const FormAddAdmin = () => {
                       <FormControl>
                         <div className="relative w-fit rounded-full bg-neutral-200 sm:w-[212px] ">
                           <div className=" mx-auto">
-                          {isloading ? (
-                      <Skeleton className="h-[212px] w-[212px] rounded-full bg-neutral-200" />
-                    ) : (
-                            <img
-                              className="h-[180px] w-[180px] rounded-full sm:h-[212px] sm:w-[212px]"
-                              src={preview || DefaultPhoto}
-                              alt="photo"
-                            />
-                    )}
+                            {isLoading ? (
+                              <Skeleton className="h-[212px] w-[212px] rounded-full bg-neutral-200" />
+                            ) : (
+                              <img
+                                className="h-[180px] w-[180px] rounded-full sm:h-[212px] sm:w-[212px]"
+                                src={preview || DefaultPhoto}
+                                alt="photo"
+                              />
+                            )}
                           </div>
                           <div className="absolute left-0 top-0 rounded-full">
                             <Input
@@ -181,23 +172,23 @@ export const FormAddAdmin = () => {
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
                       <FormLabel className="font-jakarta-sans text-sm font-bold text-neutral-900">
-                      {isloading ? (
-                      <Skeleton className="h-4 w-[500px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
-                    ) : (
-                      "Username"
-                    )}
+                        {isLoading ? (
+                          <Skeleton className="h-4 w-[500px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                        ) : (
+                          "Username"
+                        )}
                       </FormLabel>
                       <FormControl>
-                      {isloading ? (
-                      <Skeleton className="h-4 w-[700px] ml-6 rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
-                    ) : (
-                        <Input
-                          type="text"
-                          className={`border-solid-1 rounded-[10px] bg-transparent bg-white px-[12px] py-5 font-jakarta-sans text-sm font-normal text-neutral-700 ${form.formState.errors.username && "border-danger-400 focus-visible:ring-0"}`}
-                          placeholder="Masukan nama admin"
-                          {...field}
-                        />
-                      )}
+                        {isLoading ? (
+                          <Skeleton className="ml-6 h-4 w-[700px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                        ) : (
+                          <Input
+                            type="text"
+                            className={`border-solid-1 rounded-[10px] bg-transparent bg-white px-[12px] py-5 font-jakarta-sans text-sm font-normal text-neutral-700 ${form.formState.errors.username && "border-danger-400 focus-visible:ring-0"}`}
+                            placeholder="Masukan nama admin"
+                            {...field}
+                          />
+                        )}
                       </FormControl>
                     </FormItem>
                   )}
@@ -208,22 +199,23 @@ export const FormAddAdmin = () => {
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
                       <FormLabel className="font-jakarta-sans text-sm font-bold text-neutral-900">
-                      {isloading ? (
-                      <Skeleton className="h-4 w-[500px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
-                    ) : ("Password")}
+                        {isLoading ? (
+                          <Skeleton className="h-4 w-[500px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                        ) : (
+                          "Password"
+                        )}
                       </FormLabel>
                       <FormControl>
-                      
                         <div className="relative w-full rounded-[12px] ">
-                        {isloading ? (
-                      <Skeleton className="h-4 w-[700px] ml-6 rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
-                    ) : (
-                          <Input
-                            className={`border-solid-1 rounded-[10px] bg-transparent bg-white px-[12px] py-5 font-jakarta-sans text-sm font-normal text-neutral-700 ${form.formState.errors.password && "border-danger-400 focus-visible:ring-0"}`}
-                            type={visible ? "text" : "password"}
-                            placeholder="Masukan password admin"
-                            {...field}
-                          />
+                          {isLoading ? (
+                            <Skeleton className="ml-6 h-4 w-[700px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                          ) : (
+                            <Input
+                              className={`border-solid-1 rounded-[10px] bg-transparent bg-white px-[12px] py-5 font-jakarta-sans text-sm font-normal text-neutral-700 ${form.formState.errors.password && "border-danger-400 focus-visible:ring-0"}`}
+                              type={visible ? "text" : "password"}
+                              placeholder="Masukan password admin"
+                              {...field}
+                            />
                           )}
                           <button
                             className="absolute right-3 top-2"
@@ -233,7 +225,6 @@ export const FormAddAdmin = () => {
                             {visible ? <VisibilityOff /> : <Eye />}
                           </button>
                         </div>
-                    
                       </FormControl>
                     </FormItem>
                   )}
@@ -242,13 +233,14 @@ export const FormAddAdmin = () => {
             </div>
             <div className="flex items-center justify-between gap-6 sm:justify-end">
               <Link to={privateRoutes.ADMIN} className="w-full sm:w-fit">
-                <Button className="h-[42px] w-full border border-primary-500 bg-white text-sm font-medium text-primary-500 hover:bg-primary-50 hover:text-primary-500 sm:w-[180px] sm:rounded-[12px]">
-                {isloading ? (
-                      <Skeleton className="h-4 w-[120px] ml-6 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
-                    ) : ("Kembali")}
+                <Button className="h-[42px] w-full border border-primary-500 bg-white text-sm font-medium text-primary-500 hover:bg-primary-50 hover:text-primary-500 sm:w-[180px] rounded-[12px]">
+                  {isLoading ? (
+                    <Skeleton className="ml-6 h-4 w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                  ) : (
+                    "Kembali"
+                  )}
                 </Button>
               </Link>
-<<<<<<< HEAD
               <div className="w-full sm:w-[180px]">
                 <Dialog
                   action={handleSubmit}
@@ -256,37 +248,26 @@ export const FormAddAdmin = () => {
                   description="Pastikan informasi benar dan sesuai sebelum menambahkan data. Yakin ingin menambahkan data ini?"
                   textSubmit="Tambah"
                   textCancel="Batal"
+                  img={Add}
                 >
                   <button
                     disabled={
                       !form.watch("username") || !form.watch("password")
                     }
-                    className={`${!form.watch("username") || !form.watch("password")? "cursor-not-allowed bg-gray-400": "bg-primary-500 hover:bg-primary-600"} h-[42px] w-[180px] text-[16px] font-medium text-neutral-100 sm:rounded-[12px]`}
+                    className={`${!form.watch("username") || !form.watch("password") ? "cursor-not-allowed bg-gray-400" : "bg-primary-500 hover:bg-primary-600"} h-[42px] w-full sm:w-[180px] text-[16px] font-medium text-neutral-100 rounded-[12px]`}
                   >
-                    {isloading ? (
-                      <Skeleton className="h-4 w-[120px] ml-6 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
-                    ) : ("Tambah")}
+                    {isLoading ? (
+                      <Skeleton className="ml-6 h-4 sm:w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                    ) : (
+                      "Tambah"
+                    )}
                   </button>
                 </Dialog>
-=======
-              <div className="w-[150px] sm:w-[180px]">
-                <AlertConfirm
-                  textBtn="Tambah"
-                  img={Add}
-                  title="Tambah Admin?"
-                  desc="Pastikan informasi benar dan sesuai sebelum menambahkan data. Yakin ingin menambahkan data ini?"
-                  textDialogCancel="Batal"
-                  textDialogSubmit="Tambah"
-                  onConfirm={form.handleSubmit(onSubmit)}
-                  disabled={!form.watch("username") || !form.watch("password")}
-                  backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
-                  openNotif={createPostMutation}
-                />
->>>>>>> 5bd931bae1deb4ae11195a87736d1ae3c5db243e
               </div>
             </div>
           </form>
         </Form>
+         
         <Notification
           title={isSuccess ? "Sukses !" : "Gagal !"}
           description={

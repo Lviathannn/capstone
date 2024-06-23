@@ -46,7 +46,7 @@ export const AlertConfirm = ({
   useEffect(() => {
     console.log("showModal updated:", open);
     console.log(openNotif.isSuccess);
-  }, [showModal, openNotif]);
+  }, [open, openNotif]);
 
   return (
     <div>
