@@ -46,33 +46,42 @@ function App() {
         <Route element={<ProtectedRoute requiredRole="super admin" />}>
           <Route
             path={`${privateRoutes.ADMIN}/detail/:id`}
-            element={<DetailAdmin />}
+            element={currentUser ? <DetailAdmin /> : <Navigate to="/login" />}
           />
           <Route
             path={`${privateRoutes.ADMIN}/edit/:id`}
-            element={<EditAdmin />}
+            element={currentUser ? <EditAdmin /> : <Navigate to="/login" />}
           />
           <Route
             path={`${privateRoutes.ADMIN}/create`}
-            element={<AddAdmin />}
+            element={currentUser ? <AddAdmin /> : <Navigate to="/login" />}
           />
-          <Route path={privateRoutes.ADMIN} element={<DisplayAdmin />} />
+          <Route
+            path={privateRoutes.ADMIN}
+            element={currentUser ? <DisplayAdmin /> : <Navigate to="/login" />}
+          />
         </Route>
         {/* Dashboard */}
 
-        <Route path={privateRoutes.DASHBOARD} element={<DashboardPage />} />
+        <Route
+          path={privateRoutes.DASHBOARD}
+          element={currentUser ? <DashboardPage /> : <Navigate to="/login" />}
+        />
 
         {/* Content */}
 
-        <Route path={privateRoutes.CONTENT} element={<ManageContent />} />
+        <Route
+          path={privateRoutes.CONTENT}
+          element={currentUser ? <ManageContent /> : <Navigate to="/login" />}
+        />
 
         <Route
           path={`${privateRoutes.CONTENT}/create`}
-          element={<CreateContent />}
+          element={currentUser ? <CreateContent /> : <Navigate to="/login" />}
         />
         <Route
           path={`${privateRoutes.CONTENT}/detail`}
-          element={<DetailContent />}
+          element={currentUser ? <DetailContent /> : <Navigate to="/login" />}
         />
         <Route
           path={`${privateRoutes.CONTENT}/edit`}
@@ -81,22 +90,40 @@ function App() {
 
         {/* User */}
 
-        <Route path={privateRoutes.USER} element={<ManageUser />} />
+        <Route
+          path={privateRoutes.USER}
+          element={currentUser ? <ManageUser /> : <Navigate to="/login" />}
+        />
         <Route
           path={`${privateRoutes.USER}/detail/:id`}
-          element={<UserDetail />}
+          element={currentUser ? <UserDetail /> : <Navigate to="/login" />}
         />
-        <Route path={`${privateRoutes.USER}/create`} element={<UserCreate />} />
-        <Route path={`${privateRoutes.USER}/edit/:id`} element={<UserEdit />} />
+        <Route
+          path={`${privateRoutes.USER}/create`}
+          element={currentUser ? <UserCreate /> : <Navigate to="/login" />}
+        />
+        <Route
+          path={`${privateRoutes.USER}/edit/:id`}
+          element={currentUser ? <UserEdit /> : <Navigate to="/login" />}
+        />
 
         {/* Route */}
 
-        <Route path={privateRoutes.ROUTE} element={<ManageRoute />} />
-        <Route path={`${privateRoutes.ROUTE}/:id`} element={<DetailRoute />} />
+        <Route
+          path={privateRoutes.ROUTE}
+          element={currentUser ? <ManageRoute /> : <Navigate to="/login" />}
+        />
+        <Route
+          path={`${privateRoutes.ROUTE}/:id`}
+          element={currentUser ? <DetailRoute /> : <Navigate to="/login" />}
+        />
 
         {/* User */}
 
-        <Route path={privateRoutes.USER} element={<ManageUser />} />
+        <Route
+          path={privateRoutes.USER}
+          element={currentUser ? <ManageUser /> : <Navigate to="/login" />}
+        />
 
         {/* Destination */}
         <Route element={<ProtectedRoute requiredRole="super admin" />}>
