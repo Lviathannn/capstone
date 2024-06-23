@@ -152,7 +152,7 @@ export const FormEditAdmin = () => {
 
   const handleSubmit = () => {
     form.handleSubmit(onSubmit)();
-    if (form.formState.errors) {
+    if (form.formState.errors.username || form.formState.errors.password) {
       setIsError(true);
       setTimeout(() => {
         setIsError(false);
