@@ -288,7 +288,7 @@ export const FormEditAdmin = () => {
                   {isLoading ? (
                     <Skeleton className="ml-6 h-4 w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
                   ) : (
-                    "Kembal"
+                    "Kembali"
                   )}
                 </Button>
               </Link>
