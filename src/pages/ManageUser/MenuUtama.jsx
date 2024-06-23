@@ -4,15 +4,7 @@ import { useNavigate } from "react-router-dom";
 import person from "@/assets/icons/person.png";
 import plus from "@/assets/icons/plus.png";
 import search from "@/assets/icons/search.png";
-import edit from "@/assets/icons/edit.png";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useSelector } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getUsers } from "@/services/manageUser/getUsers";
@@ -25,7 +17,9 @@ import TableSkeleton from "@/components/features/skeleton/TableSkeleton";
 import Dialog from "@/components/features/alert/Dialog";
 import Notification from "@/components/features/alert/Notification";
 import TrashCan from "@/components/icons/TrachCan";
-import DeleteImage from "@/assets/ImgModal/Ilustrasi-delete.svg";
+import IcEdit from "@/components/icons/ic-edit.svg";
+import IcDelete from "@/assets/ImgModal/Ilustrasi-delete.svg";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const useGetUser = (page, searchQuery) => {
   const token = useSelector((state) => state.auth.user?.access_token);
@@ -163,35 +157,35 @@ export default function MenuUtama() {
             <TableHeader className="bg-primary-500 text-sm font-semibold">
               <TableRow>
                 <TableHead className="font-jakarta-sans text-neutral-50">
-                  Nama Pengguna
+                  {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Nama Pengguna"}
                 </TableHead>
                 <TableHead className="font-jakarta-sans text-neutral-50">
-                  Nama Lengkap
+                  {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Nama Lengkap"}
                 </TableHead>
                 <TableHead className="font-jakarta-sans text-neutral-50">
-                  Email
+                  {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Email"}
                 </TableHead>
                 <TableHead className="font-jakarta-sans text-neutral-50">
-                  Nomor Telepon
+                  {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Nomor Telepon"}
                 </TableHead>
                 <TableHead className="font-jakarta-sans text-neutral-50">
-                  Jenis Kelamin
+                  {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Jenis Kelamin"}
                 </TableHead>
                 <TableHead className="font-jakarta-sans text-neutral-50">
-                  Kota
+                  {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Kota"}
                 </TableHead>
                 <TableHead className="font-jakarta-sans text-neutral-50">
-                  Provinsi
+                  {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Provinsi"}
                 </TableHead>
                 <TableHead className="font-jakarta-sans text-neutral-50">
-                  Aksi
+                  {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Aksi"}
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="bg-neutral-50 font-jakarta-sans">
               {isLoading &&
                 Array.from({ length: 10 }).map((_, index) => (
-                  <TableSkeleton key={index} />
+                  <TableSkeleton key={index} tableCell={7} />
                 ))}
               {filteredUsers.map((user) => (
                 <TableRow key={user.id}>
@@ -243,15 +237,17 @@ export default function MenuUtama() {
                         className="mr-2"
                         onClick={() => handleUserClick(user)}
                       >
-                        <img src={edit} alt="Edit Icon" className="h-6 w-6" />
+                        <img src={IcEdit} alt="Edit Icon" sizes="24" />
                       </button>
                       <Dialog
-                        img={DeleteImage}
+                        img={IcDelete}
                         actionTitle="Hapus"
                         action={() => handleDeleteUser(user)}
                         type="danger"
                         title="Hapus Data !"
                         description="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
+                        textSubmit="Hapus"
+                        textCancel="Batal"
                       >
                         <button>
                           <TrashCan />

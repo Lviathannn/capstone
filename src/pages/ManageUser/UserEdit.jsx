@@ -12,19 +12,12 @@ import VisibilityOff from "@/components/icons/VisibilityOff";
 import Edit from "@/assets/ImgModal/Ilustrasi-edit.svg";
 import { updateUsers } from "@/services/manageUser/updateUsers";
 import { getUserById } from "@/services/manageUser/getUserById";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { z as zod } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { AlertConfirm } from "@/components/features/alert/alertConfirm";
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
 import { privateRoutes } from "@/constant/routes";
 import Notification from "@/components/features/alert/Notification";
@@ -32,15 +25,15 @@ import Dialog from "@/components/features/alert/Dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const formSchema = zod.object({
-  username: zod.string().min(2).max(50),
-  password: zod.string().min(1).max(50),
+  username: zod.string().min(2, "Username harus minimal 2 karakter").max(50),
+  password: zod.string().max(50).optional(),
   foto_profil: zod.any().nullable(),
-  nama_lengkap: zod.string().min(1).max(100),
-  email: zod.string().email(),
-  no_telepon: zod.string().min(10).max(15),
-  jenis_kelamin: zod.string().min(1),
-  provinsi: zod.string().min(1),
-  kota: zod.string().min(1),
+  nama_lengkap: zod.string().min(1, "Nama lengkap wajib diisi").max(100),
+  email: zod.string().min(1, "Email harus diisi").email("Email tidak valid"),
+  no_telepon: zod.string().min(1, "Nomor telepon harus diisi").min(10, "Nomor telepon minimal 10 karakter").max(15, "Nomor telepon maksimal 15 karakter"),
+  jenis_kelamin: zod.string().optional(),
+  provinsi: zod.string().optional(),
+  kota: zod.string().optional(),
 });
 
 export const useGetUserId = (id) => {
@@ -71,8 +64,6 @@ export default function UserEdit() {
   const [preview, setPreview] = useState(null);
   const { id } = useParams();
   const { data, isLoading } = useGetUserId(id);
-  const [openSuccess, setOpenSuccess] = useState(false);
-  const [openError, setOpenError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
 
@@ -145,7 +136,6 @@ export default function UserEdit() {
 
   function onSubmit(values) {
     const formData = new FormData();
-    console.log(values);
     formData.append("username", values.username);
     if (values.password) {
       formData.append("password", values.password);
@@ -158,9 +148,15 @@ export default function UserEdit() {
     formData.append("nama_lengkap", values.nama_lengkap);
     formData.append("email", values.email);
     formData.append("no_telepon", values.no_telepon);
-    formData.append("jenis_kelamin", values.jenis_kelamin);
-    formData.append("provinsi", values.provinsi);
-    formData.append("kota", values.kota);
+    if (values.jenis_kelamin) {
+      formData.append("jenis_kelamin", values.jenis_kelamin);
+    }
+    if (values.provinsi) {
+      formData.append("provinsi", values.provinsi);
+    }
+    if (values.kota) {
+      formData.append("kota", values.kota);
+    }
     createUpdateMutation.mutate(formData);
   }
 
@@ -237,7 +233,12 @@ export default function UserEdit() {
                 <FormField
                   control={form.control}
                   name="username"
-                  render={({ field }) => <Input {...field} />}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <Input {...field} className={fieldState.invalid ? "border-danger-400" : ""} />
+                      {fieldState.error && <p className="text-danger-400 text-xs">{fieldState.error.message}</p>}
+                    </>
+                  )}
                 />
               </FormItem>
               <FormItem className="col-span-6 mb-3">
@@ -247,7 +248,12 @@ export default function UserEdit() {
                 <FormField
                   control={form.control}
                   name="nama_lengkap"
-                  render={({ field }) => <Input {...field} />}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <Input {...field} className={fieldState.invalid ? "border-danger-400" : ""} />
+                      {fieldState.error && <p className="text-danger-400 text-xs">{fieldState.error.message}</p>}
+                    </>
+                  )}
                 />
               </FormItem>
               <FormItem className="relative col-span-12 mb-3">
@@ -282,7 +288,12 @@ export default function UserEdit() {
                 <FormField
                   control={form.control}
                   name="email"
-                  render={({ field }) => <Input type="email" {...field} />}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <Input type="email" {...field} className={fieldState.invalid ? "border-danger-400" : ""} />
+                      {fieldState.error && <p className="text-danger-400 text-xs">{fieldState.error.message}</p>}
+                    </>
+                  )}
                 />
               </FormItem>
               <FormItem className="col-span-6 mb-3">
@@ -292,7 +303,12 @@ export default function UserEdit() {
                 <FormField
                   control={form.control}
                   name="no_telepon"
-                  render={({ field }) => <Input {...field} />}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <Input {...field} className={fieldState.invalid ? "border-danger-400" : ""} />
+                      {fieldState.error && <p className="text-danger-400 text-xs">{fieldState.error.message}</p>}
+                    </>
+                  )}
                 />
               </FormItem>
               <FormItem className="col-span-12 mb-3">
@@ -356,32 +372,15 @@ export default function UserEdit() {
                   img={Edit}
                 >
                   <button
-                    
-                    className={`bg-primary-500 hover:bg-primary-600 h-[42px] w-full sm:w-[180px] text-[16px] font-medium text-neutral-100 rounded-[12px]`}
+                    className={`rounded-lg border border-primary-500 px-7 py-2 text-neutral-50 bg-primary-500  text-sm font-medium`}
                   >
                     {isLoading ? (
-                      <Skeleton className="ml-6 h-4 sm:w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                      <Skeleton className="h-4 w-[30px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
                     ) : (
                       "Edit"
                     )}
                   </button>
                 </Dialog>
-            {/* <AlertConfirm
-              textBtn="Edit"
-              img={Edit}
-              title="Simpan Perubahan !"
-              desc="Pastikan perubahan Anda benar. Yakin ingin mengubah dan menyimpan data ini?"
-              textDialogCancel="Periksa Kembali"
-              textDialogSubmit="Simpan"
-              onConfirm={form.handleSubmit(onSubmit)}
-              disabled={!form.watch("username")}
-              successOpen={openSuccess}
-              setSuccessOpen={setOpenSuccess}
-              errorOpen={openError}
-              isLoading={isLoading}
-              setErrorOpen={setOpenError}
-              backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
-            /> */}
           </div>
         </form>
         <Notification

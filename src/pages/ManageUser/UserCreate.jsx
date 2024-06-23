@@ -16,7 +16,6 @@ import AddPhoto from "@/assets/icons/add photo.png";
 import EditIcon from "@/assets/icons/edit photo.png";
 import { createUsers } from "@/services/manageUser/createUsers";
 import Add from "@/assets/ImgModal/Ilustrasi-add.svg";
-import { AlertConfirm } from "@/components/features/alert/alertConfirm";
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
 import { privateRoutes } from "@/constant/routes";
 import Notification from "@/components/features/alert/Notification";
@@ -24,15 +23,15 @@ import Dialog from "@/components/features/alert/Dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const formSchema = zod.object({
-  username: zod.string().min(2).max(50),
-  password: zod.string().min(1).max(50),
+  username: zod.string().min(2, "Username harus memiliki minimal 2 karakter").max(50, "Username maksimal 50 karakter"),
+  password: zod.string().min(1, "Password harus diisi").max(50, "Password maksimal 50 karakter"),
   foto_profil: zod.any().nullable(),
-  nama_lengkap: zod.string().min(1).max(100),
-  email: zod.string().email(),
-  no_telepon: zod.string().min(10).max(15),
-  jenis_kelamin: zod.string().min(1),
-  provinsi: zod.string().min(1),
-  kota: zod.string().min(1),
+  nama_lengkap: zod.string().min(1, "Nama lengkap harus diisi").max(100, "Nama lengkap maksimal 100 karakter"),
+  email: zod.string().min(1, "Email harus diisi").email("Email tidak valid"),
+  no_telepon: zod.string().min(1, "Nomor telepon harus diisi").min(10, "Nomor telepon minimal 10 karakter").max(15, "Nomor telepon maksimal 15 karakter"),
+  jenis_kelamin: zod.string().optional(),
+  provinsi: zod.string().optional(),
+  kota: zod.string().optional(),
 });
 
 export default function UserCreate() {
@@ -73,7 +72,6 @@ export default function UserCreate() {
         setIsError(false);
         navigate(privateRoutes.USER);
       }, 2000);
-      
     },
     onError: (error) => {
       console.error(error);
@@ -167,7 +165,13 @@ export default function UserCreate() {
                   id="username"
                   placeholder="Masukkan Nama Pengguna"
                   {...form.register("username")}
+                  className={form.formState.errors.username ? "border-danger-400" : ""}
                 />
+                {form.formState.errors.username && (
+                  <p className="text-danger-400 text-sm">
+                    {form.formState.errors.username.message}
+                  </p>
+                )}
               </div>
               <div className="col-span-6 mb-3">
                 <Label
@@ -181,7 +185,13 @@ export default function UserCreate() {
                   id="nama_lengkap"
                   placeholder="Masukkan Nama Lengkap"
                   {...form.register("nama_lengkap")}
+                  className={form.formState.errors.nama_lengkap ? "border-danger-400" : ""}
                 />
+                {form.formState.errors.nama_lengkap && (
+                  <p className="text-danger-400 text-sm">
+                    {form.formState.errors.nama_lengkap.message}
+                  </p>
+                )}
               </div>
               <div className="relative col-span-12 mb-3">
                 <Label htmlFor="password" className="pb-2 text-sm font-bold">
@@ -192,7 +202,7 @@ export default function UserCreate() {
                   id="password"
                   placeholder="Masukkan Password Pengguna"
                   {...form.register("password")}
-                  className="pr-10"
+                  className={form.formState.errors.password ? "border-danger-400" : ""}
                 />
                 <button
                   className="absolute right-3 top-8 cursor-pointer"
@@ -201,6 +211,11 @@ export default function UserCreate() {
                 >
                   {visible ? <VisibilityOff /> : <Eye />}
                 </button>
+                {form.formState.errors.password && (
+                  <p className="text-danger-400 text-sm">
+                    {form.formState.errors.password.message}
+                  </p>
+                )}
               </div>
               <div className="col-span-6 mb-3">
                 <Label htmlFor="email" className="pb-2 text-sm font-bold">
@@ -211,7 +226,13 @@ export default function UserCreate() {
                   id="email"
                   {...form.register("email")}
                   placeholder="Masukkan Email Pengguna"
+                  className={form.formState.errors.email ? "border-danger-400" : ""}
                 />
+                {form.formState.errors.email && (
+                  <p className="text-danger-400 text-sm">
+                    {form.formState.errors.email.message}
+                  </p>
+                )}
               </div>
               <div className="col-span-6 mb-3">
                 <Label htmlFor="no_telepon" className="pb-2 text-sm font-bold">
@@ -222,7 +243,13 @@ export default function UserCreate() {
                   id="no_telepon"
                   placeholder="Masukkan Nomor Telepon Pengguna"
                   {...form.register("no_telepon")}
+                  className={form.formState.errors.no_telepon ? "border-danger-400" : ""}
                 />
+                {form.formState.errors.no_telepon && (
+                  <p className="text-danger-400 text-sm">
+                    {form.formState.errors.no_telepon.message}
+                  </p>
+                )}
               </div>
               <div className="col-span-12 mb-3">
                 <Label className="pb-2 text-sm font-bold">Jenis Kelamin</Label>
@@ -298,11 +325,10 @@ export default function UserCreate() {
                   img={Add}
                 >
                   <button
-                    
-                    className={`bg-primary-500 hover:bg-primary-600 h-[42px] w-full sm:w-[180px] text-[16px] font-medium text-neutral-100 rounded-[12px]`}
+                    className={`rounded-lg border border-primary-500 px-7 py-2 text-neutral-50 bg-primary-500  text-sm font-medium`}
                   >
                     {isLoading ? (
-                      <Skeleton className="ml-6 h-4 sm:w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                      <Skeleton className="h-4 w-[60px] rounded-full bg-gradient-to-r from-neutral-200" />
                     ) : (
                       "Tambah"
                     )}
