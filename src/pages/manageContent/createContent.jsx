@@ -52,20 +52,7 @@ export default function CreateContent() {
     },
   });
 
-  const createPostMutation = useMutation({
-    mutationFn: (values) => addContent(token, { ...values, type: contentType }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["content"]);
-      toast.success("Content added successfully");
-      form.reset();
-      navigate(privateRoutes.CONTENT);
-    },
-    onError: (error) => {
-      console.error(error);
-      toast.error("Failed to add content");
-    },
-  });
-
+  {/* setting auto-height Input Deskripsi */}
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
