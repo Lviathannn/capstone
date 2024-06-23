@@ -26,7 +26,7 @@ export default function Dialog({
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
+      <AlertDialogTrigger asChild className={`w-full`}>
         {children}
       </AlertDialogTrigger>
       <AlertDialogContent className="flex flex-col gap-6">

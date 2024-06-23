@@ -23,8 +23,8 @@ import { privateRoutes } from "@/constant/routes";
 import DestinationPage from "@/pages/destination";
 import CreateDestination from "@/pages/destination/create";
 import DetailDestination from "@/pages/destination/detail";
-import Spinner from "@/components/ui/Spinner";
-import NotFound from "@/components/features/error/NotFound";
+import Spinner from "./components/ui/Spinner";
+import NotFound from "./components/features/error/NotFound";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -85,7 +85,7 @@ function App() {
         />
         <Route
           path={`${privateRoutes.CONTENT}/edit`}
-          element={<EditContent />}
+          element={currentUser ? <EditContent /> : <Navigate to="/login" />}
         />
 
         {/* User */}
@@ -126,33 +126,34 @@ function App() {
         />
 
         {/* Destination */}
-        <Route element={<ProtectedRoute requiredRole="super admin" />}>
-          <Route
-            path={privateRoutes.DESTINATION}
-            element={<DestinationPage />}
-          />
-          <Route
-            path={privateRoutes.DESTINATION + "/create"}
-            element={<CreateDestination />}
-          />
-          <Route
-            path={privateRoutes.DESTINATION + "/detail/:id"}
-            element={<DetailDestination />}
-          />
-        </Route>
+        <Route
+          path={privateRoutes.DESTINATION}
+          element={currentUser ? <DestinationPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path={privateRoutes.DESTINATION + "/create"}
+          element={
+            currentUser ? <CreateDestination /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path={privateRoutes.DESTINATION + "/detail/:id"}
+          element={
+            currentUser ? <DetailDestination /> : <Navigate to="/login" />
+          }
+        />
 
         {/* Public Routes */}
+   
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/manage-user" element={<ManageUser />} />
-        <Route path="/manage-user/detail" element={<UserDetail />} />
-        <Route path="/manage-user/create" element={<UserCreate />} />
-        <Route path="/manage-route" element={<ManageRoute />} />
-        <Route path="/manage-route/:id" element={<DetailRoute />} />
-        <Route path="/manage-content" element={<ManageContent />} />
-        <Route path="manage-content/create" element={<CreateContent />} />
-        <Route path="manage-content/detail/:id" element={<DetailContent />} />
-        <Route path="manage-content/edit" element={<EditContent />}/>
+        <Route path="/" element={<Navigate to="/dashboard" />} />
+        <Route
+          path="/login"
+          element={currentUser ? <Navigate to="/dashboard" /> : <LoginPage />}
+        />
+
+        {/* 404 */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster />
     </>
