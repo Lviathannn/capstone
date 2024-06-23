@@ -1,6 +1,5 @@
 import HeaderAdmin from "./header";
 import SideBar from "./sidebar";
-<<<<<<< HEAD
 import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -13,10 +12,6 @@ export default function ProtectedLayout({ children }) {
     return <Navigate to="/login" />;
   }
 
-=======
-
-export default function ProtectedLayout({ children }) {
->>>>>>> e4c74baaea5ee6d5277a862088c7da7c485c926f
   return (
     <div>
       <SideBar />
