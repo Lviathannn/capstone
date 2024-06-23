@@ -1,24 +1,48 @@
 import { useRef } from "react";
-import SideBar from "@/components/layout/sidebar";
-import HeaderAdmin from "@/components/layout/header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import { getContentById } from "@/services/manageContent/getContentById";
 import Preview from "@/assets/img/preview-video.png"
 import ReactPlayer from "react-player";
+import ProtectedLayout from "@/components/layout/ProtectedLayout";
+import { privateRoutes } from "@/constant/routes";
+
+const useGetContentId = (id) => {
+  const token = useSelector((state) => state.auth.user?.access_token);
+  // console.log("Token: ", token); 
+  
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["user", id],
+    queryFn: () => getContentById(token, id),
+    enabled: !!token && !!id,
+    onError: (error) => {
+      console.error("Query error:", error);
+    },
+  });
+  
+  return { data, error, isLoading };
+};
 
 export default function DetailContent() {
-  const navigate = useNavigate();
-  const { state } = useLocation();
-  const { content } = state || {};
+  const loc = useLocation();
   const textareaRef = useRef(null);
+  const { id } = useParams();
+  // console.log("Content ID: ", id); 
+  const navigate = useNavigate();
+  const { data, error, isLoading } = useGetContentId(id);
+  // console.log("Data Content: ", data);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  const content = data.data;
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[240px_1fr]">
-      <SideBar />
-      <div className="flex flex-col">
-        <HeaderAdmin />
+    <ProtectedLayout>
         <main className="flex flex-col px-10 py-6 bg-primary-50 h-full">
           <div className="bg-neutral-50 shadow-md p-4 rounded-lg mb-6">
             <div className="flex justify-between items-center">
@@ -28,7 +52,7 @@ export default function DetailContent() {
               </div>
               <Button
                 className="bg-primary-500 text-white text-[14px] font-medium font-jakarta-sans"
-                onClick={() => navigate('/manage-content')}
+                onClick={() => navigate(privateRoutes.CONTENT)}
               >
                 Kembali
               </Button>
@@ -82,7 +106,6 @@ export default function DetailContent() {
             </div>
           </div>
         </main>
-      </div>
-    </div>
+    </ProtectedLayout>
   );
 }
