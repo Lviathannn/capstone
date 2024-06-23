@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form";
 import { z as zod } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import SideBar from "@/components/layout/sidebar";
+import HeaderAdmin from "@/components/layout/header";
 import VisibilityOff from "@/components/icons/VisibilityOff";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -62,7 +64,7 @@ export default function UserCreate() {
     onSuccess: () => {
       queryClient.invalidateQueries(["user"]);
       toast.success("User added successfully");
-      form.reset();
+      form.reset(); 
       navigate(privateRoutes.USER);
     },
     onError: (error) => {
@@ -70,6 +72,12 @@ export default function UserCreate() {
       toast.error("Failed to add user");
     },
   });
+
+  const handleClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -148,7 +156,6 @@ export default function UserCreate() {
                 <Input
                   type="text"
                   id="username"
-                  placeholder="Masukkan Nama Pengguna"
                   {...form.register("username")}
                 />
               </div>
@@ -162,7 +169,6 @@ export default function UserCreate() {
                 <Input
                   type="text"
                   id="nama_lengkap"
-                  placeholder="Masukkan Nama Lengkap"
                   {...form.register("nama_lengkap")}
                 />
               </div>
@@ -173,7 +179,6 @@ export default function UserCreate() {
                 <Input
                   type={visible ? "text" : "password"}
                   id="password"
-                  placeholder="Masukkan Password Pengguna"
                   {...form.register("password")}
                   className="pr-10"
                 />
@@ -189,12 +194,7 @@ export default function UserCreate() {
                 <Label htmlFor="email" className="pb-2 text-sm font-bold">
                   Email
                 </Label>
-                <Input
-                  type="email"
-                  id="email"
-                  {...form.register("email")}
-                  placeholder="Masukkan Email Pengguna"
-                />
+                <Input type="email" id="email" {...form.register("email")} />
               </div>
               <div className="col-span-6 mb-3">
                 <Label htmlFor="no_telepon" className="pb-2 text-sm font-bold">
@@ -203,7 +203,6 @@ export default function UserCreate() {
                 <Input
                   type="tel"
                   id="no_telepon"
-                  placeholder="Masukkan Nomor Telepon Pengguna"
                   {...form.register("no_telepon")}
                 />
               </div>
@@ -243,12 +242,7 @@ export default function UserCreate() {
                 <Label htmlFor="kota" className="pb-2 text-sm font-bold">
                   Kota/Kabupaten
                 </Label>
-                <Input
-                  type="text"
-                  id="kota"
-                  {...form.register("kota")}
-                  placeholder="Nama Kota/Kabupaten"
-                />
+                <Input type="text" id="kota" {...form.register("kota")} />
               </div>
               <div className="col-span-6">
                 <Label htmlFor="provinsi" className="pb-2 text-sm font-bold">
@@ -257,12 +251,12 @@ export default function UserCreate() {
                 <Input
                   type="text"
                   id="provinsi"
-                  placeholder="Nama Provinsi"
                   {...form.register("provinsi")}
                 />
               </div>
             </div>
           </div>
+          {/* </div> */}
           <div className="mt-4 flex justify-end">
             <Button
               variant="outlined"

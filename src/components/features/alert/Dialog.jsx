@@ -9,6 +9,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import deleteImage from "@/assets/ImgModal/Ilustrasi-delete.svg";
 
 export default function Dialog({
   children,
@@ -31,9 +32,9 @@ export default function Dialog({
       </AlertDialogTrigger>
       <AlertDialogContent className="flex flex-col gap-6">
         <img
-          src={img}
+          src={deleteImage}
           alt="alert"
-          className="mx-auto"
+          className="mx-auto mb-8"
           width={242}
           height={100}
         />
@@ -52,7 +53,7 @@ export default function Dialog({
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
-            className={`h-[42px] w-full text-[16px] font-medium ${type == "danger" ? "bg-danger-400 hover:bg-danger-500" : "bg-primary-500 hover:bg-primary-600"}`}
+            className={`flex-1 ${type == "delete" ? "bg-danger-400 hover:bg-danger-500" : "bg-primary-500 hover:bg-primary-600"}`}
           >
             {textSubmit}
           </AlertDialogAction>

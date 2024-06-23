@@ -23,8 +23,8 @@ import { privateRoutes } from "@/constant/routes";
 import DestinationPage from "@/pages/destination";
 import CreateDestination from "@/pages/destination/create";
 import DetailDestination from "@/pages/destination/detail";
-import Spinner from "@/components/ui/Spinner";
-import NotFound from "@/components/features/error/NotFound";
+import Spinner from "./components/ui/Spinner";
+import NotFound from "./components/features/error/NotFound";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -126,26 +126,31 @@ function App() {
         />
 
         {/* Destination */}
-        <Route element={<ProtectedRoute requiredRole="super admin" />}>
-          <Route
-            path={privateRoutes.DESTINATION}
-            element={<DestinationPage />}
-          />
-          <Route
-            path={privateRoutes.DESTINATION + "/create"}
-            element={<CreateDestination />}
-          />
-          <Route
-            path={privateRoutes.DESTINATION + "/detail/:id"}
-            element={<DetailDestination />}
-          />
-        </Route>
+        <Route
+          path={privateRoutes.DESTINATION}
+          element={currentUser ? <DestinationPage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path={privateRoutes.DESTINATION + "/create"}
+          element={
+            currentUser ? <CreateDestination /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path={privateRoutes.DESTINATION + "/detail/:id"}
+          element={
+            currentUser ? <DetailDestination /> : <Navigate to="/login" />
+          }
+        />
 
         {/* Public Routes */}
    
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<Navigate to="/dashboard" />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/login"
+          element={currentUser ? <Navigate to="/dashboard" /> : <LoginPage />}
+        />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />

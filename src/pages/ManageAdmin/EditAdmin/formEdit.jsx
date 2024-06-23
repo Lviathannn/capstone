@@ -22,27 +22,31 @@ import { z as zod } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateAdmins } from "@/services/manageAdmin/updateAdmin";
 import { useQuery } from "@tanstack/react-query";
+import { getAdminById } from "@/services/manageAdmin/getAdminById";
 import VisibilityOff from "@/components/icons/VisibilityOff";
 import { privateRoutes } from "@/constant/routes";
-import { Skeleton } from "@/components/ui/skeleton";
-import Dialog from "@/components/features/alert/Dialog";
-import Notification from "@/components/features/alert/Notification";
-import { getAdminById } from "@/services/manageAdmin/getAdminById";
 
 const formSchema = zod.object({
-  username: zod.string().min(6).max(16),
+  username: zod.string().min(2).max(50),
   password: zod.string().optional(),
   foto_profil: zod.any().nullable(), // Allowing nullable foto for validation
 });
 
 export const useGetAdminId = (id) => {
   const token = useSelector((state) => state.auth.user?.access_token); // Mengambil token dari Redux state
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
   const { data, error, isLoading } = useQuery({
     queryKey: ["admin"],
     queryFn: () => getAdminById(token, id),
     enabled: !!token,
+    onSuccess: () => {
+      setOpenSuccess(true);
+    },
+
     onError: (error) => {
-      toast.error("Data tidak berhasil ditampilkan");
+      setOpenError(true);
+      console.error("Query error:", error);
     },
   });
   return { data, error, isLoading };
@@ -57,8 +61,9 @@ export const FormEditAdmin = () => {
   const token = useSelector((state) => state.auth.user?.access_token);
   const [visible, setVisible] = useState(false);
   const [preview, setPreview] = useState(null);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openError, setOpenError] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -72,6 +77,7 @@ export const FormEditAdmin = () => {
   const createUpdateMutation = useMutation({
     mutationFn: (values) => updateAdmins(token, id, values),
     onSuccess: () => {
+<<<<<<< HEAD
       setIsSuccess(true);
     },
     onSettled: () => {
@@ -81,9 +87,16 @@ export const FormEditAdmin = () => {
         setIsError(false);
         navigate(privateRoutes.ADMIN);
       }, 2000);
+=======
+      queryClient.invalidateQueries({ queryKey: ["admin"] });
+      toast.success("User update successfully");
+      navigate(privateRoutes.ADMIN);
+      setOpenSuccess(true);
+>>>>>>> e4c74baaea5ee6d5277a862088c7da7c485c926f
     },
     onError: (error) => {
-      setIsError(true);
+      setOpenError(true);
+      toast.error("Update data gagal dilakukan");
     },
   });
 
@@ -149,17 +162,6 @@ export const FormEditAdmin = () => {
     }
   }
 
-  const handleSubmit = () => {
-    form.handleSubmit(onSubmit)();
-    if (form.formState.errors.username || form.formState.errors.password) {
-      setIsError(true);
-      setTimeout(() => {
-        setIsError(false);
-      }, 2000);
-      toast.error("username dan passworod harus 6-16 karakter");
-    }
-  };
-
   return (
     <div className="flex flex-col gap-10">
       <div>
@@ -174,6 +176,7 @@ export const FormEditAdmin = () => {
                       <FormControl>
                         <div className="relative w-fit rounded-full bg-neutral-200 sm:w-[212px] ">
                           <div className=" mx-auto">
+<<<<<<< HEAD
                             {isLoading ? (
                               <Skeleton className="h-[180px] w-[180px] rounded-full bg-neutral-200 sm:h-[212px] sm:w-[212px]" />
                             ) : (
@@ -183,6 +186,13 @@ export const FormEditAdmin = () => {
                                 alt="photo"
                               />
                             )}
+=======
+                            <img
+                              className="h-[180px] w-[180px] rounded-full sm:h-[212px] sm:w-[212px]"
+                              src={preview || DefaultPhoto}
+                              alt="photo"
+                            />
+>>>>>>> e4c74baaea5ee6d5277a862088c7da7c485c926f
                           </div>
                           <div className="absolute left-0 top-0 rounded-full">
                             <Input
@@ -220,23 +230,15 @@ export const FormEditAdmin = () => {
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
                       <FormLabel className="font-jakarta-sans text-sm font-bold text-neutral-900">
-                        {isLoading ? (
-                          <Skeleton className="h-4 w-[500px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
-                        ) : (
-                          "Username"
-                        )}
+                        Username
                       </FormLabel>
                       <FormControl>
-                        {isLoading ? (
-                          <Skeleton className="ml-6 h-4 w-[700px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
-                        ) : (
-                          <Input
-                            type="text"
-                            className={`border-solid-1 rounded-[10px] bg-transparent bg-white px-[12px] py-5 font-jakarta-sans text-sm font-normal text-neutral-700 ${form.formState.errors.username && "border-danger-400 focus-visible:ring-0"}`}
-                            placeholder="Masukan nama admin"
-                            {...field}
-                          />
-                        )}
+                        <Input
+                          type="text"
+                          className={`border-solid-1 rounded-[10px] bg-transparent bg-white px-[12px] py-5 font-jakarta-sans text-sm font-normal text-neutral-700 ${form.formState.errors.username && "border-danger-400 focus-visible:ring-0"}`}
+                          placeholder="Masukan nama admin"
+                          {...field}
+                        />
                       </FormControl>
                     </FormItem>
                   )}
@@ -247,24 +249,16 @@ export const FormEditAdmin = () => {
                   render={({ field }) => (
                     <FormItem className="grid gap-2">
                       <FormLabel className="font-jakarta-sans text-sm font-bold text-neutral-900">
-                        {isLoading ? (
-                          <Skeleton className="h-4 w-[500px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
-                        ) : (
-                          "Password"
-                        )}
+                        Password
                       </FormLabel>
                       <FormControl>
                         <div className="relative w-full rounded-[12px] ">
-                          {isLoading ? (
-                            <Skeleton className="ml-6 h-4 w-[700px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
-                          ) : (
-                            <Input
-                              className={`border-solid-1 rounded-[10px] bg-transparent bg-white px-[12px] py-5 font-jakarta-sans text-sm font-normal text-neutral-700 ${form.formState.errors.password && "border-danger-400 focus-visible:ring-0"}`}
-                              type={visible ? "text" : "password"}
-                              placeholder="Masukan password admin"
-                              {...field}
-                            />
-                          )}
+                          <Input
+                            className={`border-solid-1 rounded-[10px] bg-transparent bg-white px-[12px] py-5 font-jakarta-sans text-sm font-normal text-neutral-700 ${form.formState.errors.password && "border-danger-400 focus-visible:ring-0"}`}
+                            type={visible ? "text" : "password"}
+                            placeholder="Masukan password admin"
+                            {...field}
+                          />
                           <button
                             className="absolute right-3 top-2"
                             type="button"
@@ -279,19 +273,16 @@ export const FormEditAdmin = () => {
                 />
               </div>
             </div>
-            <div className="flex items-center justify-between gap-6 sm:justify-end">
-              <Link to={privateRoutes.ADMIN} className="w-full sm:w-fit">
+            <div className="flex items-center justify-end gap-6">
+              <Link to={privateRoutes.ADMIN}>
                 <Button
                   type="button"
-                  className="h-[42px] w-full border border-primary-500 bg-white text-sm font-medium text-primary-500 hover:bg-primary-50 hover:text-primary-500 sm:w-[180px] sm:rounded-[12px]"
+                  className="h-[42px] w-[150px] border border-primary-500 bg-white text-sm font-medium text-primary-500 hover:bg-primary-50 hover:text-primary-500 sm:w-[180px] sm:rounded-[12px]"
                 >
-                  {isLoading ? (
-                    <Skeleton className="ml-6 h-4 w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
-                  ) : (
-                    "Kembal"
-                  )}
+                  Kembali
                 </Button>
               </Link>
+<<<<<<< HEAD
               <div className="w-full sm:w-[180px]">
                 <Dialog
                   action={handleSubmit}
@@ -323,6 +314,29 @@ export const FormEditAdmin = () => {
             open={isSuccess || isError}
             type={isSuccess ? "success" : "error"}
           />
+=======
+              <div className="w-[150px] sm:w-[180px]">
+                <AlertConfirm
+                  textBtn="Simpan"
+                  img={Edit}
+                  title="Edit Admin?"
+                  desc="Pastikan perubahan Anda benar. Yakin ingin mengubah dan menyimpan data ini?"
+                  textDialogCancel="Periksa Kembali"
+                  textDialogSubmit="Simpan"
+                  onConfirm={form.handleSubmit(onSubmit)}
+                  disabled={!form.watch("username")}
+                  successOpen={openSuccess}
+                  setSuccessOpen={setOpenSuccess}
+                  errorOpen={openError}
+                  isLoading={isLoading}
+                  setErrorOpen={setOpenError}
+                  //onClick={() => {handleConfirmClick}}
+                  backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
+                ></AlertConfirm>
+              </div>
+            </div>
+          </form>
+>>>>>>> e4c74baaea5ee6d5277a862088c7da7c485c926f
         </Form>
       </div>
     </div>
