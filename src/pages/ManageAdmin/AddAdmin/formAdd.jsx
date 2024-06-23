@@ -6,7 +6,6 @@ import VisibilityOff from "@/components/icons/VisibilityOff";
 import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addAdmins } from "@/services/manageAdmin/addAdmins";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -22,9 +21,7 @@ import {
 import { z as zod } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { privateRoutes } from "@/constant/routes";
-import Dialog from "@/components/features/alert/Dialog";
-import Notification from "@/components/features/alert/Notification";
-import { Skeleton } from "@/components/ui/skeleton";
+import { addAdmins } from "@/services/manageAdmin/addUsers";
 
 const formSchema = zod.object({
   username: zod.string().min(6).max(16),
@@ -54,9 +51,13 @@ export const FormAddAdmin = () => {
   });
 
   const createPostMutation = useMutation({
-    mutationFn: async (values) => addAdmins(token, values),
-    onSuccess: () => {  
-      setIsSuccess(true);
+    mutationFn: (values) => addAdmins(token, values),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin"] });
+      toast.success("User added successfully");
+      form.reset();
+      navigate(privateRoutes.ADMIN);
+      setOpenSuccess(true);
     },
      onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["admin"] });
