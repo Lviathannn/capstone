@@ -29,49 +29,49 @@ export const TableRoute = ({
           <TableRow>
             <TableHead className="text-center font-jakarta-sans text-neutral-50">
               {isLoading ? (
-                <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" />
+                <Skeleton className="h-5 w-full rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
               ) : (
                 "Nama Pengguna"
               )}
             </TableHead>
             <TableHead className="text-center font-jakarta-sans text-neutral-50">
               {isLoading ? (
-                <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" />
+                <Skeleton className="h-5 w-full rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
               ) : (
                 "Kota"
               )}
             </TableHead>
             <TableHead className="text-center font-jakarta-sans text-neutral-50">
               {isLoading ? (
-                <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" />
+                <Skeleton className="h-5 w-full rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
               ) : (
                 "Destinasi 1"
               )}
             </TableHead>
             <TableHead className="text-center font-jakarta-sans text-neutral-50">
               {isLoading ? (
-                <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" />
+                <Skeleton className="h-5 w-full rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
               ) : (
                 "Destinasi 2"
               )}
             </TableHead>
             <TableHead className="text-center font-jakarta-sans text-neutral-50">
               {isLoading ? (
-                <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" />
+                <Skeleton className="h-5 w-full rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
               ) : (
                 "Destinasi 3"
               )}
             </TableHead>
             <TableHead className="text-center font-jakarta-sans text-neutral-50">
               {isLoading ? (
-                <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" />
+                <Skeleton className="h-5 w-full rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
               ) : (
                 "Estimasi Biaya"
               )}
             </TableHead>
             <TableHead className="text-center font-jakarta-sans text-neutral-50">
               {isLoading ? (
-                <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" />
+                <Skeleton className="h-5 w-full rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
               ) : (
                 "Aksi"
               )}
@@ -111,10 +111,13 @@ export const TableRoute = ({
                     action={() => handleDeletedById(route?.id)}
                     type="danger"
                     title="Hapus Data !"
-                    actionTitle="Hapus"
                     description="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
+                    textSubmit="Hapus"
+                    textCancel="Batal"
                   >
-                    <TrashCan />
+                    <div>
+                      <TrashCan />
+                    </div>
                   </Dialog>
                 </TableCell>
               </TableRow>
