@@ -27,6 +27,9 @@ import { toast } from "sonner";
 import { AlertConfirm } from "@/components/features/alert/alertConfirm";
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
 import { privateRoutes } from "@/constant/routes";
+import Notification from "@/components/features/alert/Notification";
+import Dialog from "@/components/features/alert/Dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const formSchema = zod.object({
   username: zod.string().min(2).max(50),
@@ -70,6 +73,8 @@ export default function UserEdit() {
   const { data, isLoading } = useGetUserId(id);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -108,10 +113,18 @@ export default function UserEdit() {
   const createUpdateMutation = useMutation({
     mutationFn: (values) => updateUsers(token, id, values),
     onSuccess: () => {
+      setIsSuccess(true);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries(["user", id]);
-      navigate(privateRoutes.USER);
+      setTimeout(() => {
+        setIsSuccess(false);
+        setIsError(false);
+        navigate(privateRoutes.USER);
+      }, 2000);
     },
     onError: () => {
+      setIsError(true);
       toast.error("Update data gagal dilakukan");
     },
   });
@@ -334,8 +347,26 @@ export default function UserEdit() {
             >
               Kembali
             </Button>
-
-            <AlertConfirm
+            <Dialog
+                  action={form.handleSubmit(onSubmit)}
+                  title="Simpan Perubahan !"
+                  description="Pastikan perubahan Anda benar. Yakin ingin mengubah dan menyimpan data ini?"
+                  textSubmit="Simpan"
+                  textCancel="Periksa Kembali"
+                  img={Edit}
+                >
+                  <button
+                    
+                    className={`bg-primary-500 hover:bg-primary-600 h-[42px] w-full sm:w-[180px] text-[16px] font-medium text-neutral-100 rounded-[12px]`}
+                  >
+                    {isLoading ? (
+                      <Skeleton className="ml-6 h-4 sm:w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                    ) : (
+                      "Edit"
+                    )}
+                  </button>
+                </Dialog>
+            {/* <AlertConfirm
               textBtn="Edit"
               img={Edit}
               title="Simpan Perubahan !"
@@ -350,9 +381,17 @@ export default function UserEdit() {
               isLoading={isLoading}
               setErrorOpen={setOpenError}
               backround={`w-[180px] h-[42px] py-[13px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px]`}
-            />
+            /> */}
           </div>
         </form>
+        <Notification
+          title={isSuccess ? "Sukses !" : "Gagal !"}
+          description={
+            isSuccess ? "Proses berhasil dilakukan" : "Proses gagal dilakukan"
+          }
+          open={isSuccess || isError}
+          type={isSuccess ? "success" : "error"}
+        />
       </Form>
     </ProtectedLayout>
   );

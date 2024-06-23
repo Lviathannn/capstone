@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -19,6 +19,9 @@ import Add from "@/assets/ImgModal/Ilustrasi-add.svg";
 import { AlertConfirm } from "@/components/features/alert/alertConfirm";
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
 import { privateRoutes } from "@/constant/routes";
+import Notification from "@/components/features/alert/Notification";
+import Dialog from "@/components/features/alert/Dialog";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const formSchema = zod.object({
   username: zod.string().min(2).max(50),
@@ -39,8 +42,9 @@ export default function UserCreate() {
   const fileInputRef = useRef(null);
   const queryClient = useQueryClient();
   const token = useSelector((state) => state.auth.user?.access_token);
-  const [openSuccess, setOpenSuccess] = useState(false);
-  const [openError, setOpenError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -60,13 +64,20 @@ export default function UserCreate() {
   const createPostMutation = useMutation({
     mutationFn: (values) => createUsers(token, values),
     onSuccess: () => {
+      setIsSuccess(true);
+    },
+    onSettled: () => {
       queryClient.invalidateQueries(["user"]);
-      toast.success("User added successfully");
-      form.reset();
-      navigate(privateRoutes.USER);
+      setTimeout(() => {
+        setIsSuccess(false);
+        setIsError(false);
+        navigate(privateRoutes.USER);
+      }, 2000);
+      
     },
     onError: (error) => {
       console.error(error);
+      setIsError(true);
       toast.error("Failed to add user");
     },
   });
@@ -87,6 +98,12 @@ export default function UserCreate() {
       toast.error("Failed to add user");
     }
   }
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+  }, [setIsLoading]);
 
   return (
     <ProtectedLayout>
@@ -272,22 +289,35 @@ export default function UserCreate() {
             >
               Kembali
             </Button>
-            <AlertConfirm
-              textBtn="Tambah"
-              img={Add}
-              title="Tambah Data !"
-              desc="Pastikan informasi benar dan sesuai sebelum menambahkan data. Yakin ingin menambahkan data ini?"
-              textDialogCancel="Batal"
-              textDialogSubmit="Tambah"
-              onConfirm={form.handleSubmit(onSubmit)}
-              backround={`w-[180px] h-[42px] py-[10px] px-10 text-sm font-medium text-neutral-100 hover:text-neutral-100 sm:rounded-[12px] bg-primary-500`}
-              successOpen={openSuccess}
-              setSuccessOpen={setOpenSuccess}
-              errorOpen={openError}
-              setErrorOpen={setOpenError}
-            />
+            <Dialog
+                  action={form.handleSubmit(onSubmit)}
+                  title="Tambah User !"
+                  description="Pastikan informasi benar dan sesuai sebelum menambahkan data. Yakin ingin menambahkan data ini?"
+                  textSubmit="Tambah"
+                  textCancel="Batal"
+                  img={Add}
+                >
+                  <button
+                    
+                    className={`bg-primary-500 hover:bg-primary-600 h-[42px] w-full sm:w-[180px] text-[16px] font-medium text-neutral-100 rounded-[12px]`}
+                  >
+                    {isLoading ? (
+                      <Skeleton className="ml-6 h-4 sm:w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                    ) : (
+                      "Tambah"
+                    )}
+                  </button>
+                </Dialog>
           </div>
         </form>
+        <Notification
+          title={isSuccess ? "Sukses !" : "Gagal !"}
+          description={
+            isSuccess ? "Proses berhasil dilakukan" : "Proses gagal dilakukan"
+          }
+          open={isSuccess || isError}
+          type={isSuccess ? "success" : "error"}
+        />
       </main>
     </ProtectedLayout>
   );
