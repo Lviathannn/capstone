@@ -90,21 +90,25 @@ export default function SideBar() {
                 <VideoIcon />
                 Konten
               </Link>
-              <Link
-                to={privateRoutes.DESTINATION}
-                className={getLinkClasses(privateRoutes.DESTINATION)}
-              >
-                <DestinationIcon />
-                Destinasi
-              </Link>
+
               {user?.role == "super admin" && (
-                <Link
-                  to={privateRoutes.ADMIN}
-                  className={getLinkClasses(privateRoutes.ADMIN)}
-                >
-                  <PeopleAltIcon />
-                  Admin
-                </Link>
+                <>
+                  <Link
+                    to={privateRoutes.DESTINATION}
+                    className={getLinkClasses(privateRoutes.DESTINATION)}
+                  >
+                    <DestinationIcon />
+                    Destinasi
+                  </Link>
+
+                  <Link
+                    to={privateRoutes.ADMIN}
+                    className={getLinkClasses(privateRoutes.ADMIN)}
+                  >
+                    <PeopleAltIcon />
+                    Admin
+                  </Link>
+                </>
               )}
             </div>
           </nav>
@@ -118,6 +122,8 @@ export default function SideBar() {
               action={handleLogout}
               type="danger"
               actionTitle="Keluar"
+              textSubmit="keluar"
+              textCancel="Batal"
             >
               <Button
                 className="flex w-full justify-start gap-[10px] px-3 py-6 font-medium text-danger-500 hover:bg-danger-500 hover:text-white"

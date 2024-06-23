@@ -3,10 +3,10 @@ import UserGraph from "./UserGraph";
 import DataRute from "./DataRute";
 import VideoGraph from "./VideoGraph";
 import DestinationGraph from "./DestinationGraph";
-import { getDashboard } from "@/services/Dashboard/getDashboard";
 import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
+import { getDashboard } from "@/services/Dashboard/getDashboard";
 
 export default function DashboardPage() {
   const token = useSelector((state) => state.auth.user?.access_token);

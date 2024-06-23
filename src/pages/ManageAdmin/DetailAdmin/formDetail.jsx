@@ -6,8 +6,8 @@ import { getAdminById } from "@/services/manageAdmin/getAdminById";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
-import { ReadOnlyField } from "@/components/ui/read-only-field";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ReadOnlyField } from "@/components/ui/read-only-field";
 
 export const useGetAdminId = (id) => {
   const token = useSelector((state) => state.auth.user?.access_token); // Mengambil token dari Redux state
@@ -24,11 +24,7 @@ export const useGetAdminId = (id) => {
 
 export const FormDetail = () => {
   const { id } = useParams();
-
   const { data, error, isLoading } = useGetAdminId(id);
-
-  console.log(data?.data);
-  console.log(error);
   return (
     <div className="flex flex-col gap-5 sm:gap-10">
       <div className="grid h-fit w-full items-center gap-5 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-4 py-8 shadow-md sm:flex sm:gap-10 sm:py-[132px]">

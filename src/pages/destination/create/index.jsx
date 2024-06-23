@@ -5,25 +5,146 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Uploader from "@/components/features/uploader/Uploader";
-import Thumbnail from "@/components/features/uploader/Thumbnail";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getCategories } from "@/services/destination/getCategories";
+import { useSelector } from "react-redux";
+import { getFacilities } from "@/services/destination/getFacilities";
+import ImageUploader from "./ImageUploader";
+import Address from "./Address";
+import AddImage from "@/assets/ImgModal/Ilustrasi-add.svg";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { createDestination } from "@/services/destination/createDestination";
+import { postImage } from "@/services/destination/postImage";
+import { toast } from "sonner";
+import Dialog from "@/components/features/alert/Dialog";
+import Notification from "@/components/features/alert/Notification";
+import { privateRoutes } from "@/constant/routes";
+import { destinationSchema } from "@/lib/schema";
+import Spinner from "@/components/ui/Spinner";
 
 export default function CreateDestination() {
+  const [file1, setFile1] = useState({
+    description: "",
+    file: null,
+  });
+  const [file2, setFile2] = useState({
+    description: "",
+    file: null,
+  });
+  const [file3, setFile3] = useState({
+    description: "",
+    file: null,
+  });
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
-  const [file1, setFile1] = useState(null);
-  const [file2, setFile2] = useState(null);
-  const [file3, setFile3] = useState(null);
+  const token = useSelector((state) => state?.auth?.user?.access_token);
+  const queryClient = useQueryClient();
+  const { data: categories, isLoading: categoriesLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const response = await getCategories(token);
+      return response?.data;
+    },
+  });
+  const { data: facilities, isLoading: facilitiesLoading } = useQuery({
+    queryKey: ["facilities"],
+    queryFn: async () => {
+      const response = await getFacilities(token);
+      return response?.data;
+    },
+  });
+  const destinationMutation = useMutation({
+    mutationFn: async (body) => await createDestination(token, body),
+    onSuccess: async (res) => {
+      setIsSuccess(true);
+      if (file1?.file) {
+        try {
+          await postImage(token, {
+            destination_id: res?.data?.data?.id,
+            file: file1?.file[0],
+            title: file1?.description || "Gambar 1",
+          });
+        } catch {
+          toast.error("Gagal mengunggah gambar");
+        }
+      }
+      if (file2?.file) {
+        try {
+          await postImage(token, {
+            destination_id: res?.data?.data?.id,
+            file: file2?.file[0],
+            title: file2?.description || "Gambar 2",
+          });
+        } catch {
+          toast.error("Gagal mengunggah gambar");
+        }
+      }
+      if (file3?.file) {
+        try {
+          await postImage(token, {
+            destination_id: res?.data?.data?.id,
+            file: file3?.file[0],
+            title: file3?.description || "Gambar 3",
+          });
+        } catch {
+          toast.error("Gagal mengunggah gambar");
+        }
+      }
+    },
+    onError: () => {
+      setIsError(true);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["destinations"],
+      });
+      setTimeout(() => {
+        setIsError(false);
+        setIsSuccess(false);
+        navigate(privateRoutes.DESTINATION);
+      }, 2000);
+    },
+  });
+  const form = useForm({
+    resolver: zodResolver(destinationSchema),
+    defaultValues: {
+      fasilitas: [],
+    },
+  });
+
+  function onSubmit(values) {
+    const body = {
+      nama_destinasi: values.nama_destinasi,
+      deskripsi: values.deskripsi,
+      jam_buka: values.jam_buka,
+      jam_tutup: values.jam_tutup,
+      harga_masuk: Number(values.harga_masuk),
+      id_kategori: values.id_kategori,
+      latitude: Number(values.latitude),
+      longitude: Number(values.longitude),
+      fasilitas: values.fasilitas,
+      alamat_destinasi: {
+        id_provinsi: values.id_provinsi,
+        id_kota: values.id_kota,
+        id_kecamatan: values.id_kecamatan,
+        jalan: values.jalan,
+        kode_pos: values.kode_pos,
+      },
+    };
+    destinationMutation.mutate(body);
+  }
 
   return (
     <ProtectedLayout>
@@ -42,252 +163,317 @@ export default function CreateDestination() {
               Lihat detail data destinasi yang tersedia
             </p>
           </div>
-          <Button
-            onClick={() => {
-              navigate("/destination");
-            }}
+        </div>
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="grid grid-cols-1 gap-5 lg:grid-cols-2"
           >
-            Kembali
-          </Button>
-        </div>
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-          <div className="w-full rounded-xl bg-neutral-50 p-5 shadow-md">
-            {/* Image List */}
-            <p className="mb-2 text-xs text-neutral-500">* Maximum size 2 mb</p>
-            <div className="grid grid-cols-1 justify-center gap-2 md:grid-cols-2 xl:grid-cols-3">
-              {file1 ? (
-                <div className="w-full">
-                  <Thumbnail
-                    setFile={setFile1}
-                    url={URL.createObjectURL(file1[0])}
-                    onDelete={() => {
-                      setFile1(null);
-                    }}
-                  />
-                  <Input
-                    className="mt-2 h-8 rounded-md"
-                    placeholder="Gambar 1 : Sampul"
-                  />
-                </div>
-              ) : (
-                <div className="mb-5 flex w-full cursor-pointer flex-col items-center justify-center">
-                  <Uploader setFile={setFile1} />
-                  <p className="mt-2 text-xs text-neutral-400">Upload Foto 1</p>
-                </div>
-              )}
+            <div className="w-full rounded-xl bg-neutral-50 p-5 shadow-md">
+              {/* Image List */}
+              <p className="mb-2 text-xs text-neutral-500">
+                * Maximum size 2 mb
+              </p>
+              <ImageUploader
+                file1={file1}
+                file2={file2}
+                file3={file3}
+                setFile1={setFile1}
+                setFile2={setFile2}
+                setFile3={setFile3}
+              />
+              {/* Form */}
 
-              {file2 ? (
-                <div className="w-full">
-                  <Thumbnail
-                    setFile={setFile2}
-                    url={URL.createObjectURL(file2[0])}
-                    onDelete={() => {
-                      setFile2(null);
-                    }}
-                  />
-
-                  <Input
-                    className="mt-2 h-8 rounded-md"
-                    placeholder="Gambar 2"
-                  />
-                </div>
-              ) : (
-                <div className="mb-5 flex w-full cursor-pointer flex-col items-center justify-center">
-                  <Uploader setFile={setFile2} />
-                  <p className="mt-2 text-xs text-neutral-400">Upload Foto 2</p>
-                </div>
-              )}
-
-              {file3 ? (
-                <div className="w-full">
-                  <Thumbnail
-                    setFile={setFile3}
-                    url={URL.createObjectURL(file3[0])}
-                    onDelete={() => {
-                      setFile3(null);
-                    }}
-                  />
-                  <Input
-                    className="mt-2 h-8 rounded-md"
-                    placeholder="Gambar 3"
-                  />
-                </div>
-              ) : (
-                <div className="mb-5 flex w-full cursor-pointer flex-col items-center justify-center">
-                  <Uploader setFile={setFile3} />
-                  <p className="mt-2 text-xs text-neutral-400">Upload Foto 3</p>
-                </div>
-              )}
-            </div>
-            {/* Form */}
-
-            <div className="mt-5 w-full space-y-4">
-              <div className="grid w-full items-center gap-2">
-                <Label className="font-bold">Nama</Label>
-                <Input
-                  type="text"
-                  className="w-full"
-                  placeholder="Masukkan Nama Destinasi"
+              <div className="mt-5 w-full space-y-4">
+                <FormField
+                  control={form.control}
+                  name="nama_destinasi"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nama</FormLabel>
+                      <FormControl>
+                        <Input
+                          className="w-full"
+                          placeholder="Masukkan Nama Destinasi"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              <div className="grid w-full items-center gap-2">
-                <Label className="font-bold">Kategori</Label>
-                <RadioGroup defaultValue="comfortable">
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="default" id="r1" />
-                    <Label htmlFor="r1">Alam</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="comfortable" id="r2" />
-                    <Label htmlFor="r2">Seni & Budaya</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="compact" id="r3" />
-                    <Label htmlFor="r3">Sejarah</Label>
-                  </div>
-                </RadioGroup>
-              </div>
-              <div className="grid w-full items-center gap-2">
-                <Label className="text-xl font-bold">Alamat</Label>
-                <div className="mt-2 grid w-full grid-cols-2 items-center gap-2">
-                  <div className="space-y-2">
-                    <Label className="font-bold">Provinsi</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Masukkan Provinsi" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Fruits</SelectLabel>
-                          <SelectItem value="apple">Apple</SelectItem>
-                          <SelectItem value="banana">Banana</SelectItem>
-                          <SelectItem value="blueberry">Blueberry</SelectItem>
-                          <SelectItem value="grapes">Grapes</SelectItem>
-                          <SelectItem value="pineapple">Pineapple</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label className="font-bold">Kota/Kabupaten</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Masukkan Kota/Kabupaten" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Fruits</SelectLabel>
-                          <SelectItem value="apple">Apple</SelectItem>
-                          <SelectItem value="banana">Banana</SelectItem>
-                          <SelectItem value="blueberry">Blueberry</SelectItem>
-                          <SelectItem value="grapes">Grapes</SelectItem>
-                          <SelectItem value="pineapple">Pineapple</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="font-bold">Kecamatan</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Masukkan Kecamatan" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Fruits</SelectLabel>
-                          <SelectItem value="apple">Apple</SelectItem>
-                          <SelectItem value="banana">Banana</SelectItem>
-                          <SelectItem value="blueberry">Blueberry</SelectItem>
-                          <SelectItem value="grapes">Grapes</SelectItem>
-                          <SelectItem value="pineapple">Pineapple</SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="font-bold">Kode Pos</Label>
-                    <Input className="w-full" placeholder="Masukkan Kode Pos" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid w-full items-center gap-2">
-                <Label className="font-bold">Nama Jalan</Label>
-                <Input
-                  type="text"
-                  className="w-full"
-                  placeholder="Masukkan Nama Jalan"
+                <FormField
+                  control={form.control}
+                  name="id_kategori"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel>Kategori</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="flex flex-col space-y-1"
+                        >
+                          {categoriesLoading && <Spinner />}
+                          {categories?.data?.map((category) => (
+                            <FormItem
+                              className="flex items-center space-x-3 space-y-0"
+                              key={category.kategori_id}
+                            >
+                              <FormControl>
+                                <RadioGroupItem value={category.kategori_id} />
+                              </FormControl>
+                              <FormLabel className="font-normal">
+                                {category.nama}
+                              </FormLabel>
+                            </FormItem>
+                          ))}
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
+
+                <Address form={form} />
               </div>
             </div>
-          </div>
 
-          <div className="w-full rounded-xl bg-neutral-50 p-5 shadow-md">
-            <div className="mt-5 w-full space-y-4">
-              <div className="grid w-full items-center gap-2">
-                <Label className="font-bold">Deskripsi</Label>
-                <Textarea
-                  type="text"
-                  className="min-h-32 w-full"
-                  placeholder="Masukkan Deskripsi Destinasi"
+            <div className="w-full rounded-xl bg-neutral-50 p-5 shadow-md">
+              <div className="mt-5 w-full space-y-4">
+                <FormField
+                  required
+                  control={form.control}
+                  name="deskripsi"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Deskripsi</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Masukkan Deskripsi Destinasi"
+                          className="min-h-40 resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
 
-              <div className="grid w-full items-center gap-2">
-                <Label className="text-xl font-bold">Jam Operasional</Label>
-                <div className="mt-2 grid w-full grid-cols-2 items-center gap-2">
-                  <div className="space-y-2">
-                    <Label className="font-bold">Buka</Label>
-                    <Input
-                      type="text"
-                      className="w-full"
-                      placeholder="Masukkan Jam Buka"
+                <div className="grid w-full items-center gap-2">
+                  <Label className="text-xl font-bold">Jam Operasional</Label>
+                  <div className="mt-2 grid w-full grid-cols-2 items-center gap-2">
+                    <FormField
+                      control={form.control}
+                      name="jam_buka"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Buka</FormLabel>
+                          <FormControl>
+                            <Input
+                              className="w-full"
+                              placeholder="Masukkan Jam Buka"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="jam_tutup"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Tutup</FormLabel>
+                          <FormControl>
+                            <Input
+                              className="w-full"
+                              placeholder="Masukkan Jam Tutup"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label className="font-bold">Tutup</Label>
-                    <Input
-                      type="text"
-                      className="w-full"
-                      placeholder="Masukkan Jam Tutup"
+                  <FormField
+                    control={form.control}
+                    name="harga_masuk"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Biaya</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            className="w-full"
+                            placeholder="Masukkan Biaya"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="">
+                  <Label className="text-xl font-bold">Lokasi Destinasi</Label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <FormField
+                      control={form.control}
+                      name="latitude"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Latitude</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              className="w-full"
+                              placeholder="Masukkan Latitude"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="longitude"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Longitude</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              className="w-full"
+                              placeholder="Masukkan Longitude"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label className="font-bold">Biaya</Label>
-                  <Input
-                    type="number"
-                    className="w-full"
-                    placeholder="Masukkan Biaya"
-                  />
-                </div>
+
+                <FormField
+                  control={form.control}
+                  name="fasilitas"
+                  render={() => (
+                    <FormItem>
+                      <div className="mb-4">
+                        <FormLabel className="text-base">Fasilitas</FormLabel>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        {facilitiesLoading && <Spinner />}
+
+                        {facilities?.data?.map((facility) => (
+                          <FormField
+                            key={facility.fasilitas_id}
+                            control={form.control}
+                            name="fasilitas"
+                            render={({ field }) => {
+                              return (
+                                <FormItem
+                                  key={facility.fasilitas_id}
+                                  className="flex flex-row items-start space-x-3 space-y-0"
+                                >
+                                  <FormControl>
+                                    <Checkbox
+                                      checked={field?.value?.includes(
+                                        facility?.fasilitas_id,
+                                      )}
+                                      onCheckedChange={(checked) => {
+                                        return checked
+                                          ? field.onChange([
+                                              ...field.value,
+                                              facility.fasilitas_id,
+                                            ])
+                                          : field.onChange(
+                                              field?.value?.filter(
+                                                (value) =>
+                                                  value !==
+                                                  facility?.fasilitas_id,
+                                              ),
+                                            );
+                                      }}
+                                    />
+                                  </FormControl>
+                                  <FormLabel className="font-normal">
+                                    {facility.nama}
+                                  </FormLabel>
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        ))}
+                      </div>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <div className="grid w-full items-center gap-2">
-                <Label className="font-bold">Fasilitas</Label>
-                <div
-                  className="grid w-full grid-cols-2 gap-2
-                "
+            </div>
+
+            <div className="col-start-2 flex w-full justify-end gap-3">
+              <Button
+                className="text-primary"
+                size="lg"
+                variant="outline"
+                onClick={() => {
+                  navigate("/destination");
+                }}
+              >
+                Kembali
+              </Button>
+              <div className="">
+                <Dialog
+                  title="Tambah Data !"
+                  description="Pastikan informasi benar dan sesuai sebelum menambahkan data. Yakin ingin menambahkan data ini?"
+                  action={form.handleSubmit(onSubmit)}
+                  img={AddImage}
+                  textSubmit="Tambah"
+                  textCancel="Batal"
                 >
-                  {Array.from({ length: 10 }).map((_, index) => (
-                    <div className="flex items-center gap-2" key={index}>
-                      <Checkbox id="terms" />
-                      <label
-                        htmlFor="terms"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        Area Makan
-                      </label>
-                    </div>
-                  ))}
-                </div>
+                  <Button
+                    size="lg"
+                    type="button"
+                    disabled={destinationMutation.isLoading}
+                  >
+                    {destinationMutation.isLoading
+                      ? "Menambahkan..."
+                      : "Tambah"}
+                  </Button>
+                </Dialog>
               </div>
+              {isSuccess && (
+                <Notification
+                  open={isSuccess}
+                  title="Sukses!"
+                  description="Proses berhasil dilakukan."
+                  type="success"
+                />
+              )}
+
+              {isError && (
+                <Notification
+                  open={isError}
+                  title="Gagal!"
+                  description="Proses gagal dilakukan."
+                />
+              )}
             </div>
-          </div>
-        </div>
+          </form>
+        </Form>
       </section>
     </ProtectedLayout>
   );

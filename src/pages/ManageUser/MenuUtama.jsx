@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import person from "@/assets/icons/person.png";
 import plus from "@/assets/icons/plus.png";
-import search from "@/assets/icons/search.png";
+import { Clear } from "@/components/icons/Clear";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useSelector } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -151,12 +151,10 @@ export default function MenuUtama() {
                 />
               )}
               {search && (
-                <button
+                <Clear
+                  className="absolute right-3 top-3 opacity-50"
                   onClick={handleClear}
-                  className="absolute right-3 top-3 h-4 w-4 text-neutral-800"
-                >
-                  &times;
-                </button>
+                />
               )}
             </div>
             <Link

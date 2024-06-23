@@ -2,13 +2,12 @@ import search from "@/assets/icons/search.png";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const SearchRoute = ({ searchTerm, handleSearchChange, isLoading }) => {
-  console.log("isLoading", isLoading);
   return (
     <div className="col-span-8 rounded-lg bg-neutral-50 p-4 lg:col-span-10">
       {isLoading ? (
         <div className="flex flex-col gap-1">
-          <Skeleton className="h-10 w-full rounded-lg bg-neutral-200" />
-          <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" />
+          <Skeleton className="h-10 w-3/4 rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+          <Skeleton className="h-5 w-1/2 rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
         </div>
       ) : (
         <div>
@@ -22,7 +21,7 @@ export const SearchRoute = ({ searchTerm, handleSearchChange, isLoading }) => {
       )}
       <div className="mt-4 flex justify-between">
         {isLoading ? (
-          <Skeleton className="h-10 w-full rounded-lg bg-neutral-200" />
+          <Skeleton className="h-10 w-1/2 rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
         ) : (
           <div className="flex w-full items-center rounded-lg border px-4 py-3 lg:w-1/2">
             <img src={search} alt="Search Icon" className="mr-4 h-4 w-4" />

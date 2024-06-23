@@ -30,6 +30,7 @@ import { deleteDestination } from "@/services/destination/deleteDestionation";
 import Dialog from "@/components/features/alert/Dialog";
 import Notification from "@/components/features/alert/Notification";
 import DeleteImage from "@/assets/ImgModal/Ilustrasi-delete.svg";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DestinationPage() {
   const token = useSelector((state) => state.auth?.user?.access_token);
@@ -127,9 +128,13 @@ export default function DestinationPage() {
           </div>
           <div className="flex w-full flex-col justify-center space-y-4 rounded-xl bg-white p-4 shadow-md lg:col-start-5 lg:col-end-6">
             <Map />
-            <p className="text-xl font-bold text-neutral-800">
-              {destination?.data?.pagination?.total}
-            </p>
+            {isLoading ? (
+              <Skeleton className="h-5 w-20 bg-neutral-200" />
+            ) : (
+              <p className="text-xl font-bold text-neutral-800">
+                {destination?.data?.pagination?.total}
+              </p>
+            )}
             <p className="text-neutral-800">Total destinasi</p>
           </div>
         </div>
@@ -178,7 +183,7 @@ export default function DestinationPage() {
                 <TableBody className="overflow-hidden bg-white">
                   {isLoading &&
                     Array.from({ length: 8 }).map((_, index) => (
-                      <TableSkeleton key={index} />
+                      <TableSkeleton key={index} tableCell={9} />
                     ))}
 
                   {destination?.data?.data?.map((data) => (
@@ -220,7 +225,8 @@ export default function DestinationPage() {
                           action={() => handleDelete(data?.id)}
                           type="danger"
                           title="Hapus Data !"
-                          actionTitle="Hapus"
+                          textSubmit="Hapus"
+                          textCancel="Batal"
                           description="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
                         >
                           <button>
@@ -236,19 +242,27 @@ export default function DestinationPage() {
               <Pagination
                 currentPage={destination?.data?.pagination?.current_page}
                 lastPage={destination?.data?.pagination?.last_page}
+                isLoading={isLoading}
               />
             </>
           )}
         </div>
       </section>
-      <Notification
-        title={isSuccess ? "Sukses !" : "Gagal !"}
-        description={
-          isSuccess ? "Proses berhasil dilakukan" : "Proses gagal dilakukan"
-        }
-        open={isSuccess || isError}
-        type={isSuccess ? "success" : "error"}
-      />
+      {isSuccess && (
+        <Notification
+          title={"Sukses !"}
+          description={"Proses berhasil dilakukan"}
+          open={isSuccess}
+          type={"success"}
+        />
+      )}
+      {isError && (
+        <Notification
+          title={"Gagal !"}
+          description={"Proses gagal dilakukan"}
+          open={isError}
+        />
+      )}
     </ProtectedLayout>
   );
 }

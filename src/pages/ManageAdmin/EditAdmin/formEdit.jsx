@@ -22,12 +22,12 @@ import { z as zod } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateAdmins } from "@/services/manageAdmin/updateAdmin";
 import { useQuery } from "@tanstack/react-query";
-import { getAdminById } from "@/services/manageAdmin/getAdminById";
 import VisibilityOff from "@/components/icons/VisibilityOff";
 import { privateRoutes } from "@/constant/routes";
 import { Skeleton } from "@/components/ui/skeleton";
 import Dialog from "@/components/features/alert/Dialog";
 import Notification from "@/components/features/alert/Notification";
+import { getAdminById } from "@/services/manageAdmin/getAdminById";
 
 const formSchema = zod.object({
   username: zod.string().min(6).max(16),
@@ -74,8 +74,8 @@ export const FormEditAdmin = () => {
     onSuccess: () => {
       setIsSuccess(true);
     },
-    onSettled:() => {
-      queryClient.invalidateQueries({ queryKey: ["admin"] }); 
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin"] });
       setTimeout(() => {
         setIsSuccess(false);
         setIsError(false);
@@ -145,14 +145,13 @@ export const FormEditAdmin = () => {
       }
       createUpdateMutation.mutate(formData);
     } catch (error) {
-      console.log(error);
       toast.error("Tidak berhasil menambahkan Admin");
     }
   }
 
   const handleSubmit = () => {
     form.handleSubmit(onSubmit)();
-    if (form.formState.errors) {
+    if (form.formState.errors.username || form.formState.errors.password) {
       setIsError(true);
       setTimeout(() => {
         setIsError(false);
@@ -176,7 +175,7 @@ export const FormEditAdmin = () => {
                         <div className="relative w-fit rounded-full bg-neutral-200 sm:w-[212px] ">
                           <div className=" mx-auto">
                             {isLoading ? (
-                              <Skeleton className="h-[180px] w-[180px] sm:h-[212px] sm:w-[212px] rounded-full bg-neutral-200" />
+                              <Skeleton className="h-[180px] w-[180px] rounded-full bg-neutral-200 sm:h-[212px] sm:w-[212px]" />
                             ) : (
                               <img
                                 className="h-[180px] w-[180px] rounded-full sm:h-[212px] sm:w-[212px]"
@@ -294,7 +293,7 @@ export const FormEditAdmin = () => {
                 </Button>
               </Link>
               <div className="w-full sm:w-[180px]">
-              <Dialog
+                <Dialog
                   action={handleSubmit}
                   title="Edit Admin !"
                   description="Pastikan perubahan Anda benar. Yakin ingin mengubah dan menyimpan data ini?"
@@ -303,13 +302,11 @@ export const FormEditAdmin = () => {
                   img={Edit}
                 >
                   <button
-                    disabled={
-                      !form.watch("username")
-                    }
-                    className={`${!form.watch("username") ? "cursor-not-allowed bg-gray-400" : "bg-primary-500 hover:bg-primary-600"} h-[42px] w-full sm:w-[180px] text-[16px] font-medium text-neutral-100 rounded-[12px]`}
+                    disabled={!form.watch("username")}
+                    className={`${!form.watch("username") ? "cursor-not-allowed bg-gray-400" : "bg-primary-500 hover:bg-primary-600"} h-[42px] w-full rounded-[12px] text-[16px] font-medium text-neutral-100 sm:w-[180px]`}
                   >
                     {isLoading ? (
-                      <Skeleton className="ml-6 h-4 sm:w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                      <Skeleton className="ml-6 h-4 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0 sm:w-[120px]" />
                     ) : (
                       "Tambah"
                     )}
@@ -319,13 +316,13 @@ export const FormEditAdmin = () => {
             </div>
           </form>
           <Notification
-          title={isSuccess ? "Sukses !" : "Gagal !"}
-          description={
-            isSuccess ? "Proses berhasil dilakukan" : "Proses gagal dilakukan"
-          }
-          open={isSuccess || isError}
-          type={isSuccess ? "success" : "error"}
-        />
+            title={isSuccess ? "Sukses !" : "Gagal !"}
+            description={
+              isSuccess ? "Proses berhasil dilakukan" : "Proses gagal dilakukan"
+            }
+            open={isSuccess || isError}
+            type={isSuccess ? "success" : "error"}
+          />
         </Form>
       </div>
     </div>
