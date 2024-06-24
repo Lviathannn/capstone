@@ -71,7 +71,7 @@ function App() {
           element={<CreateContent />}
         />
         <Route
-          path={`${privateRoutes.CONTENT}/detail`}
+          path={`${privateRoutes.CONTENT}/detail/:id`}
           element={<DetailContent />}
         />
         <Route
