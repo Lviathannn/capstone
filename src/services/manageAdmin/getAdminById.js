@@ -8,8 +8,10 @@ export const getAdminById = async (token, id) => {
         "Content-Type": "multipart/form-data",
       },
     });
+    console.log("Data yang terambil: ", res.data);
     return res.data;
   } catch (error) {
+    console.error("Error data admins:", error); // Logging untuk debug
     throw new Error("Failed to get data admins by ID");
   }
 };
