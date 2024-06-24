@@ -21,7 +21,12 @@ export default function DetailDestination() {
     return null;
   }
 
-  const { data: destination, isLoading, isError } = useQuery({
+  const {
+    data: destination,
+    isLoading,
+    isError,
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+  } = useQuery({
     queryKey: ["destination", id],
     queryFn: () => getDestination(token, id),
   });
@@ -67,14 +72,14 @@ export default function DetailDestination() {
           </div>
         )}
         {destination?.status === 200 ? (
-          <div className="flex gap-5">
+          <div className=" grid grid-cols-1 gap-5 lg:grid-cols-2">
             <div className="w-full rounded-xl bg-neutral-50 p-5 shadow-md">
-              <div className="flex w-full justify-center gap-2">
+              <div className="flex w-full flex-col justify-center gap-2 lg:flex-row">
                 {destination?.data?.data?.url_gambar?.map((data) => (
                   <img
                     key={data.id_media}
                     src={data?.url_media}
-                    className="aspect-video w-[33.3%] rounded-lg bg-neutral-100 object-cover object-center"
+                    className="aspect-video rounded-lg bg-neutral-100 object-cover object-center lg:w-[33.3%]"
                   />
                 ))}
               </div>

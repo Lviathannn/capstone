@@ -11,8 +11,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCategories } from "@/services/destination/getCategories";
 import { useSelector } from "react-redux";
 import { getFacilities } from "@/services/destination/getFacilities";
-import ImageUploader from "./ImageUploader";
-import Address from "./Address";
 import AddImage from "@/assets/ImgModal/Ilustrasi-add.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -32,6 +30,8 @@ import Notification from "@/components/features/alert/Notification";
 import { privateRoutes } from "@/constant/routes";
 import { destinationSchema } from "@/lib/schema";
 import Spinner from "@/components/ui/Spinner";
+import ImageUploader from "../create/ImageUploader";
+import Address from "../create/Address";
 
 export default function CreateDestination() {
   const [file1, setFile1] = useState({
@@ -51,14 +51,16 @@ export default function CreateDestination() {
   const navigate = useNavigate();
   const token = useSelector((state) => state?.auth?.user?.access_token);
   const queryClient = useQueryClient();
-  const { data: categories, isLoading: categoriesLoading } = useQuery({
+
+  //   Query And Mutation
+  const categoriesQuery = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
       const response = await getCategories(token);
       return response?.data;
     },
   });
-  const { data: facilities, isLoading: facilitiesLoading } = useQuery({
+  const facilitiesQuery = useQuery({
     queryKey: ["facilities"],
     queryFn: async () => {
       const response = await getFacilities(token);
@@ -117,6 +119,8 @@ export default function CreateDestination() {
       }, 2000);
     },
   });
+
+  //   Form
   const form = useForm({
     resolver: zodResolver(destinationSchema),
     defaultValues: {
@@ -166,153 +170,34 @@ export default function CreateDestination() {
         </div>
 
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="grid grid-cols-1 gap-5 lg:grid-cols-2"
-          >
-            <div className="w-full rounded-xl bg-neutral-50 p-5 shadow-md">
-              {/* Image List */}
-              <p className="mb-2 text-xs text-neutral-500">
-                * Maximum size 2 mb
-              </p>
-              <ImageUploader
-                file1={file1}
-                file2={file2}
-                file3={file3}
-                setFile1={setFile1}
-                setFile2={setFile2}
-                setFile3={setFile3}
-              />
-              {/* Form */}
-
-              <div className="mt-5 w-full space-y-4">
-                <FormField
-                  control={form.control}
-                  name="nama_destinasi"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nama</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="w-full"
-                          placeholder="Masukkan Nama Destinasi"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+              <div className="w-full rounded-xl bg-neutral-50 p-5 shadow-md">
+                {/* Image List */}
+                <p className="mb-2 text-xs text-neutral-500">
+                  * Maximum size 2 mb
+                </p>
+                <ImageUploader
+                  file1={file1}
+                  file2={file2}
+                  file3={file3}
+                  setFile1={setFile1}
+                  setFile2={setFile2}
+                  setFile3={setFile3}
                 />
+                {/* Form */}
 
-                <FormField
-                  control={form.control}
-                  name="id_kategori"
-                  render={({ field }) => (
-                    <FormItem className="space-y-3">
-                      <FormLabel>Kategori</FormLabel>
-                      <FormControl>
-                        <RadioGroup
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          className="flex flex-col space-y-1"
-                        >
-                          {categoriesLoading && <Spinner />}
-                          {categories?.data?.map((category) => (
-                            <FormItem
-                              className="flex items-center space-x-3 space-y-0"
-                              key={category.kategori_id}
-                            >
-                              <FormControl>
-                                <RadioGroupItem value={category.kategori_id} />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                {category.nama}
-                              </FormLabel>
-                            </FormItem>
-                          ))}
-                        </RadioGroup>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <Address form={form} />
-              </div>
-            </div>
-
-            <div className="w-full rounded-xl bg-neutral-50 p-5 shadow-md">
-              <div className="mt-5 w-full space-y-4">
-                <FormField
-                  required
-                  control={form.control}
-                  name="deskripsi"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Deskripsi</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Masukkan Deskripsi Destinasi"
-                          className="min-h-40 resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="grid w-full items-center gap-2">
-                  <Label className="text-xl font-bold">Jam Operasional</Label>
-                  <div className="mt-2 grid w-full grid-cols-2 items-center gap-2">
-                    <FormField
-                      control={form.control}
-                      name="jam_buka"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Buka</FormLabel>
-                          <FormControl>
-                            <Input
-                              className="w-full"
-                              placeholder="Masukkan Jam Buka"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="jam_tutup"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Tutup</FormLabel>
-                          <FormControl>
-                            <Input
-                              className="w-full"
-                              placeholder="Masukkan Jam Tutup"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
+                <div className="mt-5 w-full space-y-4">
                   <FormField
                     control={form.control}
-                    name="harga_masuk"
+                    name="nama_destinasi"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Biaya</FormLabel>
+                        <FormLabel>Nama</FormLabel>
                         <FormControl>
                           <Input
-                            type="number"
                             className="w-full"
-                            placeholder="Masukkan Biaya"
+                            placeholder="Masukkan Nama Destinasi"
                             {...field}
                           />
                         </FormControl>
@@ -320,40 +205,118 @@ export default function CreateDestination() {
                       </FormItem>
                     )}
                   />
+
+                  <FormField
+                    control={form.control}
+                    name="id_kategori"
+                    render={({ field }) => (
+                      <FormItem className="space-y-3">
+                        <FormLabel>Kategori</FormLabel>
+                        <FormControl>
+                          <RadioGroup
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            className="flex flex-col space-y-1"
+                          >
+                            {categoriesQuery?.isLoading && <Spinner />}
+                            {categoriesQuery?.data?.data?.map((category) => (
+                              <FormItem
+                                className="flex items-center space-x-3 space-y-0"
+                                key={category.kategori_id}
+                              >
+                                <FormControl>
+                                  <RadioGroupItem
+                                    value={category.kategori_id}
+                                  />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                  {category.nama}
+                                </FormLabel>
+                              </FormItem>
+                            ))}
+                          </RadioGroup>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <Address form={form} />
                 </div>
-                <div className="">
-                  <Label className="text-xl font-bold">Lokasi Destinasi</Label>
-                  <div className="grid grid-cols-2 gap-3">
-                    <FormField
-                      control={form.control}
-                      name="latitude"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Latitude</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="number"
-                              className="w-full"
-                              placeholder="Masukkan Latitude"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+              </div>
+
+              <div className="w-full rounded-xl bg-neutral-50 p-5 shadow-md">
+                <div className="mt-5 w-full space-y-4">
+                  <FormField
+                    required
+                    control={form.control}
+                    name="deskripsi"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Deskripsi</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Masukkan Deskripsi Destinasi"
+                            className="min-h-40 resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="grid w-full items-center gap-2">
+                    <Label className="text-xl font-bold">Jam Operasional</Label>
+                    <div className="mt-2 grid w-full grid-cols-2 items-center gap-2">
+                      <FormField
+                        control={form.control}
+                        name="jam_buka"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Buka</FormLabel>
+                            <FormControl>
+                              <Input
+                                className="w-full"
+                                placeholder="Masukkan Jam Buka"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="jam_tutup"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Tutup</FormLabel>
+                            <FormControl>
+                              <Input
+                                className="w-full"
+                                placeholder="Masukkan Jam Tutup"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
                     <FormField
                       control={form.control}
-                      name="longitude"
+                      name="harga_masuk"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Longitude</FormLabel>
+                          <FormLabel>Biaya</FormLabel>
                           <FormControl>
                             <Input
                               type="number"
                               className="w-full"
-                              placeholder="Masukkan Longitude"
+                              placeholder="Masukkan Biaya"
                               {...field}
                             />
                           </FormControl>
@@ -362,69 +325,112 @@ export default function CreateDestination() {
                       )}
                     />
                   </div>
+                  <div className="">
+                    <Label className="text-xl font-bold">
+                      Lokasi Destinasi
+                    </Label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <FormField
+                        control={form.control}
+                        name="latitude"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Latitude</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                className="w-full"
+                                placeholder="Masukkan Latitude"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="longitude"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Longitude</FormLabel>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                className="w-full"
+                                placeholder="Masukkan Longitude"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  <FormField
+                    control={form.control}
+                    name="fasilitas"
+                    render={() => (
+                      <FormItem>
+                        <div className="mb-4">
+                          <FormLabel className="text-base">Fasilitas</FormLabel>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          {facilitiesQuery?.isLoading && <Spinner />}
+
+                          {facilitiesQuery?.data?.data?.map((facility) => (
+                            <FormField
+                              key={facility.fasilitas_id}
+                              control={form.control}
+                              name="fasilitas"
+                              render={({ field }) => {
+                                return (
+                                  <FormItem
+                                    key={facility.fasilitas_id}
+                                    className="flex flex-row items-start space-x-3 space-y-0"
+                                  >
+                                    <FormControl>
+                                      <Checkbox
+                                        checked={field?.value?.includes(
+                                          facility?.fasilitas_id,
+                                        )}
+                                        onCheckedChange={(checked) => {
+                                          return checked
+                                            ? field.onChange([
+                                                ...field.value,
+                                                facility.fasilitas_id,
+                                              ])
+                                            : field.onChange(
+                                                field?.value?.filter(
+                                                  (value) =>
+                                                    value !==
+                                                    facility?.fasilitas_id,
+                                                ),
+                                              );
+                                        }}
+                                      />
+                                    </FormControl>
+                                    <FormLabel className="font-normal">
+                                      {facility.nama}
+                                    </FormLabel>
+                                  </FormItem>
+                                );
+                              }}
+                            />
+                          ))}
+                        </div>
+
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
-
-                <FormField
-                  control={form.control}
-                  name="fasilitas"
-                  render={() => (
-                    <FormItem>
-                      <div className="mb-4">
-                        <FormLabel className="text-base">Fasilitas</FormLabel>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2">
-                        {facilitiesLoading && <Spinner />}
-
-                        {facilities?.data?.map((facility) => (
-                          <FormField
-                            key={facility.fasilitas_id}
-                            control={form.control}
-                            name="fasilitas"
-                            render={({ field }) => {
-                              return (
-                                <FormItem
-                                  key={facility.fasilitas_id}
-                                  className="flex flex-row items-start space-x-3 space-y-0"
-                                >
-                                  <FormControl>
-                                    <Checkbox
-                                      checked={field?.value?.includes(
-                                        facility?.fasilitas_id,
-                                      )}
-                                      onCheckedChange={(checked) => {
-                                        return checked
-                                          ? field.onChange([
-                                              ...field.value,
-                                              facility.fasilitas_id,
-                                            ])
-                                          : field.onChange(
-                                              field?.value?.filter(
-                                                (value) =>
-                                                  value !==
-                                                  facility?.fasilitas_id,
-                                              ),
-                                            );
-                                      }}
-                                    />
-                                  </FormControl>
-                                  <FormLabel className="font-normal">
-                                    {facility.nama}
-                                  </FormLabel>
-                                </FormItem>
-                              );
-                            }}
-                          />
-                        ))}
-                      </div>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
               </div>
             </div>
-
-            <div className="col-start-2 flex w-full justify-end gap-3">
+            <div className="col-start-2 mt-6 flex w-full justify-end gap-3">
               <Button
                 className="text-primary"
                 size="lg"
