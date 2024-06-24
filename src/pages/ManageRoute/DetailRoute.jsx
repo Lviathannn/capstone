@@ -11,23 +11,16 @@ import { useState } from "react";
 import { getRouteById } from "@/services/ManageRoute/getRouteById";
 
 export default function DetailRoute() {
+  const token = useSelector((state) => state.auth.user.access_token);
   const id = useParams().id;
   const navigate = useNavigate();
-  const useGetRouteById = (id) => {
-    const token = useSelector((state) => state.auth.user?.access_token); // Mengambil token dari Redux state
-    const { data, error, isLoading } = useQuery({
-      queryKey: ["admin", id],
-      queryFn: () => getRouteById(token, id),
-      enabled: !!token,
-      onError: (error) => {
-        console.error("Query error:", error);
-      },
-    });
-    return { data, error, isLoading };
-  };
-  const { data } = useGetRouteById(id);
+  const { data } = useQuery({
+    queryKey: ["destination", id],
+    queryFn: () => getRouteById(token, id),
+  });
   const detailRoute = data?.data;
 
+  console.log(detailRoute);
   const defaultDestinasiCount = 3;
   const destinasi = data?.data.destinasi || [];
   const extendedDestinasi = Array.from(
@@ -90,7 +83,9 @@ export default function DetailRoute() {
                 >
                   Username
                 </Label>
-                <ReadOnlyField id="username" children={detailRoute?.username} />
+                <ReadOnlyField id="username">
+                  {detailRoute?.username}
+                </ReadOnlyField>
               </div>
             )}
           </div>
@@ -114,7 +109,7 @@ export default function DetailRoute() {
                 >
                   Kota
                 </Label>
-                <ReadOnlyField id="kota" children={detailRoute?.kota} />
+                <ReadOnlyField id="kota">{detailRoute?.kota}</ReadOnlyField>
               </div>
               <div className="flex flex-col gap-2">
                 <Label
@@ -123,10 +118,9 @@ export default function DetailRoute() {
                 >
                   Nama Rute Perjalanan
                 </Label>
-                <ReadOnlyField
-                  id="namaRute"
-                  children={detailRoute?.nama_rute}
-                />
+                <ReadOnlyField id="namaRute">
+                  {detailRoute?.nama_rute}
+                </ReadOnlyField>
               </div>
             </div>
           )}
@@ -149,10 +143,9 @@ export default function DetailRoute() {
                   >
                     {`Destinasi ${index + 1}`}
                   </Label>
-                  <ReadOnlyField
-                    id={`destinasi${index + 1}`}
-                    children={dest.nama_destinasi || "-"}
-                  />
+                  <ReadOnlyField id={`destinasi${index + 1}`}>
+                    {dest.nama_destinasi || "-"}
+                  </ReadOnlyField>
                 </div>
               ))}
             </div>
@@ -173,10 +166,9 @@ export default function DetailRoute() {
                 >
                   Estimasi Biaya
                 </Label>
-                <ReadOnlyField
-                  id="biaya"
-                  children={detailRoute?.estimasi_biaya}
-                />
+                <ReadOnlyField id="biaya">
+                  {detailRoute?.estimasi_biaya}
+                </ReadOnlyField>
               </div>
             </div>
           )}
