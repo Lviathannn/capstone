@@ -9,7 +9,7 @@ import {
 import { privateRoutes } from "@/constant/routes";
 import { Link } from "react-router-dom";
 
-export const CardDetail = () => {
+export const CardDetail = ({title,desc,textBtn}) => {
   return (
     <div>
       <div className="w-full overflow-hidden rounded-[10px] border-none shadow-md">
