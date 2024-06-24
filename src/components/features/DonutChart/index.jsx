@@ -8,10 +8,23 @@ export default function DonutChartComponent({ width, height, dataDestinasi }) {
     "Seni dan Budaya": colors.primary[400],
     "Sejarah": colors.primary[200],
   };
+
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const { nama_kategori, total } = payload[0].payload;
+      return (
+        <div className="custom-tooltip bg-white px-2 py-3 border border-gray-300">
+          <p className="">{`${nama_kategori} : ${total}`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <ResponsiveContainer width={width} height={height}>
       <PieChart>
-        <Tooltip />
+        <Tooltip content={<CustomTooltip />} />
         <Pie
           data={dataDestinasi}
           dataKey="total"
