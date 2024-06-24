@@ -29,7 +29,6 @@ import { useNavigate } from "react-router-dom";
 import { deleteDestination } from "@/services/destination/deleteDestionation";
 import Dialog from "@/components/features/alert/Dialog";
 import Notification from "@/components/features/alert/Notification";
-import DeleteImage from "@/assets/ImgModal/Ilustrasi-delete.svg";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DestinationPage() {
@@ -60,7 +59,7 @@ export default function DestinationPage() {
     }
   }, [page, searchQuery, setSearchParams]);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+   
   const destinationMutation = useMutation({
     mutationFn: async (id) => {
       try {

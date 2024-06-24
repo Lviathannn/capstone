@@ -6,12 +6,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AlertConfirm } from "@/components/features/alert/alertConfirm";
-import IcDelete from "@/components/icons/ic-delete.svg";
-import IlusDelete from "@/assets/ImgModal/Ilustrasi-delete.svg";
 import Dialog from "@/components/features/alert/Dialog";
 import TrashCan from "@/components/icons/TrachCan";
-import Notification from "@/components/features/alert/Notification";
 import TableSkeleton from "@/components/features/skeleton/TableSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import DeleteImage from "@/assets/ImgModal/Ilustrasi-delete.svg";

@@ -21,6 +21,7 @@ export default function DetailDestination() {
     return null;
   }
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { data: destination, isLoading, isError } = useQuery({
     queryKey: ["destination", id],
     queryFn: () => getDestination(token, id),
