@@ -1,4 +1,4 @@
-export default function Search ({ className }) {
+export default function Search({ className }) {
   return (
     <svg
       width="24"
@@ -14,4 +14,4 @@ export default function Search ({ className }) {
       />
     </svg>
   );
-};
+}

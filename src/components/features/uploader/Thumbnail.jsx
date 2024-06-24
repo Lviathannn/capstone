@@ -5,7 +5,14 @@ import { toast } from "sonner";
 import Files from "react-files";
 
 export default function Thumbnail({ onDelete, setFile, fileState }) {
-  const url = URL.createObjectURL(fileState?.file[0]);
+  const getUrl = () => {
+    if (typeof fileState?.file === "string") {
+      return fileState?.file;
+    }
+    return URL.createObjectURL(fileState?.file[0]);
+  };
+
+  const url = getUrl();
 
   return (
     <div

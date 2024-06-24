@@ -9,7 +9,7 @@ const ProtectedRoute = ({ requiredRole, children }) => {
   const [hasNavigated, setHasNavigated] = useState(false);
 
   useEffect(() => {
-    if (role != requiredRole) {
+    if (role && role != requiredRole) {
       if (!hasNavigated) {
         toast.error("Hanya Super Admin yang memiliki akses");
         setHasNavigated(true);
@@ -19,7 +19,7 @@ const ProtectedRoute = ({ requiredRole, children }) => {
     }
   }, [role, requiredRole, location.pathname, hasNavigated]);
 
-  if (role != requiredRole) {
+  if (role && role != requiredRole) {
     return <Navigate to="/dashboard" />;
   } else return children ? children : <Outlet />;
 };

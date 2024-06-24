@@ -55,19 +55,18 @@ export const FormAddAdmin = () => {
 
   const createPostMutation = useMutation({
     mutationFn: async (values) => addAdmins(token, values),
-    onSuccess: () => {  
+    onSuccess: () => {
       setIsSuccess(true);
     },
-     onSettled: () => {
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["admin"] });
-        setTimeout(() => {
-          setIsSuccess(false);
-          setIsError(false);
-          navigate(privateRoutes.ADMIN);
-        }, 2000);
-     },
+      setTimeout(() => {
+        setIsSuccess(false);
+        setIsError(false);
+        navigate(privateRoutes.ADMIN);
+      }, 2000);
+    },
     onError: () => {
-      console.log("Mutation failed");
       setIsError(true);
     },
   });
@@ -232,7 +231,7 @@ export const FormAddAdmin = () => {
             </div>
             <div className="flex items-center justify-between gap-6 sm:justify-end">
               <Link to={privateRoutes.ADMIN} className="w-full sm:w-fit">
-                <Button className="h-[42px] w-full border border-primary-500 bg-white text-sm font-medium text-primary-500 hover:bg-primary-50 hover:text-primary-500 sm:w-[180px] rounded-[12px]">
+                <Button className="h-[42px] w-full rounded-[12px] border border-primary-500 bg-white text-sm font-medium text-primary-500 hover:bg-primary-50 hover:text-primary-500 sm:w-[180px]">
                   {isLoading ? (
                     <Skeleton className="ml-6 h-4 w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
                   ) : (
@@ -253,10 +252,10 @@ export const FormAddAdmin = () => {
                     disabled={
                       !form.watch("username") || !form.watch("password")
                     }
-                    className={`${!form.watch("username") || !form.watch("password") ? "cursor-not-allowed bg-gray-400" : "bg-primary-500 hover:bg-primary-600"} h-[42px] w-full sm:w-[180px] text-[16px] font-medium text-neutral-100 rounded-[12px]`}
+                    className={`${!form.watch("username") || !form.watch("password") ? "cursor-not-allowed bg-gray-400" : "bg-primary-500 hover:bg-primary-600"} h-[42px] w-full rounded-[12px] text-[16px] font-medium text-neutral-100 sm:w-[180px]`}
                   >
                     {isLoading ? (
-                      <Skeleton className="ml-6 h-4 sm:w-[120px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                      <Skeleton className="ml-6 h-4 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0 sm:w-[120px]" />
                     ) : (
                       "Tambah"
                     )}
@@ -266,7 +265,7 @@ export const FormAddAdmin = () => {
             </div>
           </form>
         </Form>
-         
+
         <Notification
           title={isSuccess ? "Sukses !" : "Gagal !"}
           description={

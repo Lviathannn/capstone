@@ -29,11 +29,11 @@ import { useNavigate } from "react-router-dom";
 import { deleteDestination } from "@/services/destination/deleteDestionation";
 import Dialog from "@/components/features/alert/Dialog";
 import Notification from "@/components/features/alert/Notification";
-import DeleteImage from "@/assets/ImgModal/Ilustrasi-delete.svg";
 import { Skeleton } from "@/components/ui/skeleton";
+import DeleteImage from "@/assets/ImgModal/Ilustrasi-delete.svg";
 
 export default function DestinationPage() {
-  const token = useSelector((state) => state.auth.user.access_token);
+  const token = useSelector((state) => state.auth.user?.access_token);
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 1000);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -60,7 +60,7 @@ export default function DestinationPage() {
     }
   }, [page, searchQuery, setSearchParams]);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+   
   const destinationMutation = useMutation({
     mutationFn: async (id) => {
       try {

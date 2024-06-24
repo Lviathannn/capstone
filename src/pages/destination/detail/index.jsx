@@ -10,9 +10,10 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import notFoundImg from "@/assets/icons/not-found.svg";
+import Spinner from "@/components/ui/Spinner";
 
 export default function DetailDestination() {
-  const token = useSelector((state) => state.auth.user.access_token);
+  const token = useSelector((state) => state.auth.user?.access_token);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -58,9 +59,7 @@ export default function DetailDestination() {
         </div>
         {isLoading && (
           <div className="flex h-full w-full flex-grow flex-col items-center justify-center gap-5 pt-32">
-            <span className="mx-auto flex items-center text-[16px] font-medium">
-              Loading...
-            </span>
+            <Spinner />
           </div>
         )}
         {isError && (
@@ -76,11 +75,15 @@ export default function DetailDestination() {
             <div className="w-full rounded-xl bg-neutral-50 p-5 shadow-md">
               <div className="flex w-full flex-col justify-center gap-2 lg:flex-row">
                 {destination?.data?.data?.url_gambar?.map((data) => (
-                  <img
-                    key={data.id_media}
-                    src={data?.url_media}
-                    className="aspect-video rounded-lg bg-neutral-100 object-cover object-center lg:w-[33.3%]"
-                  />
+                  <div className="lg:w-[33.3%]" key={data.id_media}>
+                    <img
+                      src={data?.url_media}
+                      className="aspect-video rounded-lg bg-neutral-100 object-cover object-center"
+                    />
+                    <p className="mt-2 truncate text-center text-xs text-neutral-400">
+                      {data?.judul}
+                    </p>
+                  </div>
                 ))}
               </div>
               <div className="mt-5 w-full space-y-4">

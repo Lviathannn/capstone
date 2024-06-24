@@ -1,21 +1,21 @@
-import { useState, useRef, useEffect } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useSelector } from 'react-redux';
+import { useState, useRef, useEffect } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Preview from "@/assets/img/preview-video.png";
 import AlertAdd from "@/assets/img/alert add.png";
-import ReactPlayer from 'react-player';
-import { addContent } from '@/services/manageContent/addContent';
-import { getDestination } from '@/services/manageContent/getDestination';
-import { AlertConfirm } from '@/components/features/alert/alertConfirm';
-import ProtectedLayout from '@/components/layout/ProtectedLayout';
+import ReactPlayer from "react-player";
+import { addContent } from "@/services/manageContent/addContent";
+import { getDestination } from "@/services/manageContent/getDestination";
+import { AlertConfirm } from "@/components/features/alert/alertConfirm";
+import ProtectedLayout from "@/components/layout/ProtectedLayout";
 import { privateRoutes } from "@/constant/routes";
 import {
   Select,
@@ -54,10 +54,14 @@ export default function CreateContent() {
   const token = useSelector((state) => state.auth.user?.access_token);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openError, setOpenError] = useState(false);
-  const [contentUrl, setContentUrl] = useState('');
-  const [contentType, setContentType] = useState('');
+  const [contentUrl, setContentUrl] = useState("");
+  const [contentType, setContentType] = useState("");
 
-  const { data: destinationsData, error: destinationsError, isLoading: destinationsLoading } = useGetDestination();
+  const {
+    data: destinationsData,
+    error: destinationsError,
+    isLoading: destinationsLoading,
+  } = useGetDestination();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -84,7 +88,7 @@ export default function CreateContent() {
 
   useEffect(() => {
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = "auto";
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [form.watch("title")]);
@@ -95,24 +99,21 @@ export default function CreateContent() {
 
     if (url) {
       if (url.match(/\.(jpg|jpeg|png)$/i)) {
-        setContentType('photo');
+        setContentType("photo");
       } else if (url.match(/\.(mp4|avi|mov|mkv|video|hevc|webm)$/i)) {
-        setContentType('video');
+        setContentType("video");
       } else {
-        setContentType('other');
+        setContentType("other");
       }
     } else {
-      setContentType('');
+      setContentType("");
     }
   }, [form.watch("url")]);
 
   const onSubmit = (values) => {
     try {
-      console.log('Submitting form data:', values);
-
       const dataToSend = { ...values, type: contentType };
-      console.log('Data yang akan dikirim ke backend:', dataToSend);
-  
+
       createPostMutation.mutate(dataToSend);
     } catch (error) {
       console.error(error);
@@ -122,24 +123,32 @@ export default function CreateContent() {
 
   return (
     <ProtectedLayout>
-      <main className="flex flex-col px-10 py-6 bg-primary-50 h-full">
-        <div className="bg-neutral-50 shadow-md p-4 rounded-lg mb-4">
+      <main className="flex h-full flex-col bg-primary-50 px-10 py-6">
+        <div className="mb-4 rounded-lg bg-neutral-50 p-4 shadow-md">
           <div>
-            <h1 className="text-[22px] font-bold text-neutral-800 font-jakarta-sans">Tambah Konten</h1>
-            <p className="text-base font-medium text-neutral-700 font-jakarta-sans">Tambah konten video</p>
+            <h1 className="font-jakarta-sans text-[22px] font-bold text-neutral-800">
+              Tambah Konten
+            </h1>
+            <p className="font-jakarta-sans text-base font-medium text-neutral-700">
+              Tambah konten video
+            </p>
           </div>
         </div>
         <form
-          className="bg-neutral-50 px-6 py-8 shadow-md rounded-lg grid grid-cols-12 gap-10"
+          className="grid grid-cols-12 gap-10 rounded-lg bg-neutral-50 px-6 py-8 shadow-md"
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <div className="col-span-2 flex justify-center items-start">
-            <div className='flex flex-col justify-center items-center gap-1'>
-              <p className="text-lg font-bold font-jakarta-sans">Preview</p>
+          <div className="col-span-2 flex items-start justify-center">
+            <div className="flex flex-col items-center justify-center gap-1">
+              <p className="font-jakarta-sans text-lg font-bold">Preview</p>
               <div>
                 {contentUrl ? (
                   contentUrl.match(/\.(jpg|jpeg|png|gif)$/i) ? (
-                    <img src={contentUrl} alt="Preview" className="w-auto h-auto object-cover" />
+                    <img
+                      src={contentUrl}
+                      alt="Preview"
+                      className="h-auto w-auto object-cover"
+                    />
                   ) : (
                     <ReactPlayer
                       url={contentUrl}
@@ -150,51 +159,75 @@ export default function CreateContent() {
                     />
                   )
                 ) : (
-                  <img src={Preview} alt="Alert Add" className="w-auto h-auto object-cover" style={{ aspectRatio: '16/9' }} />
+                  <img
+                    src={Preview}
+                    alt="Alert Add"
+                    className="h-auto w-auto object-cover"
+                    style={{ aspectRatio: "16/9" }}
+                  />
                 )}
               </div>
             </div>
           </div>
           <div className="col-span-10 gap-4">
-            <div className="col-span-12 mb-3 relative">
-              <Label htmlFor="destination_id" className="text-sm font-bold font-jakarta-sans pb-2">Nama Destinasi</Label>
+            <div className="relative col-span-12 mb-3">
+              <Label
+                htmlFor="destination_id"
+                className="pb-2 font-jakarta-sans text-sm font-bold"
+              >
+                Nama Destinasi
+              </Label>
               <Select
                 {...form.register("destination_id", {
                   required: true,
                 })}
-                onValueChange={(value) => form.setValue("destination_id", value)}
+                onValueChange={(value) =>
+                  form.setValue("destination_id", value)
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Masukkan Nama Destinasi" />
                 </SelectTrigger>
                 <SelectContent>
-                  {destinationsData && destinationsData.data && destinationsData.data.map(destination => (
-                    <SelectGroup key={destination.id}>
-                      <SelectLabel>{destination.alamat.kota}</SelectLabel>
-                      <SelectItem key={destination.id} value={destination.id}>
-                        {destination.nama}
-                      </SelectItem>
-                    </SelectGroup>
-                  ))}
+                  {destinationsData &&
+                    destinationsData.data &&
+                    destinationsData.data.map((destination) => (
+                      <SelectGroup key={destination.id}>
+                        <SelectLabel>{destination.alamat.kota}</SelectLabel>
+                        <SelectItem key={destination.id} value={destination.id}>
+                          {destination.nama}
+                        </SelectItem>
+                      </SelectGroup>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
-            <div className="col-span-12 mb-3 relative">
-              <Label htmlFor="title" className="text-sm font-bold font-jakarta-sans pb-2">Deskripsi Konten</Label>
+            <div className="relative col-span-12 mb-3">
+              <Label
+                htmlFor="title"
+                className="pb-2 font-jakarta-sans text-sm font-bold"
+              >
+                Deskripsi Konten
+              </Label>
               <textarea
                 id="title"
-                placeholder='Masukkan Deskripsi Konten'
+                placeholder="Masukkan Deskripsi Konten"
                 ref={textareaRef}
-                className="w-full h-auto resize-none rounded-[10px] p-2 overflow-hidden flex border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-auto w-full resize-none overflow-hidden rounded-[10px] border border-input bg-background p-2 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
                 {...form.register("title")}
               />
             </div>
-            <div className="col-span-12 mb-3 relative">
-              <Label htmlFor="url" className="text-sm font-bold font-jakarta-sans pb-2">Link Terkait</Label>
+            <div className="relative col-span-12 mb-3">
+              <Label
+                htmlFor="url"
+                className="pb-2 font-jakarta-sans text-sm font-bold"
+              >
+                Link Terkait
+              </Label>
               <Input
                 id="url"
                 type="text"
-                placeholder='Masukkan Link Video'
+                placeholder="Masukkan Link Video"
                 {...form.register("url")}
               />
             </div>
