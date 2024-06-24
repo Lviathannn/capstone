@@ -3,12 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
-import { getRouteById } from "@/services/ManageRoute/getRouteById";
 import { ReadOnlyField } from "@/components/ui/read-only-field";
 import ProtectedLayout from "@/components/layout/ProtectedLayout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect } from "react";
 import { useState } from "react";
+import { getRouteById } from "@/services/ManageRoute/getRouteById";
 
 export default function DetailRoute() {
   const id = useParams().id;

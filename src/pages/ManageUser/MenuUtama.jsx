@@ -1,18 +1,10 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import person from "@/assets/icons/person.png";
 import plus from "@/assets/icons/plus.png";
-import search from "@/assets/icons/search.png";
-import edit from "@/assets/icons/edit.png";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Clear } from "@/components/icons/Clear";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useSelector } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getUsers } from "@/services/manageUser/getUsers";
@@ -25,7 +17,11 @@ import TableSkeleton from "@/components/features/skeleton/TableSkeleton";
 import Dialog from "@/components/features/alert/Dialog";
 import Notification from "@/components/features/alert/Notification";
 import TrashCan from "@/components/icons/TrachCan";
-import DeleteImage from "@/assets/ImgModal/Ilustrasi-delete.svg";
+import IcEdit from "@/components/icons/ic-edit.svg";
+import IcDelete from "@/assets/ImgModal/Ilustrasi-delete.svg";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useDebounce } from "use-debounce";
+import IcSearch from "@/assets/icons/search.png";
 
 export const useGetUser = (page, searchQuery) => {
   const token = useSelector((state) => state.auth.user?.access_token);
@@ -44,19 +40,20 @@ export default function MenuUtama() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
-  const currentPage = parseInt(searchParams.get("page")) || 1;
-  const [searchQuery, setSearchQuery] = useState("");
-  const { data, error, isLoading } = useGetUser(currentPage, searchQuery);
+  const page = searchParams.get("page") || 1;
+  const [search, setSearch] = useState("");
+  const [searchQuery] = useDebounce(search, 1000);
+  const { data, error, isLoading } = useGetUser(page, searchQuery);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
-
+  const inputRef = useRef(null);
   const token = useSelector((state) => state.auth.user?.access_token);
 
   const createDeletedMutation = useMutation({
     mutationFn: (id) => deleteUsers(token, id),
     onSuccess: () => {
       setIsSuccess(true);
-      queryClient.invalidateQueries(["user", currentPage, searchQuery]);
+      queryClient.invalidateQueries(["user", page, searchQuery]);
     },
     onError: () => {
       setIsError(true);
@@ -68,6 +65,18 @@ export default function MenuUtama() {
       }, 2000);
     },
   });
+
+  useEffect(() => {
+    setSearchParams({ page: 1 });
+  }, [search, setSearchParams]);
+
+  useEffect(() => {
+    if (searchQuery !== "") {
+      setSearchParams({ page, search: searchQuery });
+    } else {
+      setSearchParams({ page });
+    }
+  }, [page, searchQuery, setSearchParams]);
 
   const handleDeleteUser = (user) => {
     const userId = user.id;
@@ -82,17 +91,6 @@ export default function MenuUtama() {
   const totalUsers = data?.pagination?.total || 0;
   const totalPages = data?.pagination?.last_page || 1;
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.nama_lengkap.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.no_telepon.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.jenis_kelamin.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.kota.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.provinsi.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
-
   const handleUserDetailClick = (user) => {
     const { id } = user;
     navigate(privateRoutes.USER + `/detail/${id}`);
@@ -103,9 +101,14 @@ export default function MenuUtama() {
     navigate(privateRoutes.USER + `/edit/${id}`);
   };
 
-  const paginate = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setSearchParams({ page: pageNumber });
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+  };
+
+  const handleClear = () => {
+    setSearch("");
+    if (inputRef.current) {
+      inputRef.current.value = "";
     }
   };
 
@@ -113,49 +116,72 @@ export default function MenuUtama() {
     <ProtectedLayout>
       <div className="flex w-full flex-col gap-6 bg-primary-50 px-10 py-6 font-sans">
         <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-10 rounded-lg bg-neutral-50 p-4">
-            <h1 className="font-jakarta-sans text-[26px] font-[700] text-neutral-800">
-              Kelola User
-            </h1>
-            <p className="font-jakarta-sans text-[16px] font-[500] text-neutral-700">
-              Kelola data pengguna dengan mudah!
-            </p>
-            <div className="mt-4 flex justify-between">
-              <div className="flex w-1/2 items-center rounded-lg border px-4 py-3">
-                <img src={search} alt="Search Icon" className="mr-4 h-4 w-4" />
+        <div className="col-span-10 rounded-lg bg-neutral-50 p-4">
+          <h1 className="font-jakarta-sans text-[26px] font-[700] text-neutral-800">
+            {isLoading ? (
+              <Skeleton className="h-5 w-full bg-gradient-to-r my-3 rounded-full from-neutral-200 to-neutral-50/0" />
+            ) : (
+              "Kelola User"
+            )}
+          </h1>
+          <p className="font-jakarta-sans text-[16px] font-[500] text-neutral-700">
+            {isLoading ? (
+              <Skeleton className="h-3 w-full bg-gradient-to-r my-3 rounded-full from-neutral-200 to-neutral-50/0" />
+            ) : (
+              "Kelola data pengguna dengan mudah!"
+            )}
+          </p>
+          <div className="mt-4 flex justify-between">
+            <div className="flex w-1/2 items-center rounded-lg border px-4 py-3 relative">
+              {isLoading ? (
+                <Skeleton className="h-5 w-5 bg-gradient-to-r rounded-full from-neutral-200 to-neutral-50/0 mr-2" />
+              ) : (
+                <img src={IcSearch} alt="Search Icon" className="mr-4 h-4 w-4" />
+              )}
+              {isLoading ? (
+                <Skeleton className="h-5 w-full bg-gradient-to-r rounded-full from-neutral-200 to-neutral-50/0" />
+              ) : (
                 <input
                   type="text"
                   placeholder="Cari ..."
                   className="h-full w-full border-none bg-transparent font-jakarta-sans text-neutral-800 outline-none"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  ref={inputRef}
+                  name="search"
+                  onChange={handleSearchChange}
                 />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-3 top-3 h-4 w-4 text-neutral-800"
-                  >
-                    &times;
-                  </button>
-                )}
-              </div>
-              <Link
-                to={privateRoutes.USER + "/create"}
-                className="flex items-center rounded-lg border px-10 py-3 font-jakarta-sans text-primary-500 shadow-sm"
-              >
-                <img src={plus} alt="Plus Icon" className="mr-4 h-6 w-6" />
-                Tambah ...
-              </Link>
+              )}
+              {search && (
+                <Clear
+                  className="absolute right-3 top-3 opacity-50"
+                  onClick={handleClear}
+                />
+              )}
             </div>
+            <Link
+              to={privateRoutes.USER + "/create"}
+              className="flex items-center rounded-lg border px-10 py-3 font-jakarta-sans text-primary-500 shadow-sm"
+            >
+              {isLoading ? (
+                <Skeleton className="h-6 w-6 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0 mr-3" />
+              ) : (
+                <img src={plus} alt="Plus Icon" className="mr-4 h-6 w-6" />
+              )}
+              {isLoading ? (
+                <Skeleton className="h-4 w-16 bg-gradient-to-r rounded-lg from-neutral-200 to-neutral-50/0" />
+              ) : (
+                <span>Tambah ...</span>
+              )}
+            </Link>
           </div>
+        </div>
           <div className="items-left col-span-2 flex flex-col justify-center rounded-lg bg-neutral-50 p-4">
-            <img src={person} alt="Person Icon" className="mb-4 h-6 w-6" />
-            <p className="font-jakarta-sans text-[26px] font-[700] text-neutral-800">
+            {isLoading ? ( <Skeleton className="h-6 w-6 mb-5 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />) :<img src={person} alt="Person Icon" className="mb-4 h-6 w-6" />}
+            {isLoading ? ( <Skeleton className="h-6 w-full mb-3 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />) :<p className="font-jakarta-sans text-[26px] font-[700] text-neutral-800">
               {totalUsers}
-            </p>
-            <p className="font-jakarta-sans text-[16px] font-[400] text-neutral-800">
+            </p>}
+            {isLoading ? ( <Skeleton className="h-4 w-full rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />) :<p className="font-jakarta-sans text-[16px] font-[400] text-neutral-800">
               Total User
-            </p>
+            </p>}
           </div>
         </div>
         <div className="overflow-hidden rounded-xl border border-neutral-200">
@@ -163,37 +189,37 @@ export default function MenuUtama() {
             <TableHeader className="bg-primary-500 text-sm font-semibold">
               <TableRow>
                 <TableHead className="font-jakarta-sans text-neutral-50">
-                  Nama Pengguna
+                  {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Nama Pengguna"}
                 </TableHead>
                 <TableHead className="font-jakarta-sans text-neutral-50">
-                  Nama Lengkap
+                  {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Nama Lengkap"}
                 </TableHead>
                 <TableHead className="font-jakarta-sans text-neutral-50">
-                  Email
+                  {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Email"}
                 </TableHead>
                 <TableHead className="font-jakarta-sans text-neutral-50">
-                  Nomor Telepon
+                  {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Nomor Telepon"}
                 </TableHead>
                 <TableHead className="font-jakarta-sans text-neutral-50">
-                  Jenis Kelamin
+                  {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Jenis Kelamin"}
                 </TableHead>
                 <TableHead className="font-jakarta-sans text-neutral-50">
-                  Kota
+                  {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Kota"}
                 </TableHead>
                 <TableHead className="font-jakarta-sans text-neutral-50">
-                  Provinsi
+                  {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Provinsi"}
                 </TableHead>
                 <TableHead className="font-jakarta-sans text-neutral-50">
-                  Aksi
+                  {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Aksi"}
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="bg-neutral-50 font-jakarta-sans">
               {isLoading &&
                 Array.from({ length: 10 }).map((_, index) => (
-                  <TableSkeleton key={index} />
+                  <TableSkeleton key={index} tableCell={8} />
                 ))}
-              {filteredUsers.map((user) => (
+              {data?.data?.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell
                     onClick={() => handleUserDetailClick(user)}
@@ -240,18 +266,20 @@ export default function MenuUtama() {
                   <TableCell>
                     <div className="flex items-center">
                       <button
-                        className="mr-2"
+                        className="mr-4"
                         onClick={() => handleUserClick(user)}
                       >
-                        <img src={edit} alt="Edit Icon" className="h-6 w-6" />
+                        <img src={IcEdit} alt="Edit Icon" sizes="24" />
                       </button>
                       <Dialog
-                        img={DeleteImage}
+                        img={IcDelete}
                         actionTitle="Hapus"
                         action={() => handleDeleteUser(user)}
                         type="danger"
                         title="Hapus Data !"
                         description="Data akan dihapus permanen. Yakin ingin menghapus data ini?"
+                        textSubmit="Hapus"
+                        textCancel="Batal"
                       >
                         <button>
                           <TrashCan />
@@ -266,9 +294,8 @@ export default function MenuUtama() {
         </div>
         <div className="my-3 flex justify-center">
           <Pagination
-            currentPage={data?.pagination.current_page}
+            currentPage={data?.pagination?.current_page}
             lastPage={data?.pagination?.last_page}
-            onPageChange={paginate}
           />
         </div>
       </div>

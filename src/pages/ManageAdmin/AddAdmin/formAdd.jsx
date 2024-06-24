@@ -6,7 +6,6 @@ import VisibilityOff from "@/components/icons/VisibilityOff";
 import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addAdmins } from "@/services/manageAdmin/addAdmins";
 import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -25,6 +24,7 @@ import { privateRoutes } from "@/constant/routes";
 import Dialog from "@/components/features/alert/Dialog";
 import Notification from "@/components/features/alert/Notification";
 import { Skeleton } from "@/components/ui/skeleton";
+import { addAdmins } from "@/services/manageAdmin/addAdmins";
 
 const formSchema = zod.object({
   username: zod.string().min(6).max(16),

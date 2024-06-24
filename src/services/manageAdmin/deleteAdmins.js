@@ -7,8 +7,10 @@ export const deleteAdmins = async (token, id) => {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log("Data yang terhapus: ", res.data);
     return res.data;
   } catch (error) {
+    console.error("Error delete admins:", error); // Logging untuk debug
     throw new Error("Failed to delete admins");
   }
 };
