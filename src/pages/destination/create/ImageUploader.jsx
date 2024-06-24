@@ -34,6 +34,7 @@ export default function ImageUploader({
                 description: e.target.value,
               });
             }}
+            defaultValue={file1.description}
           />
         </div>
       ) : (
@@ -66,6 +67,7 @@ export default function ImageUploader({
                 description: e.target.value,
               });
             }}
+            defaultValue={file2.description}
           />
         </div>
       ) : (
@@ -97,6 +99,7 @@ export default function ImageUploader({
                 description: e.target.value,
               });
             }}
+            defaultValue={file3.description}
           />
         </div>
       ) : (
