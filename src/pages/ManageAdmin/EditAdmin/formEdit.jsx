@@ -48,7 +48,7 @@ export const useGetAdminId = (id) => {
   return { data, error, isLoading };
 };
 
-export const FormEditAdmin = () => {
+export const FormEditAdmin = ()=> {
   const { id } = useParams();
   const fileInputRef = useRef(null);
   const queryClient = useQueryClient();
