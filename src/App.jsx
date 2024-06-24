@@ -92,8 +92,14 @@ function App() {
 
         {/* Route */}
 
-        <Route path={privateRoutes.ROUTE} element={<ManageRoute />} />
-        <Route path={`${privateRoutes.ROUTE}/:id`} element={<DetailRoute />} />
+        <Route
+          path={privateRoutes.ROUTE}
+          element={currentUser ? <ManageRoute /> : <Navigate to="/login" />}
+        />
+        <Route
+          path={`${privateRoutes.ROUTE}/detail/:id`}
+          element={currentUser ? <DetailRoute /> : <Navigate to="/login" />}
+        />
 
         {/* User */}
 
