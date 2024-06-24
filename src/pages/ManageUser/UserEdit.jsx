@@ -12,7 +12,13 @@ import VisibilityOff from "@/components/icons/VisibilityOff";
 import Edit from "@/assets/ImgModal/Ilustrasi-edit.svg";
 import { updateUsers } from "@/services/manageUser/updateUsers";
 import { getUserById } from "@/services/manageUser/getUserById";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
 import { z as zod } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
@@ -25,12 +31,20 @@ import Dialog from "@/components/features/alert/Dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const formSchema = zod.object({
-  username: zod.string().min(2, "Username harus minimal 2 karakter").max(50),
+  username: zod
+    .string()
+    .min(2, "Username harus minimal 2 karakter")
+    .max(50)
+    .regex(/^\S*$/, "Username tidak boleh mengandung spasi"),
   password: zod.string().max(50).optional(),
   foto_profil: zod.any().nullable(),
   nama_lengkap: zod.string().min(1, "Nama lengkap wajib diisi").max(100),
   email: zod.string().min(1, "Email harus diisi").email("Email tidak valid"),
-  no_telepon: zod.string().min(1, "Nomor telepon harus diisi").min(10, "Nomor telepon minimal 10 karakter").max(15, "Nomor telepon maksimal 15 karakter"),
+  no_telepon: zod
+    .string()
+    .min(1, "Nomor telepon harus diisi")
+    .min(10, "Nomor telepon minimal 10 karakter")
+    .max(15, "Nomor telepon maksimal 15 karakter"),
   jenis_kelamin: zod.string().optional(),
   provinsi: zod.string().optional(),
   kota: zod.string().optional(),
@@ -170,10 +184,18 @@ export default function UserEdit() {
           <div className="mb-4 rounded-lg bg-neutral-50 p-4 shadow-md">
             <div>
               <h1 className="font-jakarta-sans text-[22px] font-bold text-neutral-800">
-                Edit User
+                {isLoading ? (
+                  <Skeleton className="mb-3 h-5 w-full rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                ) : (
+                  "Edit User"
+                )}
               </h1>
               <p className="font-jakarta-sans text-base font-medium text-neutral-700">
-                Mengedit data pengguna
+                {isLoading ? (
+                  <Skeleton className="my-3 h-3 w-full bg-gradient-to-r from-neutral-200 to-neutral-50/0 file:rounded-full" />
+                ) : (
+                  "Mengedit data pengguna"
+                )}
               </p>
             </div>
           </div>
@@ -188,11 +210,15 @@ export default function UserEdit() {
                         <FormControl>
                           <div className="relative w-fit rounded-full bg-neutral-200">
                             <div className="mx-auto">
-                              <img
-                                className="h-40 w-40 rounded-full object-cover"
-                                src={preview || DefaultPhoto}
-                                alt="photo"
-                              />
+                              {isLoading ? (
+                                <Skeleton className="my-3 h-40 w-40 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0 object-cover" />
+                              ) : (
+                                <img
+                                  className="h-40 w-40 rounded-full object-cover"
+                                  src={preview || DefaultPhoto}
+                                  alt="photo"
+                                />
+                              )}
                             </div>
                             <div className="absolute left-0 top-0 rounded-full">
                               <Input
@@ -227,94 +253,187 @@ export default function UserEdit() {
             </div>
             <div className="col-span-10 grid grid-cols-12 gap-4">
               <FormItem className="col-span-6 mb-3">
-                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
-                  Nama Pengguna
-                </FormLabel>
+                {isLoading ? (
+                  <Skeleton className="mb-3 mt-4 h-3 w-80 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                ) : (
+                  <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                    Nama Pengguna
+                  </FormLabel>
+                )}
                 <FormField
                   control={form.control}
                   name="username"
                   render={({ field, fieldState }) => (
                     <>
-                      <Input {...field} className={fieldState.invalid ? "border-danger-400" : ""} />
-                      {fieldState.error && <p className="text-danger-400 text-xs">{fieldState.error.message}</p>}
+                      {isLoading ? (
+                        <Skeleton className="my-3 ml-5 mt-4 h-3 w-80 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                      ) : (
+                        <Input
+                          {...field}
+                          className={
+                            fieldState.invalid ? "border-danger-400" : ""
+                          }
+                        />
+                      )}
+
+                      {fieldState.error && (
+                        <p className="text-xs text-danger-400">
+                          {fieldState.error.message}
+                        </p>
+                      )}
                     </>
                   )}
                 />
               </FormItem>
               <FormItem className="col-span-6 mb-3">
-                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
-                  Nama Lengkap
-                </FormLabel>
+                {isLoading ? (
+                  <Skeleton className="mb-3 mt-4 h-3 w-80 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                ) : (
+                  <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                    Nama Lengkap
+                  </FormLabel>
+                )}
+
                 <FormField
                   control={form.control}
                   name="nama_lengkap"
                   render={({ field, fieldState }) => (
                     <>
-                      <Input {...field} className={fieldState.invalid ? "border-danger-400" : ""} />
-                      {fieldState.error && <p className="text-danger-400 text-xs">{fieldState.error.message}</p>}
+                      {isLoading ? (
+                        <Skeleton className="my-3 ml-5 mt-4 h-3 w-80 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                      ) : (
+                        <Input
+                          {...field}
+                          className={
+                            fieldState.invalid ? "border-danger-400" : ""
+                          }
+                        />
+                      )}
+                      {fieldState.error && (
+                        <p className="text-xs text-danger-400">
+                          {fieldState.error.message}
+                        </p>
+                      )}
                     </>
                   )}
                 />
               </FormItem>
               <FormItem className="relative col-span-12 mb-3">
-                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
-                  Password
-                </FormLabel>
+                {isLoading ? (
+                  <Skeleton className="mb-3 mt-4 h-3 w-80 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                ) : (
+                  <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                    Password
+                  </FormLabel>
+                )}
                 <FormField
                   control={form.control}
                   name="password"
                   render={({ field }) => (
                     <div className="relative">
-                      <Input
-                        {...field}
-                        type={visible ? "text" : "password"}
-                        className="pr-10"
-                      />
-                      <button
-                        className="absolute inset-y-0 right-0 flex items-center px-3"
-                        type="button"
-                        onClick={() => setVisible(!visible)}
-                      >
-                        {visible ? <VisibilityOff /> : <Eye />}
-                      </button>
+                      {isLoading ? (
+                        <Skeleton className="mb-3 ml-5 mt-4 h-3 w-[692px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                      ) : (
+                        <Input
+                          {...field}
+                          type={visible ? "text" : "password"}
+                          className="pr-10"
+                        />
+                      )}
+                      {isLoading ? (
+                        <Skeleton className="absolute inset-y-0 right-0 h-6 w-6 cursor-pointer rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                      ) : (
+                        <button
+                          className="absolute inset-y-0 right-0 flex items-center px-3"
+                          type="button"
+                          onClick={() => setVisible(!visible)}
+                        >
+                          {visible ? <VisibilityOff /> : <Eye />}
+                        </button>
+                      )}
                     </div>
                   )}
                 />
               </FormItem>
               <FormItem className="col-span-6 mb-3">
-                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
-                  Email
-                </FormLabel>
+                {isLoading ? (
+                  <Skeleton className="mb-3 mt-4 h-3 w-80 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                ) : (
+                  <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                    Email
+                  </FormLabel>
+                )}
+
                 <FormField
                   control={form.control}
                   name="email"
                   render={({ field, fieldState }) => (
                     <>
-                      <Input type="email" {...field} className={fieldState.invalid ? "border-danger-400" : ""} />
-                      {fieldState.error && <p className="text-danger-400 text-xs">{fieldState.error.message}</p>}
+                      {isLoading ? (
+                        <Skeleton className="mb-3 ml-5 mt-4 h-3 w-80 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                      ) : (
+                        <Input
+                          type="email"
+                          {...field}
+                          className={
+                            fieldState.invalid ? "border-danger-400" : ""
+                          }
+                        />
+                      )}
+                      {fieldState.error && (
+                        <p className="text-xs text-danger-400">
+                          {fieldState.error.message}
+                        </p>
+                      )}
                     </>
                   )}
                 />
               </FormItem>
               <FormItem className="col-span-6 mb-3">
-                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
-                  Nomor Telepon
-                </FormLabel>
+                {isLoading ? (
+                  <Skeleton className="mb-3 mt-4 h-3 w-80 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                ) : (
+                  <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                    Nomor Telepon
+                  </FormLabel>
+                )}
+
                 <FormField
                   control={form.control}
                   name="no_telepon"
                   render={({ field, fieldState }) => (
                     <>
-                      <Input {...field} className={fieldState.invalid ? "border-danger-400" : ""} />
-                      {fieldState.error && <p className="text-danger-400 text-xs">{fieldState.error.message}</p>}
+                      {isLoading ? (
+                        <Skeleton className="mb-3 ml-5 mt-4 h-3 w-80 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                      ) : (
+                        <Input
+                          {...field}
+                          className={
+                            fieldState.invalid ? "border-danger-400" : ""
+                          }
+                        />
+                      )}
+
+                      {fieldState.error && (
+                        <p className="text-xs text-danger-400">
+                          {fieldState.error.message}
+                        </p>
+                      )}
                     </>
                   )}
                 />
               </FormItem>
               <FormItem className="col-span-12 mb-3">
-                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
-                  Jenis Kelamin
-                </FormLabel>
+                {isLoading ? (
+                  <Skeleton className="mb-3 mt-4 h-3 w-80 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                ) : (
+                  <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                    Jenis Kelamin
+                  </FormLabel>
+                )}
+                {isLoading ? (
+                  <Skeleton className="my-3 ml-5 h-3 w-80 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                ) : (
                 <FormField
                   control={form.control}
                   name="jenis_kelamin"
@@ -330,27 +449,43 @@ export default function UserEdit() {
                       <Label htmlFor="Wanita">Wanita</Label>
                     </RadioGroup>
                   )}
-                />
+                />)}
               </FormItem>
               <FormItem className="col-span-6 mb-3">
-                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
-                  Provinsi
-                </FormLabel>
-                <FormField
-                  control={form.control}
-                  name="provinsi"
-                  render={({ field }) => <Input {...field} />}
-                />
+                {isLoading ? (
+                  <Skeleton className="mb-3 mt-4 h-3 w-80 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                ) : (
+                  <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                    Provinsi
+                  </FormLabel>
+                )}
+                {isLoading ? (
+                  <Skeleton className="mb-3 ml-5 mt-4 h-3 w-80 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                ) : (
+                  <FormField
+                    control={form.control}
+                    name="provinsi"
+                    render={({ field }) => <Input {...field} />}
+                  />
+                )}
               </FormItem>
               <FormItem className="col-span-6 mb-3">
-                <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
-                  Kota
-                </FormLabel>
-                <FormField
-                  control={form.control}
-                  name="kota"
-                  render={({ field }) => <Input {...field} />}
-                />
+                {isLoading ? (
+                  <Skeleton className="mb-3 mt-4 h-3 w-80 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                ) : (
+                  <FormLabel className="pb-2 font-jakarta-sans text-sm font-bold">
+                    Kota
+                  </FormLabel>
+                )}
+                {isLoading ? (
+                  <Skeleton className="mb-3 ml-5 mt-4 h-3 w-80 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                ) : (
+                  <FormField
+                    control={form.control}
+                    name="kota"
+                    render={({ field }) => <Input {...field} />}
+                  />
+                )}
               </FormItem>
             </div>
           </div>
@@ -361,26 +496,30 @@ export default function UserEdit() {
               className="mr-6 rounded-lg border border-primary-500 bg-neutral-50 px-7 py-2 text-primary-500 hover:bg-primary-500 hover:text-neutral-50"
               onClick={() => navigate(privateRoutes.USER)}
             >
-              Kembali
+              {isLoading ? (
+                <Skeleton className="h-4 w-[60px] rounded-full bg-gradient-to-r from-neutral-200" />
+              ) : (
+                "Kembali"
+              )}
             </Button>
             <Dialog
-                  action={form.handleSubmit(onSubmit)}
-                  title="Simpan Perubahan !"
-                  description="Pastikan perubahan Anda benar. Yakin ingin mengubah dan menyimpan data ini?"
-                  textSubmit="Simpan"
-                  textCancel="Periksa Kembali"
-                  img={Edit}
-                >
-                  <button
-                    className={`rounded-lg border border-primary-500 px-7 py-2 text-neutral-50 bg-primary-500  text-sm font-medium`}
-                  >
-                    {isLoading ? (
-                      <Skeleton className="h-4 w-[30px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
-                    ) : (
-                      "Edit"
-                    )}
-                  </button>
-                </Dialog>
+              action={form.handleSubmit(onSubmit)}
+              title="Simpan Perubahan !"
+              description="Pastikan perubahan Anda benar. Yakin ingin mengubah dan menyimpan data ini?"
+              textSubmit="Simpan"
+              textCancel="Periksa Kembali"
+              img={Edit}
+            >
+              <button
+                className={`rounded-lg border border-primary-500 bg-primary-500 px-7 py-2 text-sm  font-medium text-neutral-50`}
+              >
+                {isLoading ? (
+                  <Skeleton className="h-4 w-[30px] rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+                ) : (
+                  "Edit"
+                )}
+              </button>
+            </Dialog>
           </div>
         </form>
         <Notification
