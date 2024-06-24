@@ -19,12 +19,11 @@ import { getCity } from "@/services/destination/getCity";
 import { getDistrict } from "@/services/destination/getDistrict";
 import { getProvince } from "@/services/destination/getProvince";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function Address({ form }) {
-  const [selectedProvince, setSelectedProvince] = useState(null);
-  const [selectedCity, setSelectedCity] = useState(null);
+  const selectedProvince = form.watch("id_provinsi");
+  const selectedCity = form.watch("id_kota");
 
   const token = useSelector((state) => state?.auth?.user?.access_token);
 
@@ -60,44 +59,44 @@ export default function Address({ form }) {
           <FormField
             control={form.control}
             name="id_provinsi"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Provinsi</FormLabel>
-                <Select
-                  defaultValue=""
-                  onValueChange={(value) => {
-                    field.onChange(value);
-                    form.setValue("id_kota", null);
-                    form.setValue("id_kecamatan", null);
-                    setSelectedProvince(value);
-                    setSelectedCity(null);
-                  }}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Provinsi" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {provinceQuery.isLoading && (
-                      <div className="flex w-full justify-center py-10">
-                        <Spinner />
-                      </div>
-                    )}
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>Provinsi</FormLabel>
+                  <Select
+                    defaultValue={field?.value}
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                      form.setValue("id_kota", null);
+                      form.setValue("id_kecamatan", null);
+                    }}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Provinsi" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {provinceQuery.isLoading && (
+                        <div className="flex w-full justify-center py-10">
+                          <Spinner />
+                        </div>
+                      )}
 
-                    {provinceQuery?.data?.data?.map((province) => (
-                      <SelectItem
-                        value={province.provinsi_id}
-                        key={province.provinsi_id}
-                      >
-                        {province.nama}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
+                      {provinceQuery?.data?.data?.map((province) => (
+                        <SelectItem
+                          value={province.provinsi_id}
+                          key={province.provinsi_id}
+                        >
+                          {province.nama}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
           />
 
           <FormField
@@ -109,9 +108,9 @@ export default function Address({ form }) {
                 <Select
                   onValueChange={(value) => {
                     form.setValue("id_kecamatan", null);
-                    setSelectedCity(value);
                     field.onChange(value);
                   }}
+                  defaultValue={field?.value}
                   disabled={!selectedProvince}
                 >
                   <FormControl>
@@ -146,7 +145,7 @@ export default function Address({ form }) {
                 <Select
                   disabled={!selectedCity}
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  defaultValue={field?.value}
                 >
                   <FormControl>
                     <SelectTrigger>

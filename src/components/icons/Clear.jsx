@@ -1,4 +1,4 @@
-export const Clear = ({className, onClick}) => {
+export const Clear = ({ className, onClick }) => {
   return (
     <svg
       width="24"

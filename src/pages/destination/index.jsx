@@ -33,7 +33,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import DeleteImage from "@/assets/ImgModal/Ilustrasi-delete.svg";
 
 export default function DestinationPage() {
-  const token = useSelector((state) => state.auth.user.access_token);
+  const token = useSelector((state) => state.auth.user?.access_token);
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 1000);
   const [searchParams, setSearchParams] = useSearchParams();

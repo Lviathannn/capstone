@@ -24,7 +24,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { createDestination } from "@/services/destination/createDestination";
 import { postImage } from "@/services/destination/postImage";
 import { toast } from "sonner";
 import Dialog from "@/components/features/alert/Dialog";
@@ -37,6 +36,7 @@ import Address from "../create/Address";
 import { useParams } from "react-router-dom";
 import { getDestination } from "@/services/destination/getDestination";
 import { useEffect } from "react";
+import { editDestination } from "@/services/destination/editDestination";
 
 export default function EditDestination() {
   const { id } = useParams();
@@ -52,13 +52,13 @@ export default function EditDestination() {
     queryFn: () => getDestination(token, id),
   });
 
-  console.log(destinationQuery?.data?.data);
-
   const defaultFacility = destinationQuery?.data?.data?.data?.fasilitas?.map(
     (facility) => {
       return facility?.id_fasilitas;
     },
   );
+
+  const destinationId = destinationQuery?.data?.data?.data?.id_destinasi;
 
   const [file1, setFile1] = useState({
     description: "",
@@ -94,13 +94,15 @@ export default function EditDestination() {
     },
   });
   const destinationMutation = useMutation({
-    mutationFn: async (body) => await createDestination(token, body),
-    onSuccess: async (res) => {
+    mutationFn: async (body) =>
+      await editDestination(token, body, destinationId),
+    onSuccess: async () => {
       setIsSuccess(true);
-      if (file1?.file) {
+
+      if (typeof file1?.file[0] !== "string" && file1?.file[0]) {
         try {
           await postImage(token, {
-            destination_id: res?.data?.data?.id,
+            destination_id: destinationId,
             file: file1?.file[0],
             title: file1?.description || "Gambar 1",
           });
@@ -108,10 +110,10 @@ export default function EditDestination() {
           toast.error("Gagal mengunggah gambar");
         }
       }
-      if (file2?.file) {
+      if (typeof file2?.file[0] !== "string" && file2?.file[0]) {
         try {
           await postImage(token, {
-            destination_id: res?.data?.data?.id,
+            destination_id: destinationId,
             file: file2?.file[0],
             title: file2?.description || "Gambar 2",
           });
@@ -119,10 +121,10 @@ export default function EditDestination() {
           toast.error("Gagal mengunggah gambar");
         }
       }
-      if (file3?.file) {
+      if (typeof file3?.file[0] !== "string" && file3?.file[0]) {
         try {
           await postImage(token, {
-            destination_id: res?.data?.data?.id,
+            destination_id: destinationId,
             file: file3?.file[0],
             title: file3?.description || "Gambar 3",
           });
@@ -145,46 +147,70 @@ export default function EditDestination() {
       }, 2000);
     },
   });
-
   //   Form
   const form = useForm({
     resolver: zodResolver(destinationSchema),
     defaultValues: {
-      nama_destinasi: "",
-      id_kategori: "",
-      id_provinsi: "",
-      id_kota: "",
-      id_kecamatan: "",
-      kode_pos: "",
-      jalan: "",
-      deskripsi: "",
-      jam_buka: "",
-      jam_tutup: "",
-      latitude: "",
-      longitude: "",
-      harga_masuk: "",
+      nama_destinasi: destinationQuery?.data?.data?.data?.nama_destinasi,
+      id_kategori: destinationQuery?.data?.data?.data?.kategori?.id_kategori,
+      id_provinsi:
+        destinationQuery?.data?.data?.data?.alamat_destinasi?.id_provinsi || "",
+      id_kota:
+        destinationQuery?.data?.data?.data?.alamat_destinasi?.id_kota || "",
+      id_kecamatan:
+        destinationQuery?.data?.data?.data?.alamat_destinasi?.id_kecamatan ||
+        "",
+      kode_pos: destinationQuery?.data?.data?.data?.alamat_destinasi?.kode_pos,
+      jalan: destinationQuery?.data?.data?.data?.alamat_destinasi?.nama_jalan,
+      deskripsi: destinationQuery?.data?.data?.data?.deskripsi,
+      jam_buka: destinationQuery?.data?.data?.data?.jam_buka,
+      jam_tutup: destinationQuery?.data?.data?.data?.jam_tutup,
+      latitude: destinationQuery?.data?.data?.data?.latitude?.toString(),
+      longitude: destinationQuery?.data?.data?.data?.longitude?.toString(),
+      harga_masuk: destinationQuery?.data?.data?.data?.harga_masuk?.toString(),
       fasilitas: defaultFacility || [],
     },
   });
-
   useEffect(() => {
     if (destinationQuery?.data?.data?.data) {
       form.reset({
         nama_destinasi: destinationQuery?.data?.data?.data?.nama_destinasi,
         id_kategori: destinationQuery?.data?.data?.data?.kategori?.id_kategori,
-        id_provinsi: "",
-        id_kota: "",
-        id_kecamatan: "",
+        id_provinsi:
+          destinationQuery?.data?.data?.data?.alamat_destinasi?.id_provinsi,
+        id_kota: destinationQuery?.data?.data?.data?.alamat_destinasi?.id_kota,
+        id_kecamatan:
+          destinationQuery?.data?.data?.data?.alamat_destinasi?.id_kecamatan,
         kode_pos:
           destinationQuery?.data?.data?.data?.alamat_destinasi?.kode_pos,
         jalan: destinationQuery?.data?.data?.data?.alamat_destinasi?.nama_jalan,
         deskripsi: destinationQuery?.data?.data?.data?.deskripsi,
         jam_buka: destinationQuery?.data?.data?.data?.jam_buka,
         jam_tutup: destinationQuery?.data?.data?.data?.jam_tutup,
-        latitude: "",
-        longitude: "",
-        harga_masuk: destinationQuery?.data?.data?.data?.harga_masuk,
+        latitude: destinationQuery?.data?.data?.data?.latitude?.toString(),
+        longitude: destinationQuery?.data?.data?.data?.longitude?.toString(),
+        harga_masuk:
+          destinationQuery?.data?.data?.data?.harga_masuk?.toString(),
         fasilitas: defaultFacility,
+      });
+
+      setFile1({
+        description:
+          destinationQuery?.data?.data?.data?.url_gambar[0]?.judul || "",
+        file:
+          destinationQuery?.data?.data?.data?.url_gambar[0]?.url_media || null,
+      });
+      setFile2({
+        description:
+          destinationQuery?.data?.data?.data?.url_gambar[1]?.judul || "",
+        file:
+          destinationQuery?.data?.data?.data?.url_gambar[1]?.url_media || null,
+      });
+      setFile3({
+        description:
+          destinationQuery?.data?.data?.data?.url_gambar[2]?.judul || "",
+        file:
+          destinationQuery?.data?.data?.data?.url_gambar[2]?.url_media || null,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -209,6 +235,7 @@ export default function EditDestination() {
         kode_pos: values.kode_pos,
       },
     };
+
     destinationMutation.mutate(body);
   }
 

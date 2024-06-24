@@ -31,6 +31,7 @@ export default function SideBar() {
       await logout();
       navigate("/login");
       dispatch(resetUser());
+      toast.success("Berhasil keluar dari aplikasi");
     } catch {
       toast.error("Gagal keluar dari aplikasi");
     }
