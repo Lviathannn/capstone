@@ -29,7 +29,7 @@ export const CardDetail = ({title,desc, textBtn}) => {
           </CardHeader>
           <CardContent className="flex p-4">
             <Link to={privateRoutes.ADMIN}>
-              <Button className="h-fit w-fit bg-primary-500 px-10 py-[13px] text-sm font-medium text-neutral-100 hover:bg-primary-600 sm:h-[48px] sm:w-[135px] sm:rounded-[12px]">
+              <Button className="h-fit w-fit bg-primary-500 px-10 py-[13px] text-sm font-medium text-neutral-100 hover:bg-primary-600 sm:h-[48px] sm:w-[135px] rounded-[12px]">
                 {textBtn}
               </Button>
             </Link>

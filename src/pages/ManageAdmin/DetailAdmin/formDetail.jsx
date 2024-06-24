@@ -61,7 +61,6 @@ export const FormDetail = () => {
                   <ReadOnlyField
                     className=" border-solid-1 rounded-[10px] bg-white px-[12px] py-3 font-jakarta-sans text-sm font-normal text-neutral-700"
                     id="username"
-                    required
                     children={data?.data?.username}
                   />
                 )}
