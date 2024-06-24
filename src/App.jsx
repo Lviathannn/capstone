@@ -114,7 +114,7 @@ function App() {
           element={currentUser ? <ManageRoute /> : <Navigate to="/login" />}
         />
         <Route
-          path={`${privateRoutes.ROUTE}/:id`}
+          path={`${privateRoutes.ROUTE}/detail/:id`}
           element={currentUser ? <DetailRoute /> : <Navigate to="/login" />}
         />
 

@@ -62,7 +62,7 @@ export default function ManageRoute() {
   });
 
   const handleRouteClick = (user) => {
-    navigate(`${privateRoutes.ROUTE}/${user.id}`);
+    navigate(`${privateRoutes.ROUTE}/detail/${user.id}`);
   };
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
