@@ -118,7 +118,7 @@ export default function DestinationPage() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="px-10 text-sm font-medium text-primary-500"
+                  className="w-full px-10 text-sm font-medium text-primary-500"
                 >
                   <Plus size={16} className="mr-2" />
                   Tambah Destinasi
@@ -217,13 +217,18 @@ export default function DestinationPage() {
                         className="flex items-center justify-center gap-7"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <button onClick={(e) => e.stopPropagation()}>
-                          <Pen />
-                        </button>
+                        <Link
+                          to={privateRoutes.DESTINATION + "/edit/" + data?.id}
+                        >
+                          <button onClick={(e) => e.stopPropagation()}>
+                            <Pen />
+                          </button>
+                        </Link>
                         <Dialog
                           action={() => handleDelete(data?.id)}
-                          type="delete"
+                          type="danger"
                           title="Hapus Data !"
+                          img={DeleteImage}
                           textSubmit="Hapus"
                           textCancel="Batal"
                           description="Data akan dihapus permanen. Yakin ingin menghapus data ini?"

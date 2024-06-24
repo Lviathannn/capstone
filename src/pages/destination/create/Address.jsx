@@ -64,6 +64,7 @@ export default function Address({ form }) {
               <FormItem>
                 <FormLabel>Provinsi</FormLabel>
                 <Select
+                  defaultValue=""
                   onValueChange={(value) => {
                     field.onChange(value);
                     form.setValue("id_kota", null);

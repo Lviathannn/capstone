@@ -39,7 +39,6 @@ export default function LoginForm() {
     },
   });
 
-  
   async function onSubmit(values) {
     // dispatch(setUser(values));
     setLoading(true);
@@ -94,9 +93,7 @@ export default function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-bold text-primary">
-                Nama Pengguna
-              </FormLabel>
+              <FormLabel className="font-bold text-primary">Password</FormLabel>
               <FormControl>
                 <div className="relative w-full rounded-[12px] bg-white">
                   <Lock

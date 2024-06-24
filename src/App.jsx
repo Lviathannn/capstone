@@ -25,6 +25,7 @@ import CreateDestination from "@/pages/destination/create";
 import DetailDestination from "@/pages/destination/detail";
 import Spinner from "@/components/ui/Spinner";
 import NotFound from "@/components/features/error/NotFound";
+import EditDestination from "./pages/destination/edit";
 
 function App() {
   const currentUser = useSelector((state) => state.auth.user);
@@ -118,10 +119,14 @@ function App() {
             path={privateRoutes.DESTINATION + "/detail/:id"}
             element={<DetailDestination />}
           />
+          <Route
+            path={privateRoutes.DESTINATION + "/edit/:id"}
+            element={<EditDestination />}
+          />
         </Route>
 
         {/* Public Routes */}
-   
+
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<Navigate to="/dashboard" />} />
         <Route path="/login" element={<LoginPage />} />
