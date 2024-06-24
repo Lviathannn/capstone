@@ -20,10 +20,10 @@ export const CardDetail = ({title,desc, textBtn}) => {
           className="grid items-end bg-neutral-50 sm:flex"
         >
           <CardHeader className="w-full flex flex-col p-4 gap-1 sm:gap-2">
-            <CardTitle className="w-full text-[26px] font-bold text-neutral-800">
+            <CardTitle className="w-full text-[26px] font-bold text-neutral-800 ">
               {title}
             </CardTitle>
-            <CardDescription className="w-full text-[16px] font-medium text-neutral-700">
+            <CardDescription className="w-full text-[16px] font-medium text-neutral-700 ">
               {desc}
             </CardDescription>
           </CardHeader>
