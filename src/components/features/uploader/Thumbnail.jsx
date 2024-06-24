@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import Files from "react-files";
 
-export default function Thumbnail({ url, onDelete, setFile }) {
+export default function Thumbnail({ onDelete, setFile, fileState }) {
+  const url = URL.createObjectURL(fileState?.file[0]);
+
   return (
     <div
       className="group flex aspect-video w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg bg-cover bg-center"
@@ -19,7 +21,10 @@ export default function Thumbnail({ url, onDelete, setFile }) {
               if (file.length === 0) {
                 return;
               }
-              setFile(file);
+              setFile({
+                ...fileState,
+                file,
+              });
             }}
             onError={(error) => {
               const errorMessage = () => {
@@ -48,6 +53,7 @@ export default function Thumbnail({ url, onDelete, setFile }) {
           >
             <Button
               size="icon"
+              type="button"
               variant="ghost"
               className="h-8 w-8 hover:bg-neutral-50/20"
             >
@@ -56,6 +62,7 @@ export default function Thumbnail({ url, onDelete, setFile }) {
           </Files>
 
           <Button
+            type="button"
             onClick={onDelete}
             size="icon"
             variant="ghost"

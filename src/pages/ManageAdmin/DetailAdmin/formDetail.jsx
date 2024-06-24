@@ -6,8 +6,8 @@ import { getAdminById } from "@/services/manageAdmin/getAdminById";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
-import { ReadOnlyField } from "@/components/ui/read-only-field";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ReadOnlyField } from "@/components/ui/read-only-field";
 
 export const useGetAdminId = (id) => {
   const token = useSelector((state) => state.auth.user?.access_token); // Mengambil token dari Redux state
@@ -24,7 +24,8 @@ export const useGetAdminId = (id) => {
 
 export const FormDetail = () => {
   const { id } = useParams();
-  const { data, error, isLoading } = useGetAdminId(id);
+  const {data,error,isLoading} = useGetAdminId(id);
+  
   return (
     <div className=" flex flex-col gap-5 sm:gap-10">
       <div className=" grid h-fit w-full items-center gap-5 overflow-hidden rounded-[10px] border-none bg-neutral-50 px-4 py-8 shadow-md sm:flex sm:gap-10 sm:py-[132px]">
@@ -39,7 +40,7 @@ export const FormDetail = () => {
             />
           )}
         </div>
-        <form action="" className="mx-auto flex w-full flex-1 flex-col gap-10 ">
+        <form action="" className="mx-auto flex-1 flex w-full flex-col gap-10">
           <div className="flex w-full gap-10">
             <div className="grid w-full gap-2">
               <div className="flex items-center">
@@ -73,6 +74,7 @@ export const FormDetail = () => {
                 htmlFor="date"
                 className="font-jakarta-sans text-sm font-bold text-neutral-900 "
               >
+
                 {isLoading ? (
                   <Skeleton className="h-4 w-[500px] rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0 " />
                 ) : (

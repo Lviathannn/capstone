@@ -6,10 +6,10 @@ export const TotalRoute = ({ filteredData, isLoading }) => {
     <div className="items-left col-span-4 flex flex-col justify-center rounded-lg bg-neutral-50 p-4 lg:col-span-2">
       {isLoading ? (
         <div className="flex flex-col gap-4">
-          <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" />
+          <Skeleton className="h-5 w-1/4 rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
           <div className="flex flex-col gap-1">
-            <Skeleton className="h-10 w-full rounded-lg bg-neutral-200" />
-            <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" />
+            <Skeleton className="h-10 w-3/4 rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
+            <Skeleton className="h-5 w-1/2 rounded-lg bg-gradient-to-r from-neutral-200 to-neutral-50/0" />
           </div>
         </div>
       ) : (

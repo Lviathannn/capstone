@@ -47,7 +47,7 @@ export default function AreaChartComponent({ width, height, dataGraph }) {
           axisLine={false}
         />
         <YAxis
-          ticks={[0, 200, 400, 600, 800, 1000]}
+          ticks={[0, 50, 100, 150, 200, 250]}
           tick={{ fill: colors.neutral[800], fontSize: 14, fontWeight: 500 }}
           tickLine={0}
           axisLine={false}
@@ -57,6 +57,7 @@ export default function AreaChartComponent({ width, height, dataGraph }) {
         <Area
           type="monotone"
           dataKey="total_pengguna"
+          name="Total Pengguna"
           stroke={colors.primary[400]}
           strokeWidth={2}
           fillOpacity={1}
@@ -65,6 +66,7 @@ export default function AreaChartComponent({ width, height, dataGraph }) {
         <Area
           type="monotone"
           dataKey="pengguna_baru"
+          name="Pengguna Baru"
           stroke={colors.secondary[200]}
           strokeWidth={2}
           fillOpacity={1}

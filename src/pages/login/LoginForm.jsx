@@ -45,7 +45,6 @@ export default function LoginForm() {
     try {
       const res = await login(values);
       dispatch(setUser(res.data));
-      dispatch(setLoading(false));
       navigate("/dashboard");
       toast.success("Login berhasil", {
         description: "Anda akan diarahkan ke halaman dashboard",
@@ -94,9 +93,7 @@ export default function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-bold text-primary">
-                Nama Pengguna
-              </FormLabel>
+              <FormLabel className="font-bold text-primary">Password</FormLabel>
               <FormControl>
                 <div className="relative w-full rounded-[12px] bg-white">
                   <Lock
