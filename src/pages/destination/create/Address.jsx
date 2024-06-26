@@ -41,6 +41,7 @@ export default function Address({ form }) {
       const response = await getCity(token, selectedProvince);
       return response?.data;
     },
+    enabled: !!selectedProvince,
   });
 
   const districtQuery = useQuery({
@@ -49,6 +50,7 @@ export default function Address({ form }) {
       const response = await getDistrict(token, selectedCity);
       return response?.data;
     },
+    enabled: !!selectedCity,
   });
 
   return (
