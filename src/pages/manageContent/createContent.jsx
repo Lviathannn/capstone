@@ -47,7 +47,6 @@ const formSchema = z.object({
 });
 
 export default function CreateContent() {
-  const [visible, setVisible] = useState(false);
   const textareaRef = useRef(null);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -56,7 +55,6 @@ export default function CreateContent() {
   const [openError, setOpenError] = useState(false);
   const [contentUrl, setContentUrl] = useState('');
   const [contentType, setContentType] = useState('');
-
   const { data: destinationsData, error: destinationsError, isLoading: destinationsLoading } = useGetDestination();
 
   const form = useForm({
@@ -83,19 +81,12 @@ export default function CreateContent() {
   });
 
   useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-    }
-  }, [form.watch("title")]);
-
-  useEffect(() => {
     const url = form.watch("url");
     setContentUrl(url);
 
     if (url) {
       if (url.match(/\.(jpg|jpeg|png)$/i)) {
-        setContentType('photo');
+        setContentType('image');
       } else if (url.match(/\.(mp4|avi|mov|mkv|video|hevc|webm)$/i)) {
         setContentType('video');
       } else {
@@ -105,6 +96,13 @@ export default function CreateContent() {
       setContentType('');
     }
   }, [form.watch("url")]);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [form.watch("title")]);
 
   const onSubmit = (values) => {
     try {
@@ -143,8 +141,6 @@ export default function CreateContent() {
                   ) : (
                     <ReactPlayer
                       url={contentUrl}
-                      width="100%"
-                      height="100%"
                       controls={true}
                       className="react-player"
                     />

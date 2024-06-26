@@ -16,7 +16,7 @@ const useGetContentId = (id) => {
   // console.log("Token: ", token); 
   
   const { data, error, isLoading } = useQuery({
-    queryKey: ["user", id],
+    queryKey: ["content", id],
     queryFn: () => getContentById(token, id),
     enabled: !!token && !!id,
     onError: (error) => {

@@ -104,7 +104,7 @@ export default function LandingContent() {
   return (
     <ProtectedLayout>
       <main className="flex">
-        <div className="flex h-screen w-full flex-col gap-6 bg-primary-50 px-10 py-6 font-sans">
+        <div className="flex w-full flex-col gap-6 bg-primary-50 px-10 py-6 font-sans">
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-10 rounded-lg bg-neutral-50 p-4 shadow-md">
               <h1 className="font-jakarta-sans text-[26px] font-[700] text-neutral-800">
@@ -229,7 +229,7 @@ export default function LandingContent() {
                               textCancel="Batal"
                             >
                               <div>
-                                <TrashCan />
+                                <TrashCan className="cursor-pointer" />
                               </div>
                             </Dialog>
                           </div>
