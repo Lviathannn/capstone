@@ -162,9 +162,7 @@ export default function CreateContent() {
                 ) : (
                   <img
                     src={Preview}
-                    alt="Alert Add"
                     className="h-auto w-auto object-cover"
-                    style={{ aspectRatio: "16/9" }}
                   />
                 )}
               </div>
