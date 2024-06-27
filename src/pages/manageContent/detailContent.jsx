@@ -15,7 +15,7 @@ const useGetContentId = (id) => {
   const token = useSelector((state) => state.auth.user?.access_token);
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ["user", id],
+    queryKey: ["content", id],
     queryFn: () => getContentById(token, id),
     enabled: !!token && !!id,
     onError: (error) => {
