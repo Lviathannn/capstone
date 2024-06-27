@@ -1,4 +1,3 @@
-// services/manageContent/updateContent.js
 import { axiosInstance } from "@/lib/axios";
 
 export const updateContent = async (token, id, data) => {

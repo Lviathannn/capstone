@@ -1,8 +1,8 @@
 import { axiosInstance } from "@/lib/axios";
 
-export const getRoutes = async (token,page) => {
+export const getRoutes = async (token, page, search) => {
   try {
-    const res = await axiosInstance.get(`admin/routes?page=${page}`, {
+    const res = await axiosInstance.get(`admin/routes?page=${page}&limit=8&search=${search}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
