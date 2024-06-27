@@ -140,10 +140,12 @@ export default function CreateContent() {
                     <img src={contentUrl} alt="Preview" className="w-auto h-auto object-cover" />
                   ) : (
                     <ReactPlayer
-                      url={contentUrl}
-                      controls={true}
-                      className="react-player"
-                    />
+                    url={contentUrl}
+                    width="100%"
+                    height="100%"
+                    controls={true}
+                    className="react-player"
+                  />
                   )
                 ) : (
                   <img src={Preview} alt="Alert Add" className="w-auto h-auto object-cover" style={{ aspectRatio: '16/9' }} />
