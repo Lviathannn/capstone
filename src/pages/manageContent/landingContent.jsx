@@ -153,7 +153,7 @@ export default function LandingContent() {
                 {isLoading ? (
                   <Skeleton className="h-4 w-16 bg-gradient-to-r rounded-lg from-neutral-200 to-neutral-50/0" />
                 ) : (
-                  <span>Tambah ...</span>
+                  <span>Tambah Konten</span>
                 )}
                 </Link>
               </div>
