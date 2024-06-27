@@ -20,7 +20,8 @@ import content from "@/assets/icons/content.png";
 import plus from "@/assets/icons/plus.png";
 import search from "@/assets/icons/search.png";
 import edit from "@/assets/icons/edit.png";
-import deleteIcon from "@/assets/icons/delete.png";
+import { Skeleton } from "@/components/ui/skeleton";
+import TableSkeleton from "@/components/features/skeleton/TableSkeleton";
 import notFoundImg from "@/assets/icons/not-found.svg";
 import AlertDelete from "@/assets/img/alert delete.png";
 import { privateRoutes } from "@/constant/routes";
@@ -79,10 +80,6 @@ export default function LandingContent() {
     createDeletedMutation.mutate(contentId);
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   if (error) {
     return <div>Error: {error.message}</div>;
   }
@@ -104,14 +101,22 @@ export default function LandingContent() {
   return (
     <ProtectedLayout>
       <main className="flex">
-        <div className="flex h-screen w-full flex-col gap-6 bg-primary-50 px-10 py-6 font-sans">
+        <div className="flex w-full flex-col gap-6 bg-primary-50 px-10 py-6 font-sans">
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-10 rounded-lg bg-neutral-50 p-4 shadow-md">
               <h1 className="font-jakarta-sans text-[26px] font-[700] text-neutral-800">
-                Kelola Konten
+                {isLoading ? (
+                  <Skeleton className="h-5 w-full bg-gradient-to-r my-3 rounded-full from-neutral-200 to-neutral-50/0" />
+                ) : (
+                  "Kelola Konten"
+                )}
               </h1>
               <p className="font-jakarta-sans text-[16px] font-[500] text-neutral-700">
-                Kelola data konten dengan mudah!
+                {isLoading ? (
+                <Skeleton className="h-5 w-full bg-gradient-to-r my-3 rounded-full from-neutral-200 to-neutral-50/0" />
+                ) : (
+                  "Kelola data konten dengan mudah!"
+                )}
               </p>
               <div className="mt-4 flex justify-between">
                 <div className="flex w-1/2 items-center rounded-lg border px-4 py-3">
@@ -140,8 +145,16 @@ export default function LandingContent() {
                   to={`${privateRoutes.CONTENT}/create`}
                   className="flex items-center rounded-lg border px-4 py-3 font-jakarta-sans text-primary-500"
                 >
+                {isLoading ? (
+                  <Skeleton className="h-6 w-6 rounded-full bg-gradient-to-r from-neutral-200 to-neutral-50/0 mr-3" />
+                ) : (
                   <img src={plus} alt="Plus Icon" className="mr-4 h-6 w-6" />
-                  Tambah Konten
+                )}
+                {isLoading ? (
+                  <Skeleton className="h-4 w-16 bg-gradient-to-r rounded-lg from-neutral-200 to-neutral-50/0" />
+                ) : (
+                  <span>Tambah Konten</span>
+                )}
                 </Link>
               </div>
             </div>
@@ -173,20 +186,24 @@ export default function LandingContent() {
                   <TableHeader className="bg-primary-500 text-sm font-semibold">
                     <TableRow>
                       <TableHead className="font-jakarta-sans text-neutral-50">
-                        Nama Destinasi
+                      {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Nama Destinasi"}
                       </TableHead>
                       <TableHead className="font-jakarta-sans text-neutral-50">
-                        Deskripsi Konten
+                      {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Deskripsi Konten"}
                       </TableHead>
                       <TableHead className="font-jakarta-sans text-neutral-50">
-                        Link Terkait
+                      {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Link Terkait"}
                       </TableHead>
                       <TableHead className="font-jakarta-sans text-neutral-50">
-                        Aksi
+                      {isLoading ? <Skeleton className="h-5 w-full rounded-lg bg-neutral-200" /> : "Aksi"}
                       </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody className="bg-neutral-50 font-jakarta-sans">
+                  {isLoading &&
+                Array.from({ length: 8 }).map((_, index) => (
+                  <TableSkeleton key={index} tableCell={4} />
+                ))}
                     {contents.map((content) => (
                       <TableRow key={content.id}>
                         <TableCell
@@ -229,7 +246,7 @@ export default function LandingContent() {
                               textCancel="Batal"
                             >
                               <div>
-                                <TrashCan />
+                                <TrashCan className="cursor-pointer" />
                               </div>
                             </Dialog>
                           </div>

@@ -76,7 +76,7 @@ function App() {
           element={<DetailContent />}
         />
         <Route
-          path={`${privateRoutes.CONTENT}/edit`}
+          path={`${privateRoutes.CONTENT}/edit/:id`}
           element={<EditContent />}
         />
 
